@@ -20,7 +20,7 @@ object_script.*.Debug
 *.pro.user.*
 *.qbs.user
 *.qbs.user.*
-*.moc
+*.moctoolb
 moc_*.cpp
 moc_*.h
 qrc_*.cpp
@@ -52,3 +52,6 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+openstw-gui/
+build/
