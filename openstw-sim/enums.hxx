@@ -25,6 +25,12 @@ namespace Openstw::Simulation
         Sh1 = 2
     };
 
+    enum class KennLichtState
+    {
+        Off = 0,
+        On = 1
+    };
+
     enum class BlockSignalType
     {
         SelbstBlock = 0,

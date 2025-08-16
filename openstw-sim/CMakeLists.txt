@@ -18,6 +18,7 @@ add_library(openstw-sim STATIC
   enums.hxx
   signal.hxx signal.cxx
   utility.hxx
+  base.hxx
 )
 
 

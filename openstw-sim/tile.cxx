@@ -16,8 +16,8 @@ namespace Openstw::Simulation
         return this->m_signal.value();
     }
 
-    Tile::changed_signal_t& Tile::on_changed()
+    Tile::changed_event_t& Tile::on_changed()
     {
-        return this->m_sigChanged;
+        return this->m_evtChanged;
     }
 }
