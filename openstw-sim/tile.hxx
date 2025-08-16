@@ -1,6 +1,10 @@
 #pragma once
 
+#include <optional>
+
 #include <boost/signals2.hpp>
+
+#include <signal.hxx>
 
 namespace Openstw::Simulation
 {
@@ -13,19 +17,25 @@ namespace Openstw::Simulation
         Tile();
 
     public: // == Public interface
+        bool has_signal() const
+        {
+        }
+        Signal& signal();
+
     public: // == Signals
         /**
          * Called whenever the tiles contents were changed.
          *
-         * Clients should invalidate and redraw their tile represenation
+         * Clients should invalidate and redraw their tile representation
          * upon receiving this signal.
          */
-        auto on_changed() -> changed_signal_t&
-        {
-            return this->m_sigChanged;
-        }
+        changed_signal_t& on_changed();
 
     protected:
         changed_signal_t m_sigChanged{};
+
+    protected:
+        std::optional<Signal> m_signal{}; //< Signal in this tile. Can be a combination of Haupt- and Vorsignal,
+                                          //  and can include a Rangiersignal.
     };
 }

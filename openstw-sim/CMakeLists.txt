@@ -16,6 +16,8 @@ add_library(openstw-sim STATIC
   simulation.hxx
   tile.hxx tile.cxx
   enums.hxx
+  signal.hxx signal.cxx
+  utility.hxx
 )
 
 
