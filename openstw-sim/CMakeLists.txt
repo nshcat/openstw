@@ -12,8 +12,20 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(openstw-sim STATIC
-  simulation.cpp
-  simulation.h
+  simulation.cxx
+  simulation.hxx
+  tile.hxx tile.cxx
+  enums.hxx
+)
+
+
+set(BOOST_MIN_VERSION 1.79.0)
+
+find_package(
+  Boost ${BOOST_MIN_VERSION} REQUIRED
+)
+target_link_libraries(openstw-sim PUBLIC
+  Boost::boost
 )
 
 target_link_libraries(openstw-sim PRIVATE Qt${QT_VERSION_MAJOR}::Core)

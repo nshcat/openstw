@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include <simulation.h>
+#include "mainwindow.hxx"
+#include <simulation.hxx>
 
 #include <QApplication>
 
