@@ -6,7 +6,7 @@ namespace Openstw::Simulation
     {
     }
 
-    bool Tile::has_signal() const
+    bool Tile::hasSignal() const
     {
         return this->m_signal.has_value();
     }
@@ -14,6 +14,26 @@ namespace Openstw::Simulation
     Signal& Tile::signal()
     {
         return this->m_signal.value();
+    }
+
+    bool Tile::hasTrack() const
+    {
+        return m_hasTrack;
+    }
+
+    void Tile::setHasTrack(bool newHasTrack)
+    {
+        m_hasTrack = newHasTrack;
+    }
+
+    TrackState Tile::trackState() const
+    {
+        return m_trackState;
+    }
+
+    void Tile::setTrackState(TrackState newTrackState)
+    {
+        m_trackState = newTrackState;
     }
 
     Tile::changed_event_t& Tile::on_changed()

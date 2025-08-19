@@ -6,7 +6,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -20,9 +20,16 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    find_package(Qt6 REQUIRED COMPONENTS Core)
+
     qt_add_executable(openstw-gui
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        tilepanelview.hxx tilepanelview.cxx
+        tilegraphicsitem.hxx tilegraphicsitem.cxx
+        rendering/tilecomponentrenderer.hxx rendering/tilecomponentrenderer.cxx
+        rendering/trackrenderer.hxx rendering/trackrenderer.cxx
+        rendering/tilerenderingconstants.hxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -67,6 +74,7 @@ install(TARGETS openstw-gui
 
 add_subdirectory(openstw-sim)
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(openstw-gui)

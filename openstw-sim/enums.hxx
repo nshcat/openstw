@@ -43,4 +43,11 @@ namespace Openstw::Simulation
         Top = 1 << 0,
         Bottom = 1 << 1
     };
+
+    enum class TrackState
+    {
+        Inactive = 0,
+        FahrstrasseSet = 1,
+        Occupied = 2
+    };
 }

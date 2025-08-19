@@ -28,10 +28,11 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-BreakBeforeBraces: Custom
+BreakBeforeBraces: Allman
 NamespaceIndentation: All
 IndentAccessModifiers: false
 AccessModifierOffset: -4
+PointerAlignment: Left
 FixNamespaceComments: false
 ...
 
