@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
+add_subdirectory(./../thirdparty/pugixml ${CMAKE_CURRENT_BINARY_DIR}/pugixml)
+
 add_library(openstw-sim STATIC
   simulation.cxx
   simulation.hxx
@@ -21,6 +23,8 @@ add_library(openstw-sim STATIC
   base.hxx
   tilepanel.hxx tilepanel.cxx
 )
+
+target_link_libraries(openstw-sim PUBLIC pugixml-static)
 
 
 set(BOOST_MIN_VERSION 1.79.0)
