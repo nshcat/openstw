@@ -24,6 +24,9 @@ public:
     Openstw::Simulation::TilePanel* tilePanel() const;
 
 protected:
+    virtual void mousePressEvent(QMouseEvent* event) override;
+
+protected:
     Openstw::Simulation::TilePanel* m_tilePanel{};
     QGraphicsScene* m_scene{};
     QGraphicsItemGroup* m_tileItemGroup{}; //< Holds all graphics items that render the stellwerk tiles

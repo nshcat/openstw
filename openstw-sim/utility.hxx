@@ -4,6 +4,15 @@
 
 namespace Openstw::Simulation
 {
+    struct GridPosition
+    {
+        GridPosition() = default;
+        GridPosition(std::size_t x, std::size_t y);
+
+        std::size_t x{};
+        std::size_t y{};
+    };
+
     template <typename E> class FlagField
     {
         using storage_t = std::underlying_type_t<E>;

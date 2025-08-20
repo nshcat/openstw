@@ -5,11 +5,16 @@
 #include <boost/signals2.hpp>
 
 #include <signal.hxx>
+#include <utility.hxx>
 
 namespace Openstw::Simulation
 {
+    class TilePanel;
+
     class Tile
     {
+        friend class TilePanel;
+
     public:
         using changed_event_t = boost::signals2::signal<void()>;
 
@@ -17,6 +22,7 @@ namespace Openstw::Simulation
         Tile();
 
     public: // == Public interface
+        const GridPosition& position() const;
         bool hasSignal() const;
         Signal& signal();
         bool hasTrack() const;
@@ -36,9 +42,13 @@ namespace Openstw::Simulation
         changed_event_t& on_changed();
 
     protected:
+        void setPosition(const GridPosition& newPosition);
+
+    protected:
         changed_event_t m_evtChanged{};
 
     protected:
+        GridPosition m_position{};
         std::optional<Signal> m_signal{}; //< Signal in this tile. Can be a combination of Haupt- and Vorsignal,
                                           //  and can include a Rangiersignal.
 

@@ -22,6 +22,9 @@ namespace Openstw::Simulation
         Tile& operator[](std::size_t x, std::size_t y);
 
     protected:
+        std::size_t linearIndex(std::size_t x, std::size_t y) const;
+
+    protected:
         std::size_t m_width{};
         std::size_t m_height{};
         std::vector<Tile> m_tiles{};

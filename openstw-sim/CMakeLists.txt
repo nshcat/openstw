@@ -22,6 +22,7 @@ add_library(openstw-sim STATIC
   utility.hxx
   base.hxx
   tilepanel.hxx tilepanel.cxx
+  utility.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)

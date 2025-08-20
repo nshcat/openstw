@@ -36,6 +36,16 @@ namespace Openstw::Simulation
         m_trackState = newTrackState;
     }
 
+    void Tile::setPosition(const GridPosition& newPosition)
+    {
+        this->m_position = newPosition;
+    }
+
+    const GridPosition& Tile::position() const
+    {
+        return this->m_position;
+    }
+
     Tile::changed_event_t& Tile::on_changed()
     {
         return this->m_evtChanged;
