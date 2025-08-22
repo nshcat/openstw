@@ -34,10 +34,11 @@ void TilePanelView::setTilePanel(Openstw::Simulation::TilePanel *tilePanel)
             auto* tileItem = new TileGraphicsObject(tile);
             tileItem->setPos(ix * TileGraphicsObject::tileWidth, iy * TileGraphicsObject::tileHeight);
             tileGraphicsObject.append(tileItem);
+            this->m_scene->addItem(tileItem);
         }
     }
 
-    this->m_tileItemGroup = this->m_scene->createItemGroup(tileGraphicsObject);
+    // this->m_tileItemGroup = this->m_scene->createItemGroup(tileGraphicsObject);
 }
 
 bool TilePanelView::hasTilePanel() const
