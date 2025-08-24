@@ -3,8 +3,8 @@
 
 TileGraphicsObject::TileGraphicsObject(Openstw::Simulation::Tile* tile) : m_tile(tile)
 {
-    this->setEnabled(true);
-    this->setFlags(ItemIsFocusable | ItemIsSelectable);
+    // this->setEnabled(true);
+    // this->setFlags(ItemIsFocusable | ItemIsSelectable);
     this->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
 
     this->m_testObj = new Rendering::TestGraphicsObject(this);

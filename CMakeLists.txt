@@ -22,16 +22,20 @@ set(PROJECT_SOURCES
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
     qt_add_executable(openstw-gui
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         tilepanelview.hxx tilepanelview.cxx
         tilegraphicsobject.hxx tilegraphicsobject.cxx
-        rendering/tilecomponentrenderer.hxx rendering/tilecomponentrenderer.cxx
-        rendering/trackrenderer.hxx rendering/trackrenderer.cxx
+
+
         rendering/tilerenderingconstants.hxx
         rendering/testgraphicsobject.hxx rendering/testgraphicsobject.cxx
+        rendering/tilecomponentgraphicsobject.hxx rendering/tilecomponentgraphicsobject.cxx
+        rendering/trackgraphicsitem.hxx rendering/trackgraphicsitem.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -78,6 +82,8 @@ add_subdirectory(openstw-sim)
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(openstw-gui)
