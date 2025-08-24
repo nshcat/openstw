@@ -1,14 +1,9 @@
 #include "tilegraphicsobject.hxx"
+#include <QGraphicsScene>
 #include <QPainter>
 
 TileGraphicsObject::TileGraphicsObject(Openstw::Simulation::Tile* tile) : m_tile(tile)
 {
-    // this->setEnabled(true);
-    // this->setFlags(ItemIsFocusable | ItemIsSelectable);
-    this->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
-
-    this->m_testObj = new Rendering::TestGraphicsObject(this);
-    this->m_testObj->setPos(25.0f, 25.0f);
 }
 
 Openstw::Simulation::Tile* TileGraphicsObject::tile() const
@@ -34,4 +29,16 @@ void TileGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem
 void TileGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     this->QGraphicsItem::mousePressEvent(event);
+}
+
+void TileGraphicsObject::setup()
+{
+    this->createComponentRenderers();
+}
+
+void TileGraphicsObject::createComponentRenderers()
+{
+    this->m_trackRenderer = new Rendering::TrackGraphicsObject{this};
+    this->m_trackRenderer->setup();
+    this->scene()->addItem(this->m_trackRenderer);
 }

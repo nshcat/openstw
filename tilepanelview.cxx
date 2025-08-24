@@ -1,3 +1,5 @@
+#include <QMenu>
+#include <QWheelEvent>
 #include <stdexcept>
 
 #include "tilegraphicsobject.hxx"
@@ -7,7 +9,7 @@ TilePanelView::TilePanelView()
 {
     this->setBackgroundBrush(Qt::white);
     this->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    // this->setDragMode(DragMode::ScrollHandDrag);
+    this->setDragMode(DragMode::ScrollHandDrag);
 }
 
 void TilePanelView::setTilePanel(Openstw::Simulation::TilePanel *tilePanel)
@@ -35,10 +37,11 @@ void TilePanelView::setTilePanel(Openstw::Simulation::TilePanel *tilePanel)
             tileItem->setPos(ix * TileGraphicsObject::tileWidth, iy * TileGraphicsObject::tileHeight);
             tileGraphicsObject.append(tileItem);
             this->m_scene->addItem(tileItem);
+            tileItem->setup();
         }
     }
 
-    // this->m_tileItemGroup = this->m_scene->createItemGroup(tileGraphicsObject);
+    this->resetSceneRect();
 }
 
 bool TilePanelView::hasTilePanel() const
@@ -51,7 +54,44 @@ Openstw::Simulation::TilePanel *TilePanelView::tilePanel() const
     return this->m_tilePanel;
 }
 
+void TilePanelView::resetSceneRect()
+{
+    this->setSceneRect(QRectF{0.0f, 0.0f, (qreal)this->width(), (qreal)this->height()});
+}
+
 void TilePanelView::mousePressEvent(QMouseEvent* event)
 {
     this->QGraphicsView::mousePressEvent(event);
+}
+
+void TilePanelView::wheelEvent(QWheelEvent* event)
+{
+    if (event->modifiers().testFlag(Qt::KeyboardModifier::ControlModifier))
+    {
+        const auto oldAnchor = this->transformationAnchor();
+        this->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+
+        const auto angle = event->angleDelta().y();
+        const qreal scaleFactor = angle > 0 ? 1.1f : 0.9f;
+        this->scale(scaleFactor, scaleFactor);
+
+        this->setTransformationAnchor(oldAnchor);
+    }
+}
+
+void TilePanelView::contextMenuEvent(QContextMenuEvent* event)
+{
+    QMenu contextMenu{this};
+
+    QAction* actionRecenter = contextMenu.addAction("&Recenter View");
+
+    connect(actionRecenter, &QAction::triggered, this, &TilePanelView::onRecenterView);
+
+    contextMenu.exec(event->globalPos());
+}
+
+void TilePanelView::onRecenterView()
+{
+    this->resetTransform();
+    this->resetSceneRect();
 }

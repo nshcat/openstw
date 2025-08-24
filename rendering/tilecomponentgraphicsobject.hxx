@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../tilegraphicsobject.hxx"
 #include <QGraphicsObject>
 #include <QObject>
 #include <optional>
 #include <tile.hxx>
+
+class TileGraphicsObject;
 
 namespace Rendering
 {
@@ -37,6 +38,9 @@ namespace Rendering
          * buttons to react to.
          */
         virtual std::optional<Qt::MouseButtons> acceptsMouseInput() const;
+
+    public:
+        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
     protected:
         Openstw::Simulation::Tile* m_tile{};

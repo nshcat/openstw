@@ -1,17 +1,17 @@
 #pragma once
 
-#include "../tilegraphicsobject.hxx"
 #include "tilecomponentgraphicsobject.hxx"
 #include <QObject>
 
+class TileGraphicsObject;
+
 namespace Rendering
 {
-
-    class TrackGraphicsItem : public Rendering::TileComponentGraphicsObject
+    class TrackGraphicsObject : public Rendering::TileComponentGraphicsObject
     {
         Q_OBJECT
     public:
-        TrackGraphicsItem(TileGraphicsObject* parent);
+        TrackGraphicsObject(TileGraphicsObject* parent);
 
     public:
         virtual QRectF boundingRect() const override;

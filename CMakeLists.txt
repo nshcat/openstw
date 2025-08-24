@@ -33,9 +33,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 
 
         rendering/tilerenderingconstants.hxx
-        rendering/testgraphicsobject.hxx rendering/testgraphicsobject.cxx
+
         rendering/tilecomponentgraphicsobject.hxx rendering/tilecomponentgraphicsobject.cxx
-        rendering/trackgraphicsitem.hxx rendering/trackgraphicsitem.cxx
+        rendering/trackgraphicsobject.hxx rendering/trackgraphicsobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

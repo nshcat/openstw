@@ -3,6 +3,8 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow), m_tilePanel{8, 4}
 {
+    this->m_tilePanel[2, 1].setHasTrack(true);
+
     ui->setupUi(this);
 
     this->m_tilePanelView = new TilePanelView();

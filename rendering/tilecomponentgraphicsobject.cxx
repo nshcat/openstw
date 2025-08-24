@@ -1,4 +1,6 @@
 #include "tilecomponentgraphicsobject.hxx"
+#include "../tilegraphicsobject.hxx"
+#include <QPainter>
 
 namespace Rendering
 {
@@ -18,5 +20,15 @@ namespace Rendering
     std::optional<Qt::MouseButtons> TileComponentGraphicsObject::acceptsMouseInput() const
     {
         return std::nullopt;
+    }
+
+    void TileComponentGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+    {
+        // Always clip to the bounding rectangle to make painting diagonal items
+        // easier (by being able to use rotated rectangles)
+        painter->setClipRect(this->boundingRect());
+
+        // Enable antialiasing
+        painter->setRenderHint(QPainter::Antialiasing);
     }
 }

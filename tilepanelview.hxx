@@ -23,8 +23,16 @@ public:
     bool hasTilePanel() const;
     Openstw::Simulation::TilePanel* tilePanel() const;
 
-protected:
+protected: // == Internal helper methods
+    void resetSceneRect();
+
+protected: // == Input events
     virtual void mousePressEvent(QMouseEvent* event) override;
+    virtual void wheelEvent(QWheelEvent* event) override;
+    virtual void contextMenuEvent(QContextMenuEvent* event) override;
+
+protected slots:
+    void onRecenterView();
 
 protected:
     Openstw::Simulation::TilePanel* m_tilePanel{};

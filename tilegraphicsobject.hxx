@@ -3,8 +3,8 @@
 #include <QGraphicsObject>
 #include <tile.hxx>
 
-#include "rendering/testgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
+#include "rendering/trackgraphicsobject.hxx"
 
 class TileGraphicsObject : public QGraphicsObject
 {
@@ -25,10 +25,17 @@ public: // == QGraphicsItem implementation
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
+public:
+    void setup();
+
     // XXX Implement signals that are triggered when user clicks on tile elements
+
+protected:
+    void createComponentRenderers();
 
 protected:
     Openstw::Simulation::Tile* m_tile{};
 
-    Rendering::TestGraphicsObject* m_testObj;
+protected: // == Component renderers
+    Rendering::TrackGraphicsObject* m_trackRenderer;
 };
