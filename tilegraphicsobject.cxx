@@ -1,4 +1,5 @@
 #include "tilegraphicsobject.hxx"
+#include "rendering/tilerenderingconstants.hxx"
 #include <QGraphicsScene>
 #include <QPainter>
 
@@ -9,6 +10,14 @@ TileGraphicsObject::TileGraphicsObject(Openstw::Simulation::Tile* tile) : m_tile
 Openstw::Simulation::Tile* TileGraphicsObject::tile() const
 {
     return this->m_tile;
+}
+
+QRectF TileGraphicsObject::innerBoundingRect() const
+{
+    return QRectF{Rendering::TileRenderingConstants::tileInsetSize / 2.0f,
+                  Rendering::TileRenderingConstants::tileInsetSize / 2.0f,
+                  Rendering::TileRenderingConstants::innerTileWidth,
+                  Rendering::TileRenderingConstants::innerTileHeight};
 }
 
 QRectF TileGraphicsObject::boundingRect() const
@@ -22,8 +31,22 @@ void TileGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem
     QColor backgroundBorderColor = QColor{0x3e, 0x3e, 0x3e};
 
     painter->setBrush(QBrush{backgroundColor});
-    painter->setPen(QPen{backgroundBorderColor, 1.5f});
-    painter->drawRect(this->boundingRect());
+
+    auto borderPen = QPen{backgroundBorderColor, Rendering::TileRenderingConstants::borderThickness};
+    borderPen.setJoinStyle(Qt::PenJoinStyle::MiterJoin);
+    painter->setPen(borderPen);
+
+    // Qt renders rectangles in such a way that the outline stroke is centered on the 'ideal'
+    // rectangles outline, thus the stroke extends 'outside' our bounding box.
+    // We can fix this by making the rectangle smaller by the amount of expected overdraw, shrinking
+    // it to lie entirely inside our bounding box.
+    const auto boundingRect = this->boundingRect();
+    const QRectF tileBackgroundRect{boundingRect.left() + Rendering::TileRenderingConstants::borderThickness / 2.0f,
+                                    boundingRect.top() + Rendering::TileRenderingConstants::borderThickness / 2.0f,
+                                    boundingRect.width() - Rendering::TileRenderingConstants::borderThickness,
+                                    boundingRect.height() - Rendering::TileRenderingConstants::borderThickness};
+
+    painter->drawRect(tileBackgroundRect);
 }
 
 void TileGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent* event)

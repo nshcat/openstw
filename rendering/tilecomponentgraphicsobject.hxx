@@ -21,6 +21,7 @@ namespace Rendering
          * Is called from the main tile graphics object.
          */
         void setup();
+        TileGraphicsObject* tileGraphicsObject() const;
 
     protected:
         /**
@@ -44,5 +45,6 @@ namespace Rendering
 
     protected:
         Openstw::Simulation::Tile* m_tile{};
+        TileGraphicsObject* m_tileGraphicsObj{};
     };
 }

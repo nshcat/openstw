@@ -1,5 +1,6 @@
 #include <QPainter>
 
+#include "../tilegraphicsobject.hxx"
 #include "tilerenderingconstants.hxx"
 #include "trackgraphicsobject.hxx"
 
@@ -10,19 +11,18 @@ namespace Rendering
     {
     }
 
-    QRectF Rendering::TrackGraphicsObject::boundingRect() const
+    QRectF TrackGraphicsObject::boundingRect() const
     {
-        // We span the whole tile.
-        return QRectF{0.0f, 0.0f, TileRenderingConstants::tileWidth, TileRenderingConstants::tileHeight};
+        // We span the whole inner tile.
+        return this->tileGraphicsObject()->innerBoundingRect();
     }
 
-    void Rendering::TrackGraphicsObject::positionSelf()
+    void TrackGraphicsObject::positionSelf()
     {
-        this->setPos(0.0f, 0.0f);
+        this->setPos(this->boundingRect().topLeft());
     }
 
-    void Rendering::TrackGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
-                                               QWidget* widget)
+    void TrackGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         // Base class method call sets up clipping region
         TileComponentGraphicsObject::paint(painter, option, widget);

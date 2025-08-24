@@ -20,6 +20,12 @@ public:
 public:
     Openstw::Simulation::Tile* tile() const;
 
+    /**
+     * @brief The bounding rect of the inner tile, without the border.
+     * Use this when rendering tile contents.
+     */
+    QRectF innerBoundingRect() const;
+
 public: // == QGraphicsItem implementation
     virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;

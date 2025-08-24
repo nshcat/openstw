@@ -5,7 +5,7 @@
 namespace Rendering
 {
     TileComponentGraphicsObject::TileComponentGraphicsObject(TileGraphicsObject* parent)
-        : QGraphicsObject(parent), m_tile{parent->tile()}
+        : QGraphicsObject(parent), m_tile{parent->tile()}, m_tileGraphicsObj{parent}
     {
     }
 
@@ -13,8 +13,12 @@ namespace Rendering
     {
         const auto mouseButtons = this->acceptsMouseInput();
         this->setAcceptedMouseButtons(mouseButtons.value_or(Qt::MouseButton::NoButton));
-
         this->positionSelf();
+    }
+
+    TileGraphicsObject* TileComponentGraphicsObject::tileGraphicsObject() const
+    {
+        return this->m_tileGraphicsObj;
     }
 
     std::optional<Qt::MouseButtons> TileComponentGraphicsObject::acceptsMouseInput() const
