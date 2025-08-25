@@ -11,18 +11,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-add_subdirectory(./../thirdparty/pugixml ${CMAKE_CURRENT_BINARY_DIR}/pugixml)
-
 add_library(openstw-sim STATIC
-  simulation.cxx
-  simulation.hxx
-  tile.hxx tile.cxx
-  enums.hxx
-  signal.hxx signal.cxx
-  utility.hxx
-  base.hxx
-  tilepanel.hxx tilepanel.cxx
-  utility.cxx
+  src/simulation.cxx
+  src/simulation.hxx
+  src/tile.hxx src/tile.cxx
+  src/enums.hxx
+  src/signal.hxx src/signal.cxx
+  src/utility.hxx
+  src/base.hxx
+  src/tilepanel.hxx src/tilepanel.cxx
+  src/utility.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)
@@ -38,6 +36,6 @@ target_link_libraries(openstw-sim PUBLIC
 )
 
 target_link_libraries(openstw-sim PRIVATE Qt${QT_VERSION_MAJOR}::Core)
-target_include_directories(openstw-sim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(openstw-sim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 target_compile_definitions(openstw-sim PRIVATE OPENSTW_SIM_LIBRARY)
