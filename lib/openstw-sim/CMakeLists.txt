@@ -21,6 +21,9 @@ add_library(openstw-sim STATIC
   src/base.hxx
   src/tilepanel.hxx src/tilepanel.cxx
   src/utility.cxx
+  src/isignalschirm.hxx src/isignalschirm.cxx
+  src/hauptsignalschirm.hxx src/hauptsignalschirm.cxx
+  src/vorsignalschirm.hxx src/vorsignalschirm.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)

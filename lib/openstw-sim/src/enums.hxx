@@ -2,6 +2,21 @@
 
 namespace Openstw::Simulation
 {
+    enum class SignalBildType
+    {
+        None = 0,
+        HauptSignal = 1 << 0,
+        VorSignal = 1 << 1,
+        RangierSignal = 1 << 2,
+        ZugDeckungsSignal = 1 << 3
+    };
+
+    enum class ZugDeckungsSignalBild
+    {
+        Off = 0,
+        Hp0 = 1
+    };
+
     enum class HauptSignalBild
     {
         Off = 0,

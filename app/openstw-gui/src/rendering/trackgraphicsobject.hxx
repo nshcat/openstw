@@ -11,6 +11,9 @@ namespace Rendering
     {
         Q_OBJECT
     public:
+        constexpr static qreal trackWidth = 16.f;
+
+    public:
         TrackGraphicsObject(TileGraphicsObject* parent);
 
     public:
