@@ -23,8 +23,8 @@ namespace Openstw::Simulation
 
     public: // == Public interface
         const GridPosition& position() const;
-        bool hasSignal() const;
-        Signal& signal();
+        bool hasSignal(const TileElementDirection direction) const;
+        Signal& signal(const TileElementDirection direction);
         bool hasTrack() const;
         TrackState trackState() const;
 
@@ -49,8 +49,8 @@ namespace Openstw::Simulation
 
     protected:
         GridPosition m_position{};
-        std::optional<Signal> m_signal{}; //< Signal in this tile. Can be a combination of Haupt- and Vorsignal,
-                                          //  and can include a Rangiersignal.
+        std::optional<Signal> m_forwardSignal{};  //< Signal for traffic going left to right
+        std::optional<Signal> m_backwardSignal{}; //< Signal for traffic from right to left
 
         // XXX The following are just placeholder members to test out the
         // the architecture of the rendering system

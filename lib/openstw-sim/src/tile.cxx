@@ -6,14 +6,22 @@ namespace Openstw::Simulation
     {
     }
 
-    bool Tile::hasSignal() const
+    bool Tile::hasSignal(const TileElementDirection direction) const
     {
-        return this->m_signal.has_value();
+        if (direction == TileElementDirection::Forward)
+            return this->m_forwardSignal.has_value();
+        else
+            return this->m_backwardSignal.has_value();
     }
 
-    Signal& Tile::signal()
+    Signal& Tile::signal(const TileElementDirection direction)
     {
-        return this->m_signal.value();
+        auto& signal = (direction == TileElementDirection::Forward) ? this->m_forwardSignal : this->m_backwardSignal;
+
+        if (!signal.has_value())
+            throw std::runtime_error("Tile doesnt contain signal in given direction");
+
+        return signal.value();
     }
 
     bool Tile::hasTrack() const
