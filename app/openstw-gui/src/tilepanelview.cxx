@@ -56,7 +56,7 @@ Openstw::Simulation::TilePanel *TilePanelView::tilePanel() const
 
 void TilePanelView::resetSceneRect()
 {
-    this->setSceneRect(QRectF{0.0f, 0.0f, (qreal)this->width(), (qreal)this->height()});
+    this->setSceneRect(this->m_scene->sceneRect());
 }
 
 void TilePanelView::mousePressEvent(QMouseEvent* event)

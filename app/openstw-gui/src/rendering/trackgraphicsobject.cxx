@@ -1,6 +1,7 @@
 #include <QPainter>
 
 #include "../tilegraphicsobject.hxx"
+#include "renderinghelpers.hxx"
 #include "tilerenderingconstants.hxx"
 #include "trackgraphicsobject.hxx"
 
@@ -30,30 +31,12 @@ namespace Rendering
         if (!this->m_tile->hasTrack())
             return;
 
-        painter->save();
+        const auto boundingRect = this->boundingRect();
 
-        painter->translate(TileRenderingConstants::halfTileWidth, TileRenderingConstants::halfTileHeight);
-        painter->rotate(TileRenderingConstants::tileDiagonalAngle);
-        painter->translate(-TileRenderingConstants::halfTileWidth, -TileRenderingConstants::halfTileHeight);
-
-        painter->setPen(Qt::NoPen);
         painter->setBrush(Qt::black);
-        painter->drawRect(QRectF{-40.0f, TileRenderingConstants::halfTileHeight - 8.0f,
-                                 TileRenderingConstants::tileWidth + 80, 16.0f});
-
-        painter->restore();
-
-        painter->save();
-
-        painter->translate(TileRenderingConstants::halfTileWidth, TileRenderingConstants::halfTileHeight);
-        painter->rotate(-TileRenderingConstants::tileDiagonalAngle);
-        painter->translate(-TileRenderingConstants::halfTileWidth, -TileRenderingConstants::halfTileHeight);
-
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(Qt::black);
-        painter->drawRect(QRectF{-40.0f, TileRenderingConstants::halfTileHeight - 8.0f,
-                                 TileRenderingConstants::tileWidth + 80, 16.0f});
-
-        painter->restore();
+        painter->setPen(rectanglePen(Qt::black, 1.0f));
+        painter->drawRect(adjustRectForBorder(
+            QRectF{boundingRect.left(), boundingRect.top(), boundingRect.width(), TrackGraphicsObject::trackThickness},
+            1.0f));
     }
 }

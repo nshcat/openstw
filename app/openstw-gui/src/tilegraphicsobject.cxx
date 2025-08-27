@@ -1,4 +1,5 @@
 #include "tilegraphicsobject.hxx"
+#include "rendering/renderinghelpers.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include <QGraphicsScene>
 #include <QPainter>
@@ -31,22 +32,14 @@ void TileGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem
     QColor backgroundBorderColor = QColor{0x3e, 0x3e, 0x3e};
 
     painter->setBrush(QBrush{backgroundColor});
-
-    auto borderPen = QPen{backgroundBorderColor, Rendering::TileRenderingConstants::borderThickness};
-    borderPen.setJoinStyle(Qt::PenJoinStyle::MiterJoin);
-    painter->setPen(borderPen);
+    painter->setPen(Rendering::rectanglePen(backgroundBorderColor, Rendering::TileRenderingConstants::borderThickness));
 
     // Qt renders rectangles in such a way that the outline stroke is centered on the 'ideal'
     // rectangles outline, thus the stroke extends 'outside' our bounding box.
     // We can fix this by making the rectangle smaller by the amount of expected overdraw, shrinking
     // it to lie entirely inside our bounding box.
-    const auto boundingRect = this->boundingRect();
-    const QRectF tileBackgroundRect{boundingRect.left() + Rendering::TileRenderingConstants::borderThickness / 2.0f,
-                                    boundingRect.top() + Rendering::TileRenderingConstants::borderThickness / 2.0f,
-                                    boundingRect.width() - Rendering::TileRenderingConstants::borderThickness,
-                                    boundingRect.height() - Rendering::TileRenderingConstants::borderThickness};
-
-    painter->drawRect(tileBackgroundRect);
+    painter->drawRect(
+        Rendering::adjustRectForBorder(this->boundingRect(), Rendering::TileRenderingConstants::borderThickness));
 }
 
 void TileGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent* event)
