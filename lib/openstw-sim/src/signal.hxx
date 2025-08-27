@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <optional>
+#include <pugixml.hpp>
 #include <string>
 
 #include "enums.hxx"
@@ -16,8 +17,10 @@ namespace Openstw::Simulation
      */
     class Signal
     {
-    public:
+    protected:
         Signal();
+
+    public:
         ~Signal() = default;
 
         // No copy allowed
@@ -26,6 +29,9 @@ namespace Openstw::Simulation
 
         Signal(Signal&&) = default;
         Signal& operator=(Signal&&) = default;
+
+    public:
+        static Signal CreateFrom(const pugi::xml_node&);
 
     public:
         TileElementDirection direction() const;

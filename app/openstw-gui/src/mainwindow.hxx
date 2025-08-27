@@ -1,10 +1,9 @@
 #pragma once
 
+#include "tilepanelview.hxx"
 #include <QMainWindow>
 #include <QVBoxLayout>
-#include <tilepanel.hxx>
-
-#include "tilepanelview.hxx"
+#include <simulation.hxx>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -25,5 +24,5 @@ private:
     Ui::MainWindow* ui;
     QVBoxLayout* m_layout{};
     TilePanelView* m_tilePanelView{};
-    Openstw::Simulation::TilePanel m_tilePanel;
+    Openstw::Simulation::Simulation m_simulation;
 };

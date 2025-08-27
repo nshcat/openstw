@@ -36,6 +36,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 
         src/rendering/tilecomponentgraphicsobject.hxx src/rendering/tilecomponentgraphicsobject.cxx
         src/rendering/trackgraphicsobject.hxx src/rendering/trackgraphicsobject.cxx
+        data/sim_template.xml
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -78,6 +79,11 @@ install(TARGETS openstw-gui
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+add_custom_command(
+        TARGET openstw-gui POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/data/sim_template.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/sim_template.xml)
 
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)

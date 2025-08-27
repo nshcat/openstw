@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulation>
+    <TilePanel width="7" height="4">
+        <Tile x="0" y="2">
+            <Track></Track>
+        </Tile>
+        <Tile x="1" y="2">
+            <Track></Track>
+        </Tile>
+        <Tile x="2" y="2">
+            <Track></Track>
+        </Tile>
+        <Tile x="3" y="2">
+            <Track></Track>
+            <ForwardSignal name="H100">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+
+                <SecondarySignalSchirm type="VorSignalSchirm">
+                </SecondarySignalSchirm>
+            </ForwardSignal>
+
+            <BackwardSignal name="Hv200">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                    <KennLicht/>
+                </PrimarySignalSchirm>
+            </BackwardSignal>
+        </Tile>
+        <Tile x="4" y="2">
+            <Track></Track>
+        </Tile>
+        <Tile x="5" y="2">
+            <Track></Track>
+        </Tile>
+        <Tile x="6" y="2">
+            <Track></Track>
+        </Tile>
+    </TilePanel>
+</Simulation>
+

@@ -7,6 +7,13 @@ namespace Openstw::Simulation
     {
     }
 
+    std::unique_ptr<ISignalSchirm> VorSignalSchirm::CreateFrom(const pugi::xml_node& node)
+    {
+        const auto hasKennLicht = (bool)node.child("KennLicht");
+
+        return std::make_unique<VorSignalSchirm>(hasKennLicht);
+    }
+
     FlagField<SignalBildType> VorSignalSchirm::supportedSignalBilder() const
     {
         return {SignalBildType::VorSignal};

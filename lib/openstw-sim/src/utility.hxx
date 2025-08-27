@@ -1,10 +1,22 @@
 #pragma once
 
 #include <initializer_list>
+#include <memory>
 #include <type_traits>
 
 namespace Openstw::Simulation
 {
+    template <class T, class U> std::unique_ptr<T> dynamic_pointer_cast(std::unique_ptr<U>&& r) noexcept
+    {
+        (void)dynamic_cast<T*>(static_cast<U*>(0));
+
+        T* p = dynamic_cast<T*>(r.get());
+
+        if (p)
+            r.release();
+        return std::unique_ptr<T>(p);
+    }
+
     struct GridPosition
     {
         GridPosition() = default;

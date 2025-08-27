@@ -2,6 +2,8 @@
 
 #include "enums.hxx"
 #include "utility.hxx"
+#include <memory>
+#include <pugixml.hpp>
 
 namespace Openstw::Simulation
 {
@@ -13,6 +15,9 @@ namespace Openstw::Simulation
     public:
         ISignalSchirm();
         virtual ~ISignalSchirm();
+
+    public:
+        static std::unique_ptr<ISignalSchirm> CreateFrom(const pugi::xml_node&);
 
     public:
         virtual FlagField<SignalBildType> supportedSignalBilder() const = 0;

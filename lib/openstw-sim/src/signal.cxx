@@ -1,9 +1,55 @@
 #include "signal.hxx"
+#include "utility.hxx"
+#include <boost/smart_ptr.hpp>
 
 namespace Openstw::Simulation
 {
     Signal::Signal()
     {
+    }
+
+    Signal Signal::CreateFrom(const pugi::xml_node& root)
+    {
+        Signal signal{};
+
+        // == Direction
+        TileElementDirection signalDirection{TileElementDirection::Forward};
+        if (root.name() == std::string{"BackwardSignal"})
+            signalDirection = TileElementDirection::Backward;
+
+        signal.m_direction = signalDirection;
+        // ==
+
+        // == Attributes
+        const std::string signalName{root.attribute("name").as_string()};
+        signal.m_signalName = signalName;
+        // ==
+
+        // == Primary Signalschirm
+        const auto primarySignalSchirmNode = root.child("PrimarySignalSchirm");
+        if (!primarySignalSchirmNode)
+            throw std::runtime_error("Signal XML node contains not primary Signalschirm child node");
+
+        signal.m_primarySchirm = ISignalSchirm::CreateFrom(primarySignalSchirmNode);
+        // ==
+
+        // == Secondary Signalschirm
+        const auto secondarySignalSchirmNode = root.child("SecondarySignalSchirm");
+        if (secondarySignalSchirmNode)
+        {
+            if (secondarySignalSchirmNode.attribute("type").as_string() != std::string{"VorSignalSchirm"})
+                throw std::runtime_error("Secondary Signalschirm in Signal XML node was not a VorSignalSchirm");
+
+            auto secondarySignalSchirm =
+                dynamic_pointer_cast<VorSignalSchirm>(ISignalSchirm::CreateFrom(secondarySignalSchirmNode));
+            if (!secondarySignalSchirm)
+                throw std::runtime_error("Secondary Signalschirm in Signal XML node was not a VorSignalSchirm");
+
+            signal.m_secondarySchirm = std::move(secondarySignalSchirm);
+        }
+        // ==
+
+        return signal;
     }
 
     TileElementDirection Signal::direction() const

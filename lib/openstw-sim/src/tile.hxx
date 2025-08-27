@@ -18,8 +18,16 @@ namespace Openstw::Simulation
     public:
         using changed_event_t = boost::signals2::signal<void()>;
 
-    public: 
+    public:
         Tile();
+        Tile(const Tile&) = delete;
+        Tile& operator=(const Tile&) = delete;
+
+        Tile(Tile&&) = default;
+        Tile& operator=(Tile&&) = default;
+
+    public:
+        static Tile CreateFrom(const pugi::xml_node&);
 
     public: // == Public interface
         const GridPosition& position() const;

@@ -9,6 +9,14 @@ namespace Openstw::Simulation
     {
     }
 
+    std::unique_ptr<ISignalSchirm> HauptSignalSchirm::CreateFrom(const pugi::xml_node& node)
+    {
+        const auto hasKennLicht = (bool)node.child("KennLicht");
+        const auto hasRangierBild = (bool)node.child("RangierSignal");
+
+        return std::make_unique<HauptSignalSchirm>(hasRangierBild, hasKennLicht);
+    }
+
     FlagField<SignalBildType> HauptSignalSchirm::supportedSignalBilder() const
     {
         FlagField<SignalBildType> supportedBilder{SignalBildType::HauptSignal};

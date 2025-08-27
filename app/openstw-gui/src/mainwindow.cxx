@@ -1,10 +1,10 @@
 #include "mainwindow.hxx"
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow), m_tilePanel{8, 4}
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow),
+      m_simulation{Openstw::Simulation::Simulation::FromTemplateFile("sim_template.xml")}
 {
-    this->m_tilePanel[2, 1].setHasTrack(true);
-
     ui->setupUi(this);
 
     this->m_tilePanelView = new TilePanelView();
@@ -12,9 +12,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->m_layout = new QVBoxLayout();
     this->m_layout->addWidget(this->m_tilePanelView);
     this->ui->centralwidget->setLayout(this->m_layout);
-
-    // XXX pass actual tile panel instance ptr
-    this->m_tilePanelView->setTilePanel(&this->m_tilePanel);
+    this->m_tilePanelView->setTilePanel(this->m_simulation.tilePanel());
 }
 
 MainWindow::~MainWindow()
