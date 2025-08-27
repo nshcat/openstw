@@ -2,6 +2,18 @@
 
 namespace Openstw::Simulation
 {
+    /**
+     * @brief Somewhat arbitrary labeling of the direction a tile
+     * element is facing. We assign elements that are meant for traffic going
+     * from left to right the label 'forward', and ones that go in the other
+     * direction the label 'backward'.
+     */
+    enum class TileElementDirection
+    {
+        Forward = 0, //< Left to right
+        Backward = 1 //< Right to left
+    };
+
     enum class SignalBildType
     {
         None = 0,

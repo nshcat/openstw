@@ -6,6 +6,11 @@ namespace Openstw::Simulation
     {
     }
 
+    TileElementDirection Signal::direction() const
+    {
+        return this->m_direction;
+    }
+
     bool Signal::isBlockSignal() const
     {
         return m_isBlockSignal;
@@ -24,5 +29,23 @@ namespace Openstw::Simulation
     const std::string& Signal::name() const
     {
         return m_signalName;
+    }
+
+    ISignalSchirm* Signal::primarySignalSchirm()
+    {
+        return this->m_primarySchirm.get();
+    }
+
+    bool Signal::hasSecondarySignalSchirm() const
+    {
+        return this->m_secondarySchirm.has_value();
+    }
+
+    VorSignalSchirm* Signal::secondarySignalSchirm()
+    {
+        if (!this->hasSecondarySignalSchirm())
+            throw std::runtime_error("Signal has no secondary Signalschirm");
+
+        return this->m_secondarySchirm.value().get();
     }
 }

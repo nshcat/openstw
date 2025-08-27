@@ -12,6 +12,7 @@ namespace Openstw::Simulation
     {
     public:
         ISignalSchirm();
+        virtual ~ISignalSchirm();
 
     public:
         virtual FlagField<SignalBildType> supportedSignalBilder() const = 0;

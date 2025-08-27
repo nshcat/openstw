@@ -4,7 +4,8 @@
 
 namespace Openstw::Simulation
 {
-    HauptSignalSchirm::HauptSignalSchirm()
+    HauptSignalSchirm::HauptSignalSchirm(bool hasRangierBild, bool hasKennLicht)
+        : m_hasRangierBild{hasRangierBild}, m_hasKennLicht{hasKennLicht}
     {
     }
 
@@ -45,5 +46,36 @@ namespace Openstw::Simulation
     KennLichtState HauptSignalSchirm::kennLichtState() const
     {
         return this->m_kennLichtState;
+    }
+
+    void HauptSignalSchirm::setHauptSignalBild(const HauptSignalBild bild)
+    {
+        this->m_hauptSignalBild = bild;
+    }
+
+    void HauptSignalSchirm::setVorSignalBild(const VorSignalBild bild)
+    {
+        throw std::runtime_error("Not implemented for Hauptsignal");
+    }
+
+    void HauptSignalSchirm::setRangierSignalBild(const RangierSignalBild bild)
+    {
+        if (!this->m_hasRangierBild)
+            throw std::runtime_error("This Hauptsignal does not support a Rangiersignalbild");
+
+        this->m_rangierSignalBild = bild;
+    }
+
+    void HauptSignalSchirm::setZugDeckungsSignalBild(const ZugDeckungsSignalBild bild)
+    {
+        throw std::runtime_error("Not implemented for Hauptsignal");
+    }
+
+    void HauptSignalSchirm::setKennLichtState(const KennLichtState state)
+    {
+        if (!this->m_hasKennLicht)
+            throw std::runtime_error("This Hauptsignal does not have a Kennlicht");
+
+        this->m_kennLichtState = state;
     }
 }

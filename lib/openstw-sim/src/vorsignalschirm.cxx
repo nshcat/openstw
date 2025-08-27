@@ -3,7 +3,7 @@
 
 namespace Openstw::Simulation
 {
-    VorSignalSchirm::VorSignalSchirm()
+    VorSignalSchirm::VorSignalSchirm(bool hasKennLicht) : m_hasKennLicht{hasKennLicht}
     {
     }
 
@@ -40,5 +40,33 @@ namespace Openstw::Simulation
     KennLichtState VorSignalSchirm::kennLichtState() const
     {
         return this->m_kennLichtState;
+    }
+
+    void VorSignalSchirm::setHauptSignalBild(const HauptSignalBild bild)
+    {
+        throw std::runtime_error("Not implemented vor Vorsignal");
+    }
+
+    void VorSignalSchirm::setVorSignalBild(const VorSignalBild bild)
+    {
+        this->m_vorSignalBild = bild;
+    }
+
+    void VorSignalSchirm::setRangierSignalBild(const RangierSignalBild bild)
+    {
+        throw std::runtime_error("Not implemented vor Vorsignal");
+    }
+
+    void VorSignalSchirm::setZugDeckungsSignalBild(const ZugDeckungsSignalBild bild)
+    {
+        throw std::runtime_error("Not implemented vor Vorsignal");
+    }
+
+    void VorSignalSchirm::setKennLichtState(const KennLichtState state)
+    {
+        if (!this->m_hasKennLicht)
+            throw std::runtime_error("This Vorsignal does not have a Kennlich");
+
+        this->m_kennLichtState = state;
     }
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+#include <optional>
 #include <string>
 
 #include "enums.hxx"
@@ -16,17 +18,32 @@ namespace Openstw::Simulation
     {
     public:
         Signal();
+        ~Signal() = default;
+
+        // No copy allowed
+        Signal(const Signal&) = delete;
+        Signal& operator=(const Signal&) = delete;
+
+        Signal(Signal&&) = default;
+        Signal& operator=(Signal&&) = default;
 
     public:
+        TileElementDirection direction() const;
         bool isBlockSignal() const;
         BlockSignalType blockSignalType() const;
         bool hasConnector() const;
         const std::string& name() const;
 
-        // XXX This needs to always have a primaty ISignalSchirm, and an optional secondary one
+        ISignalSchirm* primarySignalSchirm();
+        bool hasSecondarySignalSchirm() const;
+        VorSignalSchirm* secondarySignalSchirm();
 
     protected:
+        TileElementDirection m_direction{TileElementDirection::Forward};
         std::string m_signalName{""};
+
+        std::unique_ptr<ISignalSchirm> m_primarySchirm{};
+        std::optional<std::unique_ptr<VorSignalSchirm>> m_secondarySchirm{}; //< Always is a Vorsignal
 
         bool m_isBlockSignal{false};
         BlockSignalType m_blockSignalType{BlockSignalType::SelbstBlock};

@@ -5,4 +5,8 @@ namespace Openstw::Simulation
     ISignalSchirm::ISignalSchirm()
     {
     }
+
+    ISignalSchirm::~ISignalSchirm()
+    {
+    }
 }
