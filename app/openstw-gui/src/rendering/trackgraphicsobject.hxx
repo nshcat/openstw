@@ -10,6 +10,7 @@ namespace Rendering
     class TrackGraphicsObject : public Rendering::TileComponentGraphicsObject
     {
         Q_OBJECT
+
     public:
         constexpr static qreal trackThickness = 16.f;
         constexpr static qreal trackIndicatorHeight = 6.0f;

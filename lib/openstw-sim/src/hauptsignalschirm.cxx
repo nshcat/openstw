@@ -17,6 +17,11 @@ namespace Openstw::Simulation
         return std::make_unique<HauptSignalSchirm>(hasRangierBild, hasKennLicht);
     }
 
+    SignalSchirmType HauptSignalSchirm::type() const
+    {
+        return SignalSchirmType::HauptSignal;
+    }
+
     FlagField<SignalBildType> HauptSignalSchirm::supportedSignalBilder() const
     {
         FlagField<SignalBildType> supportedBilder{SignalBildType::HauptSignal};

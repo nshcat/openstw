@@ -30,7 +30,7 @@ namespace Rendering
     {
         // Always clip to the bounding rectangle to make painting diagonal items
         // easier (by being able to use rotated rectangles)
-        painter->setClipRect(this->boundingRect());
+        // painter->setClipRect(this->boundingRect());
 
         // Enable antialiasing
         painter->setRenderHint(QPainter::Antialiasing);

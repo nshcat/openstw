@@ -41,8 +41,10 @@ namespace Openstw::Simulation
         const std::string& name() const;
 
         ISignalSchirm* primarySignalSchirm();
+        const ISignalSchirm* primarySignalSchirm() const;
         bool hasSecondarySignalSchirm() const;
         VorSignalSchirm* secondarySignalSchirm();
+        const VorSignalSchirm* secondarySignalSchirm() const;
 
     protected:
         TileElementDirection m_direction{TileElementDirection::Forward};

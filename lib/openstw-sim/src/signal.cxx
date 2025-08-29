@@ -82,12 +82,25 @@ namespace Openstw::Simulation
         return this->m_primarySchirm.get();
     }
 
+    const ISignalSchirm* Signal::primarySignalSchirm() const
+    {
+        return this->m_primarySchirm.get();
+    }
+
     bool Signal::hasSecondarySignalSchirm() const
     {
         return this->m_secondarySchirm.has_value();
     }
 
     VorSignalSchirm* Signal::secondarySignalSchirm()
+    {
+        if (!this->hasSecondarySignalSchirm())
+            throw std::runtime_error("Signal has no secondary Signalschirm");
+
+        return this->m_secondarySchirm.value().get();
+    }
+
+    const VorSignalSchirm* Signal::secondarySignalSchirm() const
     {
         if (!this->hasSecondarySignalSchirm())
             throw std::runtime_error("Signal has no secondary Signalschirm");

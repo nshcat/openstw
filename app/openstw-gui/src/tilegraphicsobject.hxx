@@ -3,6 +3,7 @@
 #include <QGraphicsObject>
 #include <tile.hxx>
 
+#include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
 
@@ -44,4 +45,6 @@ protected:
 
 protected: // == Component renderers
     Rendering::TrackGraphicsObject* m_trackRenderer;
+    Rendering::SignalGraphicsObject* m_fwdSignalRenderer;
+    Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;
 };

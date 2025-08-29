@@ -57,4 +57,14 @@ void TileGraphicsObject::createComponentRenderers()
     this->m_trackRenderer = new Rendering::TrackGraphicsObject{this};
     this->m_trackRenderer->setup();
     this->scene()->addItem(this->m_trackRenderer);
+
+    this->m_bkwdSignalRenderer =
+        new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Backward};
+    this->m_bkwdSignalRenderer->setup();
+    this->scene()->addItem(this->m_bkwdSignalRenderer);
+
+    this->m_fwdSignalRenderer =
+        new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Forward};
+    this->m_fwdSignalRenderer->setup();
+    this->scene()->addItem(this->m_fwdSignalRenderer);
 }

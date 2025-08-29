@@ -34,7 +34,7 @@ namespace Openstw::Simulation
         Off = 0,
         Hp0 = 1,
         Hp1 = 2,
-        Hp2 = 3
+        // Hp2 = 3
     };
 
     enum class VorSignalBild
@@ -42,7 +42,7 @@ namespace Openstw::Simulation
         Off = 0,
         Vr0 = 1,
         Vr1 = 2,
-        Vr2 = 3
+        // Vr2 = 3
     };
 
     enum class RangierSignalBild

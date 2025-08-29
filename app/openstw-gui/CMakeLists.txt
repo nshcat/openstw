@@ -24,6 +24,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
     qt_add_executable(openstw-gui
         MANUAL_FINALIZATION
@@ -38,6 +39,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/rendering/trackgraphicsobject.hxx src/rendering/trackgraphicsobject.cxx
         data/sim_template.xml
         src/rendering/renderinghelpers.hxx src/rendering/renderinghelpers.cxx
+        src/rendering/signalgraphicsobject.hxx src/rendering/signalgraphicsobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -89,6 +91,7 @@ add_custom_command(
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 

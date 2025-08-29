@@ -8,6 +8,15 @@
 namespace Openstw::Simulation
 {
     /**
+     * @brief Enum that describes all the subclasses of ISignalSchirm
+     */
+    enum SignalSchirmType
+    {
+        HauptSignal = 0,
+        VorSignal = 1
+    };
+
+    /**
      * @brief Base interface for a single Signalschirm on a Signal
      */
     class ISignalSchirm
@@ -20,6 +29,8 @@ namespace Openstw::Simulation
         static std::unique_ptr<ISignalSchirm> CreateFrom(const pugi::xml_node&);
 
     public:
+        virtual SignalSchirmType type() const = 0;
+
         virtual FlagField<SignalBildType> supportedSignalBilder() const = 0;
 
         virtual HauptSignalBild hauptSignalBild() const = 0;

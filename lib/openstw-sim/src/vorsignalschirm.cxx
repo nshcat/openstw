@@ -14,6 +14,11 @@ namespace Openstw::Simulation
         return std::make_unique<VorSignalSchirm>(hasKennLicht);
     }
 
+    SignalSchirmType VorSignalSchirm::type() const
+    {
+        return SignalSchirmType::VorSignal;
+    }
+
     FlagField<SignalBildType> VorSignalSchirm::supportedSignalBilder() const
     {
         return {SignalBildType::VorSignal};

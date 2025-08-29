@@ -44,11 +44,11 @@ namespace Rendering
 
     void TrackGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
-        // Base class method call sets up clipping region
-        TileComponentGraphicsObject::paint(painter, option, widget);
-
         if (!this->m_tile->hasTrack())
             return;
+
+        // Base class method call sets up clipping region
+        TileComponentGraphicsObject::paint(painter, option, widget);
 
         const auto& track = this->m_tile->track();
 

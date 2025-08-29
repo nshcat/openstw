@@ -29,6 +29,7 @@ BraceWrapping:
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBraces: Allman
+IndentCaseBlocks: true
 NamespaceIndentation: All
 IndentAccessModifiers: false
 AccessModifierOffset: -4

@@ -5,7 +5,11 @@
             <Track></Track>
         </Tile>
         <Tile x="1" y="2">
-            <Track></Track>
+            <Track></Track>          
+            <ForwardSignal name="Hv100">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
         </Tile>
         <Tile x="2" y="2">
             <Track></Track>
@@ -31,6 +35,13 @@
         </Tile>
         <Tile x="5" y="2">
             <Track></Track>
+
+            <ForwardSignal name="H101">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                    <KennLicht/>
+                    <RangierSignal/>
+                </PrimarySignalSchirm>
+            </ForwardSignal>
         </Tile>
         <Tile x="6" y="2">
             <Track></Track>

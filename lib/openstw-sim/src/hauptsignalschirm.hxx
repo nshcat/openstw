@@ -14,6 +14,7 @@ namespace Openstw::Simulation
         static std::unique_ptr<ISignalSchirm> CreateFrom(const pugi::xml_node&);
 
     public: // == ISignalSchirm interface implementation
+        virtual SignalSchirmType type() const override;
         virtual FlagField<SignalBildType> supportedSignalBilder() const override;
         virtual HauptSignalBild hauptSignalBild() const override;
         virtual VorSignalBild vorSignalBild() const override;
