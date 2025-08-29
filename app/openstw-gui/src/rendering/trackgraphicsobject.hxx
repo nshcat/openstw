@@ -12,6 +12,8 @@ namespace Rendering
         Q_OBJECT
     public:
         constexpr static qreal trackThickness = 16.f;
+        constexpr static qreal trackIndicatorHeight = 6.0f;
+        constexpr static qreal trackIndicatorWidth = 64.0f;
 
     public:
         TrackGraphicsObject(TileGraphicsObject* parent);
@@ -22,6 +24,9 @@ namespace Rendering
 
     protected:
         virtual void positionSelf() override;
+
+    protected:
+        static QColor colorForTrackState(const Openstw::Simulation::TrackState);
     };
 
 } // namespace Rendering

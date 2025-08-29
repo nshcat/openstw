@@ -18,4 +18,10 @@ namespace Rendering
      * corner rounding.
      */
     QPen rectanglePen(const QColor color, const qreal borderThickness);
+
+    /**
+     * @brief Centers an object within a containing object in one dimension. For 2D objects,
+     * use this function on both the x and y coordinate with appropiate values.
+     */
+    qreal centerWithin(qreal objectLength, qreal containerLength, qreal containerPosition);
 }

@@ -24,7 +24,7 @@ namespace Openstw::Simulation
         const auto trackNode = root.child("Track");
         if (trackNode)
         {
-            tile.m_hasTrack = true;
+            tile.m_track = TrackSegment::CreateFrom(trackNode);
         }
         // ==
 
@@ -65,22 +65,15 @@ namespace Openstw::Simulation
 
     bool Tile::hasTrack() const
     {
-        return m_hasTrack;
+        return this->m_track.has_value();
     }
 
-    void Tile::setHasTrack(bool newHasTrack)
+    TrackSegment& Tile::track()
     {
-        m_hasTrack = newHasTrack;
-    }
+        if (!this->m_track.has_value())
+            throw std::runtime_error("Tile doesnt contain track segment");
 
-    TrackState Tile::trackState() const
-    {
-        return m_trackState;
-    }
-
-    void Tile::setTrackState(TrackState newTrackState)
-    {
-        m_trackState = newTrackState;
+        return this->m_track.value();
     }
 
     void Tile::setPosition(const GridPosition& newPosition)

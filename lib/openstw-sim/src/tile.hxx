@@ -4,8 +4,9 @@
 
 #include <boost/signals2.hpp>
 
-#include <signal.hxx>
-#include <utility.hxx>
+#include "signal.hxx"
+#include "tracksegment.hxx"
+#include "utility.hxx"
 
 namespace Openstw::Simulation
 {
@@ -34,11 +35,7 @@ namespace Openstw::Simulation
         bool hasSignal(const TileElementDirection direction) const;
         Signal& signal(const TileElementDirection direction);
         bool hasTrack() const;
-        TrackState trackState() const;
-
-        // XXX Setters are for testing only for now
-        void setHasTrack(bool newHasTrack);
-        void setTrackState(TrackState newTrackState);
+        TrackSegment& track();
 
     public: // == Signals
         /**
@@ -60,9 +57,6 @@ namespace Openstw::Simulation
         std::optional<Signal> m_forwardSignal{};  //< Signal for traffic going left to right
         std::optional<Signal> m_backwardSignal{}; //< Signal for traffic from right to left
 
-        // XXX The following are just placeholder members to test out the
-        // the architecture of the rendering system
-        bool m_hasTrack{false};
-        TrackState m_trackState{TrackState::Inactive};
+        std::optional<TrackSegment> m_track{};
     };
 }
