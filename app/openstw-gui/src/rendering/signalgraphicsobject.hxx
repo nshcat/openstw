@@ -20,7 +20,7 @@ namespace Rendering
         Q_OBJECT
 
     public:
-        constexpr static qreal signalToBorderPadding = 25.0f;
+        constexpr static qreal signalToBorderPadding = 20.0f;
         constexpr static QColor kennLichtColor{0xFE, 0xFF, 0x7F};
         constexpr static QColor inactiveLampColor{0x23, 0x23, 0x23};
         constexpr static qreal inactiveLampDiameter = 11.0f;
@@ -40,6 +40,8 @@ namespace Rendering
         virtual void positionSelf() override;
 
     protected:
+        void drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color, const qreal diameter) const;
+
         QSizeF measureHauptSignal(HauptSignalRenderingStyle style,
                                   const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm);
         void drawHauptSignal(QPainter* painter, HauptSignalRenderingStyle style,

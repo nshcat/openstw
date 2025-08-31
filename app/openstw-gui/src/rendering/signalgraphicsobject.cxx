@@ -40,6 +40,20 @@ namespace Rendering
         }
     }
 
+    void SignalGraphicsObject::drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color,
+                                              const qreal diameter) const
+    {
+        painter->save();
+
+        QRectF lampRect{centerWithin(diameter, location.width(), location.left()),
+                        centerWithin(diameter, location.height(), location.top()), diameter, diameter};
+
+        painter->setBrush(color);
+        painter->setPen(Qt::NoPen);
+        painter->drawEllipse(lampRect);
+        painter->restore();
+    }
+
     QSizeF SignalGraphicsObject::measureHauptSignal(HauptSignalRenderingStyle style,
                                                     const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm)
     {
@@ -53,13 +67,16 @@ namespace Rendering
         // (Rangiersignalbild is not supported here XXX does it need to be?)
         if (style == HauptSignalRenderingStyle::Normal)
         {
-            // 20 pixels extra for each extra lamp..
-            if (hauptSignalSchirm->hasKennLicht())
+            const auto hasRangierLamp =
+                hauptSignalSchirm->supportedSignalBilder().has(Openstw::Simulation::SignalBildType::RangierSignal);
+
+            // We always leave the space for the kennlicht if we have a rangier lamp, even if its not installed
+            if (hauptSignalSchirm->hasKennLicht() || hasRangierLamp)
             {
                 signalWidth += SignalGraphicsObject::activeLampDiameter + (0.66f * activeLampDiameter);
             }
 
-            if (hauptSignalSchirm->supportedSignalBilder().has(Openstw::Simulation::SignalBildType::RangierSignal))
+            if (hasRangierLamp)
             {
                 signalWidth += SignalGraphicsObject::activeLampDiameter + (0.66f * activeLampDiameter);
             }
@@ -83,54 +100,88 @@ namespace Rendering
         const auto kennLichtOn =
             hasKennLicht && (hauptSignalSchirm->kennLichtState() == Openstw::Simulation::KennLichtState::On);
 
+        // ==== Draw signal lamps
+        constexpr qreal spaceForLamp = SignalGraphicsObject::activeLampDiameter;
+        constexpr qreal paddingBetweenLamps = 0.66f * spaceForLamp;
+        const qreal lampYPos = centerWithin(spaceForLamp, location.height(), location.top());
+
+        qreal currentXPos = location.right() - signalLampPadding - spaceForLamp;
+
         // == Green lamp
         const auto greenLampOn = (hauptSignalBild == Openstw::Simulation::HauptSignalBild::Hp1);
         const auto greenLampDiameter =
             (greenLampOn ? SignalGraphicsObject::activeLampDiameter : SignalGraphicsObject::inactiveLampDiameter);
+        const auto greenLampColor = greenLampOn ? QColor{Qt::green} : SignalGraphicsObject::inactiveLampColor;
 
-        painter->setBrush(greenLampOn ? Qt::green : SignalGraphicsObject::inactiveLampColor);
-        painter->setPen(Qt::NoPen);
+        this->drawSignalLamp(painter, QRectF{currentXPos, lampYPos, spaceForLamp, spaceForLamp}, greenLampColor,
+                             greenLampDiameter);
 
-        qreal xPosRelGreen = SignalGraphicsObject::activeLampDiameter + signalLampPadding;
-        if (!greenLampOn)
-            xPosRelGreen -=
-                (SignalGraphicsObject::activeLampDiameter - SignalGraphicsObject::inactiveLampDiameter) / 2.0f;
+        // == Red lamp
+        currentXPos -= paddingBetweenLamps + spaceForLamp;
 
-        painter->drawEllipse(QRectF{location.right() - xPosRelGreen,
-                                    centerWithin(greenLampDiameter, location.height(), location.top()),
-                                    greenLampDiameter, greenLampDiameter});
-
-        // == Red lamp / Kennlicht (if in compact mode)
         const auto redLampOn =
             (hauptSignalBild == Openstw::Simulation::HauptSignalBild::Hp0 || (isCompact && kennLichtOn));
-
         auto redLampColor = SignalGraphicsObject::inactiveLampColor;
         auto redLampDiameter = SignalGraphicsObject::inactiveLampDiameter;
-        auto redLampActive = false;
         if (isCompact && kennLichtOn)
         {
             redLampColor = SignalGraphicsObject::kennLichtColor;
             redLampDiameter = SignalGraphicsObject::activeLampDiameter;
-            redLampActive = true;
         }
         else if (redLampOn)
         {
             redLampColor = Qt::red;
             redLampDiameter = SignalGraphicsObject::activeLampDiameter;
-            redLampActive = true;
         }
 
-        painter->setBrush(redLampColor);
-        painter->setPen(Qt::NoPen);
+        this->drawSignalLamp(painter, QRectF{currentXPos, lampYPos, spaceForLamp, spaceForLamp}, redLampColor,
+                             redLampDiameter);
 
-        qreal xPosRelRed = SignalGraphicsObject::activeLampDiameter + signalLampPadding;
-        if (!redLampActive)
-            xPosRelRed -=
-                (SignalGraphicsObject::activeLampDiameter - SignalGraphicsObject::inactiveLampDiameter) / 2.0f;
+        // == Kennlicht lamp
+        if (!isCompact && hasKennLicht)
+        {
+            currentXPos -= paddingBetweenLamps + spaceForLamp;
 
-        painter->drawEllipse(QRectF{location.right() - (1.66f * SignalGraphicsObject::activeLampDiameter) - xPosRelRed,
-                                    centerWithin(redLampDiameter, location.height(), location.top()), redLampDiameter,
-                                    redLampDiameter});
+            const auto kennLichtDiameter = (kennLichtOn ? SignalGraphicsObject::activeKennLampDiameter
+                                                        : SignalGraphicsObject::inactiveKennLampDiameter);
+            const auto kennLichtColor =
+                kennLichtOn ? SignalGraphicsObject::kennLichtColor : SignalGraphicsObject::inactiveLampColor;
+
+            this->drawSignalLamp(painter, QRectF{currentXPos, lampYPos, spaceForLamp, spaceForLamp}, kennLichtColor,
+                                 kennLichtDiameter);
+        }
+
+        // == Rangiersignal diagonal lamp
+        const auto hasRangierLamp =
+            hauptSignalSchirm->supportedSignalBilder().has(Openstw::Simulation::SignalBildType::RangierSignal);
+        if (!isCompact && hasRangierLamp)
+        {
+            currentXPos -= paddingBetweenLamps + spaceForLamp;
+
+            // If we did not render a kennlicht, we leave that space free.
+            if (!hasKennLicht)
+                currentXPos -= paddingBetweenLamps + spaceForLamp;
+
+            const auto rangierLampOn =
+                (hauptSignalSchirm->rangierSignalBild() == Openstw::Simulation::RangierSignalBild::Sh1);
+            const auto rangierLampColor =
+                rangierLampOn ? SignalGraphicsObject::kennLichtColor : SignalGraphicsObject::inactiveLampColor;
+            const auto rangierLampWidth = rangierLampOn ? 5.0f : 2.0f;
+
+            QRectF rangierLampRect{currentXPos + 2.0f, lampYPos, spaceForLamp, spaceForLamp};
+
+            if (!rangierLampOn)
+            {
+                rangierLampRect = rangierLampRect.marginsRemoved(QMarginsF{1.0f, 1.0f, 1.0f, 1.0f});
+            }
+
+            painter->save();
+
+            painter->setPen(QPen{rangierLampColor, rangierLampWidth, Qt::SolidLine, Qt::FlatCap});
+            painter->drawLine(rangierLampRect.topLeft(), rangierLampRect.bottomRight());
+
+            painter->restore();
+        }
     }
 
     void SignalGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
