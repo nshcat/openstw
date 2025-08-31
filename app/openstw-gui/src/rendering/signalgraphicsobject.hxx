@@ -28,6 +28,8 @@ namespace Rendering
         constexpr static qreal signalLampPadding = 2.5f;
         constexpr static qreal activeKennLampDiameter = 11.0f;
         constexpr static qreal inactiveKennLampDiameter = 8.0f;
+        constexpr static qreal hpSpaceForLamp = SignalGraphicsObject::activeLampDiameter;
+        constexpr static qreal hpPaddingBetweenLamps = 0.66f * SignalGraphicsObject::hpSpaceForLamp;
 
     public:
         SignalGraphicsObject(TileGraphicsObject* parent, const Openstw::Simulation::TileElementDirection direction);

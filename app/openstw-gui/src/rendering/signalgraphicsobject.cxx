@@ -60,8 +60,8 @@ namespace Rendering
         constexpr qreal signalHeight = 18.0f;
 
         // Base case - only two lamps. No rangiersignal, no kennlicht.
-        qreal signalWidth = (SignalGraphicsObject::signalLampPadding * 2) +
-                            (2 * SignalGraphicsObject::activeLampDiameter) + (0.66f * activeLampDiameter);
+        qreal signalWidth = (SignalGraphicsObject::signalLampPadding * 2) + (2 * SignalGraphicsObject::hpSpaceForLamp) +
+                            (SignalGraphicsObject::hpPaddingBetweenLamps);
 
         // If in compact style, thats it - we will never render more than two lamps
         // (Rangiersignalbild is not supported here XXX does it need to be?)
@@ -73,12 +73,12 @@ namespace Rendering
             // We always leave the space for the kennlicht if we have a rangier lamp, even if its not installed
             if (hauptSignalSchirm->hasKennLicht() || hasRangierLamp)
             {
-                signalWidth += SignalGraphicsObject::activeLampDiameter + (0.66f * activeLampDiameter);
+                signalWidth += SignalGraphicsObject::hpSpaceForLamp + SignalGraphicsObject::hpPaddingBetweenLamps;
             }
 
             if (hasRangierLamp)
             {
-                signalWidth += SignalGraphicsObject::activeLampDiameter + (0.66f * activeLampDiameter);
+                signalWidth += SignalGraphicsObject::hpSpaceForLamp + SignalGraphicsObject::hpPaddingBetweenLamps;
             }
         }
 
@@ -101,11 +101,10 @@ namespace Rendering
             hasKennLicht && (hauptSignalSchirm->kennLichtState() == Openstw::Simulation::KennLichtState::On);
 
         // ==== Draw signal lamps
-        constexpr qreal spaceForLamp = SignalGraphicsObject::activeLampDiameter;
-        constexpr qreal paddingBetweenLamps = 0.66f * spaceForLamp;
-        const qreal lampYPos = centerWithin(spaceForLamp, location.height(), location.top());
+        const qreal lampYPos = centerWithin(SignalGraphicsObject::hpSpaceForLamp, location.height(), location.top());
 
-        qreal currentXPos = location.right() - signalLampPadding - spaceForLamp;
+        qreal currentXPos =
+            location.right() - SignalGraphicsObject::signalLampPadding - SignalGraphicsObject::hpSpaceForLamp;
 
         // == Green lamp
         const auto greenLampOn = (hauptSignalBild == Openstw::Simulation::HauptSignalBild::Hp1);
@@ -113,11 +112,13 @@ namespace Rendering
             (greenLampOn ? SignalGraphicsObject::activeLampDiameter : SignalGraphicsObject::inactiveLampDiameter);
         const auto greenLampColor = greenLampOn ? QColor{Qt::green} : SignalGraphicsObject::inactiveLampColor;
 
-        this->drawSignalLamp(painter, QRectF{currentXPos, lampYPos, spaceForLamp, spaceForLamp}, greenLampColor,
-                             greenLampDiameter);
+        this->drawSignalLamp(
+            painter,
+            QRectF{currentXPos, lampYPos, SignalGraphicsObject::hpSpaceForLamp, SignalGraphicsObject::hpSpaceForLamp},
+            greenLampColor, greenLampDiameter);
 
         // == Red lamp
-        currentXPos -= paddingBetweenLamps + spaceForLamp;
+        currentXPos -= SignalGraphicsObject::hpPaddingBetweenLamps + SignalGraphicsObject::hpSpaceForLamp;
 
         const auto redLampOn =
             (hauptSignalBild == Openstw::Simulation::HauptSignalBild::Hp0 || (isCompact && kennLichtOn));
@@ -134,21 +135,25 @@ namespace Rendering
             redLampDiameter = SignalGraphicsObject::activeLampDiameter;
         }
 
-        this->drawSignalLamp(painter, QRectF{currentXPos, lampYPos, spaceForLamp, spaceForLamp}, redLampColor,
-                             redLampDiameter);
+        this->drawSignalLamp(
+            painter,
+            QRectF{currentXPos, lampYPos, SignalGraphicsObject::hpSpaceForLamp, SignalGraphicsObject::hpSpaceForLamp},
+            redLampColor, redLampDiameter);
 
         // == Kennlicht lamp
         if (!isCompact && hasKennLicht)
         {
-            currentXPos -= paddingBetweenLamps + spaceForLamp;
+            currentXPos -= SignalGraphicsObject::hpPaddingBetweenLamps + SignalGraphicsObject::hpSpaceForLamp;
 
             const auto kennLichtDiameter = (kennLichtOn ? SignalGraphicsObject::activeKennLampDiameter
                                                         : SignalGraphicsObject::inactiveKennLampDiameter);
             const auto kennLichtColor =
                 kennLichtOn ? SignalGraphicsObject::kennLichtColor : SignalGraphicsObject::inactiveLampColor;
 
-            this->drawSignalLamp(painter, QRectF{currentXPos, lampYPos, spaceForLamp, spaceForLamp}, kennLichtColor,
-                                 kennLichtDiameter);
+            this->drawSignalLamp(painter,
+                                 QRectF{currentXPos, lampYPos, SignalGraphicsObject::hpSpaceForLamp,
+                                        SignalGraphicsObject::hpSpaceForLamp},
+                                 kennLichtColor, kennLichtDiameter);
         }
 
         // == Rangiersignal diagonal lamp
@@ -156,11 +161,11 @@ namespace Rendering
             hauptSignalSchirm->supportedSignalBilder().has(Openstw::Simulation::SignalBildType::RangierSignal);
         if (!isCompact && hasRangierLamp)
         {
-            currentXPos -= paddingBetweenLamps + spaceForLamp;
+            currentXPos -= SignalGraphicsObject::hpPaddingBetweenLamps + SignalGraphicsObject::hpSpaceForLamp;
 
             // If we did not render a kennlicht, we leave that space free.
             if (!hasKennLicht)
-                currentXPos -= paddingBetweenLamps + spaceForLamp;
+                currentXPos -= SignalGraphicsObject::hpPaddingBetweenLamps + SignalGraphicsObject::hpSpaceForLamp;
 
             const auto rangierLampOn =
                 (hauptSignalSchirm->rangierSignalBild() == Openstw::Simulation::RangierSignalBild::Sh1);
@@ -168,7 +173,8 @@ namespace Rendering
                 rangierLampOn ? SignalGraphicsObject::kennLichtColor : SignalGraphicsObject::inactiveLampColor;
             const auto rangierLampWidth = rangierLampOn ? 5.0f : 2.0f;
 
-            QRectF rangierLampRect{currentXPos + 2.0f, lampYPos, spaceForLamp, spaceForLamp};
+            QRectF rangierLampRect{currentXPos + 2.0f, lampYPos, SignalGraphicsObject::hpSpaceForLamp,
+                                   SignalGraphicsObject::hpSpaceForLamp};
 
             if (!rangierLampOn)
             {
