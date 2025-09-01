@@ -54,8 +54,8 @@ namespace Rendering
         painter->restore();
     }
 
-    QSizeF SignalGraphicsObject::measureHauptSignal(HauptSignalRenderingStyle style,
-                                                    const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm)
+    QSizeF SignalGraphicsObject::measureHauptSignal(
+        HauptSignalRenderingStyle style, const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm) const
     {
         constexpr qreal signalHeight = 18.0f;
 
@@ -190,6 +190,122 @@ namespace Rendering
         }
     }
 
+    QSizeF SignalGraphicsObject::measureVorSignal(const Openstw::Simulation::VorSignalSchirm* vorSignalSchirm) const
+    {
+        constexpr qreal vorSignalHeight = 18.0;
+
+        qreal vorSignalWidth = 48.0f;
+
+        if (vorSignalSchirm->hasKennLicht())
+        {
+            vorSignalWidth += SignalGraphicsObject::vrExtraSpaceForKennLicht;
+        }
+
+        return QSizeF{vorSignalWidth, vorSignalHeight};
+    }
+
+    void SignalGraphicsObject::drawVorSignal(QPainter* painter,
+                                             const Openstw::Simulation::VorSignalSchirm* vorSignalSchirm,
+                                             const QRectF& location) const
+    {
+        painter->save();
+
+        // == Schirm
+        const qreal vorSignalShiftX =
+            (vorSignalSchirm->hasKennLicht() ? location.width() - SignalGraphicsObject::vrExtraSpaceForKennLicht
+                                             : location.width()) *
+            0.25f;
+        const qreal vorSignalShiftY = location.height() * 0.33f;
+
+        QPolygonF vorSignalPolygon{};
+        vorSignalPolygon << QPointF{location.left(), location.top()}
+                         << QPointF{location.left() + location.width() - vorSignalShiftX, location.top()}
+                         << QPointF{location.left() + location.width(),
+                                    location.top() + location.height() - vorSignalShiftY}
+                         << QPointF{location.left() + location.width(), location.top() + location.height()}
+                         << QPointF{location.left() + vorSignalShiftX, location.top() + location.height()}
+                         << QPointF{location.left(), location.top() + vorSignalShiftY}
+                         << QPointF{location.left(), location.top()};
+
+        painter->setPen(Qt::black);
+        painter->setBrush(Qt::black);
+        painter->drawPolygon(vorSignalPolygon);
+
+        // == Main lamps
+        const auto vorSignalBild = vorSignalSchirm->vorSignalBild();
+
+        QColor lowerLampColor = SignalGraphicsObject::inactiveLampColor;
+        qreal lowerLampDiameter = SignalGraphicsObject::vrInactiveLampDiameter;
+        QColor upperLampColor = SignalGraphicsObject::inactiveLampColor;
+        qreal upperLampDiameter = SignalGraphicsObject::vrInactiveLampDiameter;
+
+        if (vorSignalBild == Openstw::Simulation::VorSignalBild::Vr0)
+        {
+            lowerLampColor = Qt::yellow;
+            lowerLampDiameter = SignalGraphicsObject::vrActiveLampDiameter;
+        }
+        else if (vorSignalBild == Openstw::Simulation::VorSignalBild::Vr1)
+        {
+            upperLampColor = Qt::green;
+            upperLampDiameter = SignalGraphicsObject::vrActiveLampDiameter;
+        }
+
+        // = Lower lamps
+        const qreal lowerLampsXPos =
+            (vorSignalSchirm->hasKennLicht() ? location.left() + SignalGraphicsObject::vrExtraSpaceForKennLicht
+                                             : location.left()) +
+            SignalGraphicsObject::vrLampPaddingX;
+
+        this->drawSignalLamp(painter,
+                             QRectF{lowerLampsXPos, location.top() + SignalGraphicsObject::vrLampPaddingY,
+                                    SignalGraphicsObject::vrSpaceForLamp, SignalGraphicsObject::vrSpaceForLamp},
+                             lowerLampColor, lowerLampDiameter);
+
+        this->drawSignalLamp(
+            painter,
+            QRectF{lowerLampsXPos + vorSignalShiftX - 2.5,
+                   location.bottom() - SignalGraphicsObject::vrLampPaddingY - SignalGraphicsObject::vrSpaceForLamp,
+                   SignalGraphicsObject::vrSpaceForLamp, SignalGraphicsObject::vrSpaceForLamp},
+            lowerLampColor, lowerLampDiameter);
+
+        // = Upper lamps
+        const qreal upperLampsXPos =
+            location.right() - SignalGraphicsObject::vrLampPaddingX - SignalGraphicsObject::vrSpaceForLamp;
+
+        this->drawSignalLamp(painter,
+                             QRectF{upperLampsXPos - vorSignalShiftX + 2.5,
+                                    location.top() + SignalGraphicsObject::vrLampPaddingY,
+                                    SignalGraphicsObject::vrSpaceForLamp, SignalGraphicsObject::vrSpaceForLamp},
+                             upperLampColor, upperLampDiameter);
+
+        this->drawSignalLamp(
+            painter,
+            QRectF{upperLampsXPos,
+                   location.bottom() - SignalGraphicsObject::vrLampPaddingY - SignalGraphicsObject::vrSpaceForLamp,
+                   SignalGraphicsObject::vrSpaceForLamp, SignalGraphicsObject::vrSpaceForLamp},
+            upperLampColor, upperLampDiameter);
+
+        // Kennlicht lamp
+        if (vorSignalSchirm->hasKennLicht())
+        {
+            QColor kennLampColor = SignalGraphicsObject::inactiveLampColor;
+            qreal kennLampDiameter = SignalGraphicsObject::inactiveKennLampDiameter;
+
+            if (vorSignalSchirm->kennLichtState() == Openstw::Simulation::KennLichtState::On)
+            {
+                kennLampColor = SignalGraphicsObject::kennLichtColor;
+                kennLampDiameter = SignalGraphicsObject::activeKennLampDiameter;
+            }
+
+            const QRectF extraKennLichtSpace{location.left(), location.top(),
+                                             SignalGraphicsObject::vrExtraSpaceForKennLicht + 6, location.height()};
+
+            this->drawSignalLamp(painter, extraKennLichtSpace, kennLampColor, kennLampDiameter);
+        }
+
+        painter->restore();
+    }
+
     void SignalGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         if (!this->m_tile->hasSignal(this->m_direction))
@@ -233,6 +349,24 @@ namespace Rendering
                 // Render it
                 this->drawHauptSignal(painter, renderStyle, hauptSignalSchirm, hauptSchirmRect);
 
+                // Also render the vorsignal attached to it if needed
+                if (signal.hasSecondarySignalSchirm())
+                {
+                    const auto* vorSignalSchirm = signal.secondarySignalSchirm();
+
+                    // Measure out Vorsignalschirm
+                    const auto vorSignalSchirmSize = this->measureVorSignal(vorSignalSchirm);
+
+                    // Lay it out. Its right edge is close to the left edge of the Hauptsignalschirm
+                    QRectF vorSignalSchirmRect{
+                        hauptSchirmRect.left() - vorSignalSchirmSize.width() - SignalGraphicsObject::hpVrPadding,
+                        centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
+                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
+
+                    // Render it
+                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+
                 break;
             }
 
@@ -243,10 +377,6 @@ namespace Rendering
 
         default:
             break;
-        }
-
-        /*painter->setBrush(Qt::transparent);
-        painter->setPen(rectanglePen(Qt::black, 1.0f));
-        painter->drawRect(adjustRectForBorder(boundingRect, 1.0f));*/
+        } 
     }
 }

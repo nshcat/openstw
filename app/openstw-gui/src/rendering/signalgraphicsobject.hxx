@@ -30,6 +30,14 @@ namespace Rendering
         constexpr static qreal inactiveKennLampDiameter = 8.0f;
         constexpr static qreal hpSpaceForLamp = SignalGraphicsObject::activeLampDiameter;
         constexpr static qreal hpPaddingBetweenLamps = 0.66f * SignalGraphicsObject::hpSpaceForLamp;
+        constexpr static qreal hpVrPadding = 7.5f;
+
+        constexpr static qreal vrActiveLampDiameter = 8.5f;
+        constexpr static qreal vrInactiveLampDiameter = 4.0f;
+        constexpr static qreal vrSpaceForLamp = SignalGraphicsObject::vrActiveLampDiameter;
+        constexpr static qreal vrLampPaddingX = 0.75f;
+        constexpr static qreal vrLampPaddingY = 0.0f;
+        constexpr static qreal vrExtraSpaceForKennLicht = 22.0f;
 
     public:
         SignalGraphicsObject(TileGraphicsObject* parent, const Openstw::Simulation::TileElementDirection direction);
@@ -45,10 +53,14 @@ namespace Rendering
         void drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color, const qreal diameter) const;
 
         QSizeF measureHauptSignal(HauptSignalRenderingStyle style,
-                                  const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm);
+                                  const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm) const;
         void drawHauptSignal(QPainter* painter, HauptSignalRenderingStyle style,
                              const Openstw::Simulation::HauptSignalSchirm* hauptSignalSchirm,
                              const QRectF& location) const;
+
+        QSizeF measureVorSignal(const Openstw::Simulation::VorSignalSchirm* vorSignalSchirm) const;
+        void drawVorSignal(QPainter* painter, const Openstw::Simulation::VorSignalSchirm* vorSignalSchirm,
+                           const QRectF& location) const;
 
     protected:
         Openstw::Simulation::TileElementDirection m_direction;

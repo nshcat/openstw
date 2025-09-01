@@ -13,6 +13,14 @@
         </Tile>
         <Tile x="2" y="2">
             <Track></Track>
+            <ForwardSignal name="H100">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+
+                <SecondarySignalSchirm type="VorSignalSchirm">
+                    <KennLicht/>
+                </SecondarySignalSchirm>
+            </ForwardSignal>
         </Tile>
         <Tile x="3" y="2">
             <Track></Track>
