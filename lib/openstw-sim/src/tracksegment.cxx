@@ -6,10 +6,14 @@ namespace Openstw::Simulation
     {
     }
 
-    TrackSegment TrackSegment::CreateFrom(const pugi::xml_node&)
+    TrackSegment TrackSegment::CreateFrom(const pugi::xml_node& node)
     {
-        // XXX Nothing to deserialize yet..
-        return TrackSegment{};
+        TrackSegment segment{};
+
+        const auto hasLeuchtMelder = node.attribute("hasLeuchtMelder").as_bool(true);
+        segment.m_hasLeuchtMelder = hasLeuchtMelder;
+
+        return segment;
     }
 
     TrackState TrackSegment::state() const
@@ -20,5 +24,10 @@ namespace Openstw::Simulation
     void TrackSegment::setState(TrackState newState)
     {
         this->m_state = newState;
+    }
+
+    bool TrackSegment::hasLeuchtMelder() const
+    {
+        return this->m_hasLeuchtMelder;
     }
 }

@@ -54,6 +54,10 @@ void TileGraphicsObject::setup()
 
 void TileGraphicsObject::createComponentRenderers()
 {
+    this->m_arrowRenderer = new Rendering::ArrowGraphicsObject{this};
+    this->m_arrowRenderer->setup();
+    this->scene()->addItem(this->m_arrowRenderer);
+
     this->m_trackRenderer = new Rendering::TrackGraphicsObject{this};
     this->m_trackRenderer->setup();
     this->scene()->addItem(this->m_trackRenderer);

@@ -3,6 +3,7 @@
 #include <QGraphicsObject>
 #include <tile.hxx>
 
+#include "rendering/arrowgraphicsobject.hxx"
 #include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
@@ -44,6 +45,7 @@ protected:
     Openstw::Simulation::Tile* m_tile{};
 
 protected: // == Component renderers
+    Rendering::ArrowGraphicsObject* m_arrowRenderer;
     Rendering::TrackGraphicsObject* m_trackRenderer;
     Rendering::SignalGraphicsObject* m_fwdSignalRenderer;
     Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;

@@ -14,6 +14,19 @@ namespace Openstw::Simulation
         Backward = 1 //< Right to left
     };
 
+    enum class ArrowDirection
+    {
+        None = 0,
+        Left = 1 << 0,
+        Right = 1 << 1
+    };
+
+    enum class ArrowAlignment
+    {
+        Left = 1,
+        Right = 2
+    };
+
     enum class SperrMelderState
     {
         Off = 0,

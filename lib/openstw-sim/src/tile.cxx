@@ -20,6 +20,22 @@ namespace Openstw::Simulation
         tile.m_position = GridPosition{static_cast<std::size_t>(x), static_cast<std::size_t>(y)};
         // ==
 
+        // == Arrows
+        const auto leftArrowNode = root.child("LeftArrow");
+        if (leftArrowNode)
+        {
+            tile.m_arrowAlignment = Tile::ParseArrowAlignment(leftArrowNode);
+            tile.m_arrows.set(ArrowDirection::Left);
+        }
+
+        const auto rightArrowNode = root.child("RightArrow");
+        if (rightArrowNode)
+        {
+            tile.m_arrowAlignment = Tile::ParseArrowAlignment(rightArrowNode);
+            tile.m_arrows.set(ArrowDirection::Right);
+        }
+        // ==
+
         // == Track
         const auto trackNode = root.child("Track");
         if (trackNode)
@@ -43,6 +59,16 @@ namespace Openstw::Simulation
         // ==
 
         return std::move(tile);
+    }
+
+    ArrowAlignment Tile::ParseArrowAlignment(const pugi::xml_node& node)
+    {
+        const std::string arrowAlignmentTxt = node.attribute("alignment").as_string("left");
+        ArrowAlignment arrowAlignment{ArrowAlignment::Left};
+        if (arrowAlignmentTxt == "right")
+            arrowAlignment = ArrowAlignment::Right;
+
+        return arrowAlignment;
     }
 
     bool Tile::hasSignal(const TileElementDirection direction) const
@@ -74,6 +100,21 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile doesnt contain track segment");
 
         return this->m_track.value();
+    }
+
+    bool Tile::hasArrow() const
+    {
+        return this->m_arrows.hasAny();
+    }
+
+    FlagField<ArrowDirection> Tile::arrows() const
+    {
+        return this->m_arrows;
+    }
+
+    ArrowAlignment Tile::arrowAlignment() const
+    {
+        return this->m_arrowAlignment;
     }
 
     void Tile::setPosition(const GridPosition& newPosition)

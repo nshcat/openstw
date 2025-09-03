@@ -63,14 +63,17 @@ namespace Rendering
         painter->setPen(rectanglePen(Qt::black, 1.0f));
         painter->drawRect(adjustRectForBorder(trackRect, 1.0f));
 
-        const auto trackIndicatorRect =
-            QRectF{centerWithin(TrackGraphicsObject::trackIndicatorWidth, trackRect.width(), trackRect.left()),
-                   centerWithin(TrackGraphicsObject::trackIndicatorHeight, trackRect.height(), trackRect.top()),
-                   TrackGraphicsObject::trackIndicatorWidth, TrackGraphicsObject::trackIndicatorHeight};
+        if (track.hasLeuchtMelder())
+        {
+            const auto trackIndicatorRect =
+                QRectF{centerWithin(TrackGraphicsObject::trackIndicatorWidth, trackRect.width(), trackRect.left()),
+                       centerWithin(TrackGraphicsObject::trackIndicatorHeight, trackRect.height(), trackRect.top()),
+                       TrackGraphicsObject::trackIndicatorWidth, TrackGraphicsObject::trackIndicatorHeight};
 
-        const auto trackIndicatorColor = TrackGraphicsObject::colorForTrackState(track.state());
-        painter->setBrush(trackIndicatorColor);
-        painter->setPen(rectanglePen(trackIndicatorColor, 1.0f));
-        painter->drawRect(adjustRectForBorder(trackIndicatorRect, 1.0f));
+            const auto trackIndicatorColor = TrackGraphicsObject::colorForTrackState(track.state());
+            painter->setBrush(trackIndicatorColor);
+            painter->setPen(rectanglePen(trackIndicatorColor, 1.0f));
+            painter->drawRect(adjustRectForBorder(trackIndicatorRect, 1.0f));
+        }
     }
 }

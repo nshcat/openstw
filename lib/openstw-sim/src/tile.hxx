@@ -30,12 +30,19 @@ namespace Openstw::Simulation
     public:
         static Tile CreateFrom(const pugi::xml_node&);
 
+    protected:
+        static ArrowAlignment ParseArrowAlignment(const pugi::xml_node&);
+
     public: // == Public interface
         const GridPosition& position() const;
         bool hasSignal(const TileElementDirection direction) const;
         Signal& signal(const TileElementDirection direction);
         bool hasTrack() const;
         TrackSegment& track();
+
+        bool hasArrow() const;
+        FlagField<ArrowDirection> arrows() const;
+        ArrowAlignment arrowAlignment() const;
 
     public: // == Signals
         /**
@@ -58,5 +65,8 @@ namespace Openstw::Simulation
         std::optional<Signal> m_backwardSignal{}; //< Signal for traffic from right to left
 
         std::optional<TrackSegment> m_track{};
+
+        FlagField<ArrowDirection> m_arrows{ArrowDirection::None};
+        ArrowAlignment m_arrowAlignment{ArrowAlignment::Left};
     };
 }

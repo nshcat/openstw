@@ -40,6 +40,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         data/sim_template.xml
         src/rendering/renderinghelpers.hxx src/rendering/renderinghelpers.cxx
         src/rendering/signalgraphicsobject.hxx src/rendering/signalgraphicsobject.cxx
+        src/rendering/arrowgraphicsobject.hxx
+        src/rendering/arrowgraphicsobject.cxx
+        src/rendering/arrowgraphicsobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

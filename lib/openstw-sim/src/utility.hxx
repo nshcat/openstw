@@ -50,6 +50,11 @@ namespace Openstw::Simulation
         }
 
     public:
+        bool hasAny() const
+        {
+            return this->m_flags != storage_t{};
+        }
+
         bool has(const E value) const
         {
             return (this->m_flags & static_cast<storage_t>(value)) != storage_t{};
