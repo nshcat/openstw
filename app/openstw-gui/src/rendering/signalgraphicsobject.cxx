@@ -40,6 +40,37 @@ namespace Rendering
         }
     }
 
+    void SignalGraphicsObject::drawMastBase(QPainter* painter, const QRectF& location)
+    {
+        painter->save();
+
+        const QRectF mastBaseRect{location.left(), location.top(), SignalGraphicsObject::mastThickness,
+                                  location.height()};
+
+        painter->setBrush(Qt::black);
+        painter->setPen(rectanglePen(Qt::black, 1.0f));
+        painter->drawRect(adjustRectForBorder(mastBaseRect, 1.0f));
+
+        this->drawMastSegment(painter, location);
+
+        painter->restore();
+    }
+
+    void SignalGraphicsObject::drawMastSegment(QPainter* painter, const QRectF& location)
+    {
+        painter->save();
+
+        const QRectF mastRect{location.left(),
+                              centerWithin(SignalGraphicsObject::mastThickness, location.height(), location.top()),
+                              location.width(), SignalGraphicsObject::mastThickness};
+
+        painter->setBrush(Qt::black);
+        painter->setPen(rectanglePen(Qt::black, 1.0f));
+        painter->drawRect(adjustRectForBorder(mastRect, 1.0f));
+
+        painter->restore();
+    }
+
     void SignalGraphicsObject::drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color,
                                               const qreal diameter) const
     {
@@ -363,8 +394,51 @@ namespace Rendering
                         centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
                         vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
 
-                    // Render it
+                    // We have to draw the mast base first.
+                    QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                        centerWithin(SignalGraphicsObject::mastBaseHeight, vorSignalSchirmRect.height(),
+                                                     vorSignalSchirmRect.top()),
+                                        SignalGraphicsObject::mastBaseWidth *
+                                            2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                        SignalGraphicsObject::mastBaseHeight};
+
+                    // Render the mast base
+                    this->drawMastBase(painter, mastBaseRect);
+
+                    // Then draw the connector to the Hauptsignal. This is always present
+                    QRectF mastSegmentRect{vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth,
+                                           centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                        vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                           SignalGraphicsObject::mastBaseWidth *
+                                               2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                           SignalGraphicsObject::mastBaseHeight};
+                    this->drawMastSegment(painter, mastSegmentRect);
+
+                    // Render the Vorsignalschirm
                     this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+                else
+                {
+                    // Signal either has a mast base or a connector to the next tile - if it is part
+                    // of a multi-tile signal
+                    if (signal.hasConnector())
+                    {
+                        const QRectF mastSegmentRect{boundingRect.left(), hauptSchirmRect.top(),
+                                                     (hauptSchirmRect.left() - boundingRect.left()),
+                                                     hauptSchirmRect.height()};
+
+                        this->drawMastSegment(painter, mastSegmentRect);
+                    }
+                    else
+                    {
+                        const QRectF mastBaseRect{hauptSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                                  centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                               hauptSchirmRect.height(), hauptSchirmRect.top()),
+                                                  SignalGraphicsObject::mastBaseWidth,
+                                                  SignalGraphicsObject::mastBaseHeight};
+
+                        this->drawMastBase(painter, mastBaseRect);
+                    }
                 }
 
                 break;
@@ -372,6 +446,71 @@ namespace Rendering
 
         case Openstw::Simulation::SignalSchirmType::VorSignal:
             {
+                // Cast down pointer
+                const auto* vorSignalSchirm = dynamic_cast<const Openstw::Simulation::VorSignalSchirm*>(primarySchirm);
+
+                if (!vorSignalSchirm)
+                    throw std::runtime_error("ISignalSchirm was unexpectedly not VorSignalSchirm");
+
+                const auto vorSignalSchirmSize = this->measureVorSignal(vorSignalSchirm);
+
+                // We have two possible cases here - if we are part of a multi-tile signal, we want to render
+                // at the same distance to tile border as if we were a Hauptsignalschirm.
+                // If we are just an individual vorsignal, center us more within the tile.
+                if (signal.hasConnector())
+                {
+                    // Lay it out. The top end of the topmost Signalschirm is always fixed to be the same distance
+                    // to the tile border.
+                    const QRectF vorSignalSchirmRect{
+                        boundingRect.right() - vorSignalSchirmSize.width() -
+                            SignalGraphicsObject::signalToBorderPadding,
+                        centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
+                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
+
+                    // We have to render the mast base first
+                    const QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              SignalGraphicsObject::mastBaseWidth *
+                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                              SignalGraphicsObject::mastBaseHeight};
+
+                    this->drawMastBase(painter, mastBaseRect);
+
+                    // And then the connector
+                    const qreal mastSegmentStartX = vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth;
+
+                    const QRectF mastSegmentRect{mastSegmentStartX, vorSignalSchirmRect.top(),
+                                                 (boundingRect.right() - mastSegmentStartX),
+                                                 vorSignalSchirmRect.height()};
+
+                    this->drawMastSegment(painter, mastSegmentRect);
+
+                    // Finally, draw the Vorsignalschirm
+                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+                else
+                {
+                    // Lay it out so its centered horizontally in the tile
+                    const QRectF vorSignalSchirmRect{
+                        centerWithin(vorSignalSchirmSize.width(), boundingRect.width(), boundingRect.left()),
+                        centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
+                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
+
+                    // We have to render the mast base first
+                    const QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              SignalGraphicsObject::mastBaseWidth *
+                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                              SignalGraphicsObject::mastBaseHeight};
+
+                    this->drawMastBase(painter, mastBaseRect);
+
+                    // Finally, render the Vorsignalschirm
+                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+
                 break;
             }
 

@@ -39,6 +39,10 @@ namespace Rendering
         constexpr static qreal vrLampPaddingY = 0.0f;
         constexpr static qreal vrExtraSpaceForKennLicht = 22.0f;
 
+        constexpr static qreal mastThickness = 4.0f;
+        constexpr static qreal mastBaseWidth = 7.5f;
+        constexpr static qreal mastBaseHeight = 16.0f;
+
     public:
         SignalGraphicsObject(TileGraphicsObject* parent, const Openstw::Simulation::TileElementDirection direction);
 
@@ -50,6 +54,9 @@ namespace Rendering
         virtual void positionSelf() override;
 
     protected:
+        void drawMastBase(QPainter* painter, const QRectF& loctation);
+        void drawMastSegment(QPainter* painter, const QRectF& location);
+
         void drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color, const qreal diameter) const;
 
         QSizeF measureHauptSignal(HauptSignalRenderingStyle style,

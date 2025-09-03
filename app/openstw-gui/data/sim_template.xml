@@ -40,11 +40,25 @@
         </Tile>
         <Tile x="4" y="2">
             <Track></Track>
+
+            <ForwardSignal name="H101" connected="true">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                    <KennLicht/>
+                </PrimarySignalSchirm>
+            </ForwardSignal>
+        </Tile>
+        <Tile x="4" y="1">
+            <Track></Track>
+
+            <ForwardSignal name="H101" connected="true">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
         </Tile>
         <Tile x="5" y="2">
             <Track></Track>
 
-            <ForwardSignal name="H101">
+            <ForwardSignal name="H101" connected="true">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
                     <KennLicht/>
                     <RangierSignal/>
@@ -54,7 +68,7 @@
         <Tile x="5" y="1">
             <Track></Track>
 
-            <ForwardSignal name="H101">
+            <ForwardSignal name="H101" connected="true">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
                     <RangierSignal/>
                 </PrimarySignalSchirm>

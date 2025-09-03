@@ -23,6 +23,9 @@ namespace Openstw::Simulation
         // == Attributes
         const std::string signalName{root.attribute("name").as_string()};
         signal.m_signalName = signalName;
+
+        const bool isConnected{root.attribute("connected").as_bool(false)};
+        signal.m_hasConnector = isConnected;
         // ==
 
         // == Primary Signalschirm

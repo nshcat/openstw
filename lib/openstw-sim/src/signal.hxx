@@ -56,6 +56,6 @@ namespace Openstw::Simulation
         bool m_isBlockSignal{false};
         BlockSignalType m_blockSignalType{BlockSignalType::SelbstBlock};
 
-        bool m_hasConnector{false}; //< Used on Vorsignale that are connected to a Hauptsignal on a neighbouring tile
+        bool m_hasConnector{false}; //< Used on both signals in a signal that spans multiple tiles
     };
 }
