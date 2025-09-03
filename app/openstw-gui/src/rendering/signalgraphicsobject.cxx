@@ -340,12 +340,23 @@ namespace Rendering
     void SignalGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         if (!this->m_tile->hasSignal(this->m_direction))
-            return;
+            return;  
 
         // Base class method call sets up clipping region
         TileComponentGraphicsObject::paint(painter, option, widget);
 
         const auto boundingRect = this->boundingRect();
+
+        // We need to rotate our drawing by 180 degrees if we are rendering a backwards signal
+        if (this->m_direction == Openstw::Simulation::TileElementDirection::Backward)
+        {
+            // We want to rotate around the center of the bounding rectangle.
+            const auto boundingRectCenter = boundingRect.center();
+
+            painter->translate(boundingRectCenter);
+            painter->rotate(180.0f);
+            painter->translate(-boundingRectCenter);
+        }
 
         const auto& signal = this->m_tile->signal(this->m_direction);
         const auto* primarySchirm = signal.primarySignalSchirm();
