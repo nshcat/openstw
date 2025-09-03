@@ -413,6 +413,9 @@ namespace Rendering
                 // Render it
                 this->drawHauptSignal(painter, renderStyle, hauptSignalSchirm, hauptSchirmRect);
 
+                // We need this later to draw the block signal connection.
+                QRectF mastBaseRect;
+
                 // Also render the vorsignal attached to it if needed
                 if (signal.hasSecondarySignalSchirm())
                 {
@@ -439,8 +442,6 @@ namespace Rendering
                     this->drawMastSegment(painter, mastSegmentRect);
 
                     // Draw mast base. This depends on whether we have a Sperrmelder or not.
-                    QRectF mastBaseRect;
-
                     if (signal.hasSperrMelder())
                     {
                         const auto mastBaseXPos = boundingRect.left() + SignalGraphicsObject::sperrMelderDiameter +
@@ -483,8 +484,6 @@ namespace Rendering
                     }
                     else
                     {
-                        QRectF mastBaseRect;
-
                         if (signal.hasSperrMelder())
                         {
                             const auto mastBaseXPos = boundingRect.left() + SignalGraphicsObject::sperrMelderDiameter +
@@ -521,6 +520,22 @@ namespace Rendering
                                                  SignalGraphicsObject::sperrMelderDiameter};
 
                     this->drawSperrMelder(painter, sperrMelderRect, sperrMelderState);
+                }
+
+                // Blocksignale have a line connecting them to the tracks.
+                if (signal.isBlockSignal() && !signal.hasConnector())
+                {
+                    painter->save();
+
+                    const QRectF blockSignalConnectorRect{mastBaseRect.left(), boundingRect.top(),
+                                                          SignalGraphicsObject::mastThickness,
+                                                          (mastBaseRect.bottom() - boundingRect.top())};
+
+                    painter->setPen(rectanglePen(Qt::black, 1.0f));
+                    painter->setBrush(Qt::black);
+                    painter->drawRect(adjustRectForBorder(blockSignalConnectorRect, 1.0f));
+
+                    painter->restore();
                 }
 
                 break;

@@ -26,6 +26,9 @@ namespace Openstw::Simulation
 
         const bool isConnected{root.attribute("connected").as_bool(false)};
         signal.m_hasConnector = isConnected;
+
+        const bool isBlockSignal{root.attribute("isBlockSignal").as_bool(false)};
+        signal.m_isBlockSignal = isBlockSignal;
         // ==
 
         // == Sperrmelder

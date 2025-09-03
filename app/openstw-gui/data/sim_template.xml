@@ -22,12 +22,6 @@
         </Tile>
         <Tile x="0" y="2">
             <Track></Track>
-
-            <ForwardSignal name="Hv100">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
         </Tile>
         <Tile x="1" y="2">
             <Track></Track>          
@@ -104,6 +98,63 @@
             </ForwardSignal>
         </Tile>
         <Tile x="6" y="2">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="0" y="3">
+            <Track></Track>
+
+            <ForwardSignal name="Hv100" isBlockSignal="true">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="1" y="3">
+            <Track></Track>
+
+            <ForwardSignal name="H100" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SecondarySignalSchirm type="VorSignalSchirm">
+                </SecondarySignalSchirm>
+                <SperrMelder/>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="2" y="3">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="3" y="3">
+            <Track></Track>
+
+            <ForwardSignal name="H101" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SecondarySignalSchirm type="VorSignalSchirm">
+                </SecondarySignalSchirm>
+                <SperrMelder/>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="4" y="3">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="5" y="3">
+            <Track></Track>
+
+            <ForwardSignal name="H101" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SecondarySignalSchirm type="VorSignalSchirm">
+                </SecondarySignalSchirm>
+                <SperrMelder/>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="6" y="3">
             <Track></Track>
         </Tile>
     </TilePanel>
