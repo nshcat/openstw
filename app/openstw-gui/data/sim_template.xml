@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulation>
-    <TilePanel width="7" height="4">
+    <TilePanel width="11" height="7">
         <Tile x="1" y="0">
             <Track></Track>
 
@@ -101,7 +101,21 @@
             <Track></Track>
         </Tile>
 
-        <Tile x="0" y="3">
+        <Tile x="0" y="6">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="1" y="6">
+            <Track></Track>
+
+            <ForwardSignal name="H100" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="2" y="6">
             <Track></Track>
 
             <ForwardSignal name="Hv100" isBlockSignal="true">
@@ -110,23 +124,34 @@
             </ForwardSignal>
         </Tile>
 
-        <Tile x="1" y="3">
+        <Tile x="3" y="6">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="4" y="6">
             <Track></Track>
 
-            <ForwardSignal name="H100" isBlockSignal="true">
+            <ForwardSignal name="H101" isBlockSignal="true">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
                 </PrimarySignalSchirm>
-                <SecondarySignalSchirm type="VorSignalSchirm">
-                </SecondarySignalSchirm>
                 <SperrMelder/>
             </ForwardSignal>
         </Tile>
 
-        <Tile x="2" y="3">
+        <Tile x="5" y="6">
+            <Track></Track>
+
+            <ForwardSignal name="Hv100" isBlockSignal="true">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="6" y="6">
             <Track></Track>
         </Tile>
 
-        <Tile x="3" y="3">
+        <Tile x="7" y="6">
             <Track></Track>
 
             <ForwardSignal name="H101" isBlockSignal="true">
@@ -138,25 +163,116 @@
             </ForwardSignal>
         </Tile>
 
-        <Tile x="4" y="3">
+        <Tile x="8" y="6">
             <Track></Track>
         </Tile>
 
-        <Tile x="5" y="3">
+        <Tile x="9" y="6">
+            <Track></Track>
+            <ForwardSignal name="H101" connected="true">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="10" y="6">
             <Track></Track>
 
-            <ForwardSignal name="H101" isBlockSignal="true">
+            <ForwardSignal name="H101" connected="true">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
+                    <KennLicht/>
+                    <RangierSignal/>
                 </PrimarySignalSchirm>
-                <SecondarySignalSchirm type="VorSignalSchirm">
-                </SecondarySignalSchirm>
                 <SperrMelder/>
             </ForwardSignal>
         </Tile>
 
-        <Tile x="6" y="3">
+
+        <Tile x="0" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H100" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+        </Tile>
+
+        <Tile x="1" y="5">
             <Track></Track>
         </Tile>
+
+        <Tile x="2" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H100">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </BackwardSignal>
+        </Tile>
+
+        <Tile x="3" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H100" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+        </Tile>
+
+        <Tile x="4" y="5">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="5" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H100">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </BackwardSignal>
+        </Tile>
+
+        <Tile x="6" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H100" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+        </Tile>
+
+        <Tile x="7" y="5">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="8" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H100">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </BackwardSignal>
+        </Tile>
+
+        <Tile x="9" y="5">
+            <Track></Track>
+        </Tile>
+
+        <Tile x="10" y="5">
+            <Track></Track>
+
+            <BackwardSignal name="H101">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                    <KennLicht/>
+                    <RangierSignal/>
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+        </Tile>
+
     </TilePanel>
 </Simulation>
 
