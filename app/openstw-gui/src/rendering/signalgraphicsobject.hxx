@@ -8,7 +8,6 @@
 
 namespace Rendering
 {
-
     class SignalGraphicsObject : public Rendering::TileComponentGraphicsObject
     {
         enum class HauptSignalRenderingStyle
@@ -19,7 +18,7 @@ namespace Rendering
 
         Q_OBJECT
 
-    public:
+    public: // == Metrics and color constants
         constexpr static qreal signalToBorderPadding = 20.0f;
         constexpr static QColor kennLichtColor{0xFE, 0xFF, 0x7F};
         constexpr static QColor inactiveLampColor{0x23, 0x23, 0x23};
@@ -43,6 +42,13 @@ namespace Rendering
         constexpr static qreal mastBaseWidth = 7.5f;
         constexpr static qreal mastBaseHeight = 16.0f;
 
+        constexpr static qreal sperrMelderDiameter = 11.0f;
+        constexpr static QColor sperrMelderInactiveColor = inactiveLampColor;
+        constexpr static QColor sperrMelderActiveColor{0xFF, 0xFF, 0x0};
+        constexpr static qreal sperrMelderToBorderPadding = 20.0f;
+
+        constexpr static qreal sperrMelderMastBasePadding = 1.0f;
+
     public:
         SignalGraphicsObject(TileGraphicsObject* parent, const Openstw::Simulation::TileElementDirection direction);
 
@@ -54,7 +60,10 @@ namespace Rendering
         virtual void positionSelf() override;
 
     protected:
-        void drawMastBase(QPainter* painter, const QRectF& loctation);
+        void drawSperrMelder(QPainter* painter, const QRectF& location,
+                             const Openstw::Simulation::SperrMelderState state);
+
+        void drawMastBase(QPainter* painter, const QRectF& location);
         void drawMastSegment(QPainter* painter, const QRectF& location);
 
         void drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color, const qreal diameter) const;
@@ -72,5 +81,4 @@ namespace Rendering
     protected:
         Openstw::Simulation::TileElementDirection m_direction;
     };
-
-} // namespace Rendering
+}

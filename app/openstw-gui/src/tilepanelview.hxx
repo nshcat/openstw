@@ -11,7 +11,7 @@
  * and supports displaying and interacting with auxilliary elements such as magnets
  * placed on the panel
  */
-class TilePanelView: public QGraphicsView
+class TilePanelView : public QGraphicsView
 {
     Q_OBJECT
 

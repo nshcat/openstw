@@ -40,6 +40,28 @@ namespace Rendering
         }
     }
 
+    void SignalGraphicsObject::drawSperrMelder(QPainter* painter, const QRectF& location,
+                                               const Openstw::Simulation::SperrMelderState state)
+    {
+        painter->save();
+
+        const auto sperrMelderInnerColor = (state == Openstw::Simulation::SperrMelderState::Off)
+                                               ? SignalGraphicsObject::sperrMelderInactiveColor
+                                               : SignalGraphicsObject::sperrMelderActiveColor;
+
+        painter->setPen(QPen{Qt::black, 0.5f});
+        painter->setBrush(sperrMelderInnerColor);
+
+        const QRectF sperrMelderRect{
+            centerWithin(SignalGraphicsObject::sperrMelderDiameter, location.width(), location.left()),
+            centerWithin(SignalGraphicsObject::sperrMelderDiameter, location.height(), location.top()),
+            SignalGraphicsObject::sperrMelderDiameter, SignalGraphicsObject::sperrMelderDiameter};
+
+        painter->drawEllipse(sperrMelderRect);
+
+        painter->restore();
+    }
+
     void SignalGraphicsObject::drawMastBase(QPainter* painter, const QRectF& location)
     {
         painter->save();
@@ -405,25 +427,44 @@ namespace Rendering
                         centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
                         vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
 
-                    // We have to draw the mast base first.
-                    QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
-                                        centerWithin(SignalGraphicsObject::mastBaseHeight, vorSignalSchirmRect.height(),
-                                                     vorSignalSchirmRect.top()),
-                                        SignalGraphicsObject::mastBaseWidth *
-                                            2.0, //< In order to extend under the diagonal of the Vorsignalschirm
-                                        SignalGraphicsObject::mastBaseHeight};
+                    // Draw mast segment between Vorsignal and Hauptsignal
+                    const auto mastSegmentRect =
+                        QRectF{vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth,
+                               centerWithin(SignalGraphicsObject::mastBaseHeight, vorSignalSchirmRect.height(),
+                                            vorSignalSchirmRect.top()),
+                               SignalGraphicsObject::mastBaseWidth *
+                                   2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                               SignalGraphicsObject::mastBaseHeight};
+
+                    this->drawMastSegment(painter, mastSegmentRect);
+
+                    // Draw mast base. This depends on whether we have a Sperrmelder or not.
+                    QRectF mastBaseRect;
+
+                    if (signal.hasSperrMelder())
+                    {
+                        const auto mastBaseXPos = boundingRect.left() + SignalGraphicsObject::sperrMelderDiameter +
+                                                  SignalGraphicsObject::sperrMelderToBorderPadding +
+                                                  SignalGraphicsObject::sperrMelderMastBasePadding;
+
+                        mastBaseRect = QRectF{mastBaseXPos,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              (vorSignalSchirmRect.left() - mastBaseXPos) + 15.0f,
+                                              SignalGraphicsObject::mastBaseHeight};
+                    }
+                    else
+                    {
+                        mastBaseRect = QRectF{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              SignalGraphicsObject::mastBaseWidth *
+                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                              SignalGraphicsObject::mastBaseHeight};
+                    }
 
                     // Render the mast base
                     this->drawMastBase(painter, mastBaseRect);
-
-                    // Then draw the connector to the Hauptsignal. This is always present
-                    QRectF mastSegmentRect{vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth,
-                                           centerWithin(SignalGraphicsObject::mastBaseHeight,
-                                                        vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
-                                           SignalGraphicsObject::mastBaseWidth *
-                                               2.0, //< In order to extend under the diagonal of the Vorsignalschirm
-                                           SignalGraphicsObject::mastBaseHeight};
-                    this->drawMastSegment(painter, mastSegmentRect);
 
                     // Render the Vorsignalschirm
                     this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
@@ -442,14 +483,44 @@ namespace Rendering
                     }
                     else
                     {
-                        const QRectF mastBaseRect{hauptSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
-                                                  centerWithin(SignalGraphicsObject::mastBaseHeight,
-                                                               hauptSchirmRect.height(), hauptSchirmRect.top()),
-                                                  SignalGraphicsObject::mastBaseWidth,
-                                                  SignalGraphicsObject::mastBaseHeight};
+                        QRectF mastBaseRect;
+
+                        if (signal.hasSperrMelder())
+                        {
+                            const auto mastBaseXPos = boundingRect.left() + SignalGraphicsObject::sperrMelderDiameter +
+                                                      SignalGraphicsObject::sperrMelderToBorderPadding +
+                                                      SignalGraphicsObject::sperrMelderMastBasePadding;
+
+                            mastBaseRect =
+                                QRectF{mastBaseXPos,
+                                       centerWithin(SignalGraphicsObject::mastBaseHeight, hauptSchirmRect.height(),
+                                                    hauptSchirmRect.top()),
+                                       (hauptSchirmRect.left() - mastBaseXPos), SignalGraphicsObject::mastBaseHeight};
+                        }
+                        else
+                        {
+                            mastBaseRect =
+                                QRectF{hauptSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                       centerWithin(SignalGraphicsObject::mastBaseHeight, hauptSchirmRect.height(),
+                                                    hauptSchirmRect.top()),
+                                       SignalGraphicsObject::mastBaseWidth, SignalGraphicsObject::mastBaseHeight};
+                        }
 
                         this->drawMastBase(painter, mastBaseRect);
                     }
+                }
+
+                if (signal.hasSperrMelder())
+                {
+                    const auto sperrMelderState = signal.sperrMelderState();
+
+                    const QRectF sperrMelderRect{boundingRect.left() + SignalGraphicsObject::sperrMelderToBorderPadding,
+                                                 centerWithin(SignalGraphicsObject::sperrMelderDiameter,
+                                                              hauptSchirmRect.height(), hauptSchirmRect.top()),
+                                                 SignalGraphicsObject::sperrMelderDiameter,
+                                                 SignalGraphicsObject::sperrMelderDiameter};
+
+                    this->drawSperrMelder(painter, sperrMelderRect, sperrMelderState);
                 }
 
                 break;

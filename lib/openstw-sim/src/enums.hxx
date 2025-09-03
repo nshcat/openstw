@@ -14,6 +14,12 @@ namespace Openstw::Simulation
         Backward = 1 //< Right to left
     };
 
+    enum class SperrMelderState
+    {
+        Off = 0,
+        On = 1
+    };
+
     enum class SignalBildType
     {
         None = 0,

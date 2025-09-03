@@ -28,6 +28,12 @@ namespace Openstw::Simulation
         signal.m_hasConnector = isConnected;
         // ==
 
+        // == Sperrmelder
+        const auto hasSperrMelder = (bool)root.child("SperrMelder");
+        if (hasSperrMelder)
+            signal.m_sperrMelder = SperrMelderState::Off;
+        // ==
+
         // == Primary Signalschirm
         const auto primarySignalSchirmNode = root.child("PrimarySignalSchirm");
         if (!primarySignalSchirmNode)
@@ -78,6 +84,19 @@ namespace Openstw::Simulation
     const std::string& Signal::name() const
     {
         return m_signalName;
+    }
+
+    bool Signal::hasSperrMelder() const
+    {
+        return this->m_sperrMelder.has_value();
+    }
+
+    SperrMelderState Signal::sperrMelderState() const
+    {
+        if (!this->hasSperrMelder())
+            throw std::runtime_error("Signal has no Sperrmelder");
+
+        return this->m_sperrMelder.value();
     }
 
     ISignalSchirm* Signal::primarySignalSchirm()

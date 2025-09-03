@@ -39,6 +39,8 @@ namespace Openstw::Simulation
         BlockSignalType blockSignalType() const;
         bool hasConnector() const;
         const std::string& name() const;
+        bool hasSperrMelder() const;
+        SperrMelderState sperrMelderState() const;
 
         ISignalSchirm* primarySignalSchirm();
         const ISignalSchirm* primarySignalSchirm() const;
@@ -57,5 +59,6 @@ namespace Openstw::Simulation
         BlockSignalType m_blockSignalType{BlockSignalType::SelbstBlock};
 
         bool m_hasConnector{false}; //< Used on both signals in a signal that spans multiple tiles
+        std::optional<SperrMelderState> m_sperrMelder{};
     };
 }
