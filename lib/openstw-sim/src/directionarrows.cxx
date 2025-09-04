@@ -17,6 +17,10 @@ namespace Openstw::Simulation
             arrowAlignment = ArrowAlignment::Right;
         arrow.m_alignment = arrowAlignment;
 
+        // Label attribute
+        const QString label = node.attribute("label").as_string("");
+        arrow.m_label = label;
+
         // Arrow directions
         const auto leftDirectionNode = node.child("Left");
         if (leftDirectionNode)
@@ -41,5 +45,15 @@ namespace Openstw::Simulation
     ArrowAlignment DirectionArrows::alignment() const
     {
         return this->m_alignment;
+    }
+
+    bool DirectionArrows::hasLabel() const
+    {
+        return !this->m_label.isEmpty();
+    }
+
+    const QString& DirectionArrows::label() const
+    {
+        return this->m_label;
     }
 }

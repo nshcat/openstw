@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QPainter>
 #include <QtCore>
 
 namespace Rendering
@@ -24,4 +25,17 @@ namespace Rendering
      * use this function on both the x and y coordinate with appropiate values.
      */
     qreal centerWithin(qreal objectLength, qreal containerLength, qreal containerPosition);
+
+    /**
+     * @brief Draws a text box that contains given text. The font size is chosen in such a way that the
+     * text fills the given rectangle as best as possible.
+     */
+    void drawTextBox(QPainter* painter, const QRectF& rect, const QString& text, QColor backgroundColor,
+                     QColor borderColor, qreal borderThickness, QColor textColor);
+
+    /**
+     * @brief Adjusts the size of the currently set font in such a way that the given text fits well into the given
+     * rectangle.
+     */
+    void adjustFontSizeToFit(QPainter* painter, const QRectF& rect, const int textFlags, const QString& text);
 }

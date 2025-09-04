@@ -9,10 +9,19 @@ namespace Rendering
 {
     class ArrowGraphicsObject : public Rendering::TileComponentGraphicsObject
     {
+        enum class LabelBoxLocation
+        {
+            Top = 0,
+            Bottom = 1
+        };
+
         Q_OBJECT
 
     public:
         constexpr static qreal arrowTipOverDrawFactor = 0.20f;
+        constexpr static qreal labelBoxWidth = 140.0f;
+        constexpr static qreal labelBoxHeight = 20.0f;
+        constexpr static qreal labelBoxBorderPadding = 12.0f;
 
     public:
         ArrowGraphicsObject(TileGraphicsObject* parent);
@@ -26,5 +35,6 @@ namespace Rendering
 
     protected:
         void drawArrow(QPainter* painter, Openstw::Simulation::ArrowDirection direction, const QRectF& location) const;
+        void drawLabel(QPainter* painter, LabelBoxLocation location, const QString& label) const;
     };
 }

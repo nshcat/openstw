@@ -2,6 +2,8 @@
 
 #include <pugixml.hpp>
 
+#include <qstring.h>
+
 #include "enums.hxx"
 #include "utility.hxx"
 
@@ -30,9 +32,12 @@ namespace Openstw::Simulation
     public:
         FlagField<ArrowDirection> directions() const;
         ArrowAlignment alignment() const;
+        bool hasLabel() const;
+        const QString& label() const;
 
     protected:
         FlagField<ArrowDirection> m_directions{ArrowDirection::None};
         ArrowAlignment m_alignment{ArrowAlignment::Left};
+        QString m_label{};
     };
 }

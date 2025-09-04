@@ -2,6 +2,7 @@
 
 #include "../tilegraphicsobject.hxx"
 #include "arrowgraphicsobject.hxx"
+#include "renderinghelpers.hxx"
 
 namespace Rendering
 {
@@ -52,6 +53,22 @@ namespace Rendering
         painter->restore();
     }
 
+    void ArrowGraphicsObject::drawLabel(QPainter* painter, LabelBoxLocation location, const QString& label) const
+    {
+        const auto boundingRect = this->tileGraphicsObject()->innerBoundingRect();
+
+        const qreal labelBoxYPos = (location == LabelBoxLocation::Top)
+                                       ? (boundingRect.top() + ArrowGraphicsObject::labelBoxBorderPadding)
+                                       : (boundingRect.bottom() - ArrowGraphicsObject::labelBoxBorderPadding -
+                                          ArrowGraphicsObject::labelBoxHeight);
+
+        const QRectF labelBoxRect{
+            centerWithin(ArrowGraphicsObject::labelBoxWidth, boundingRect.width(), boundingRect.left()), labelBoxYPos,
+            ArrowGraphicsObject::labelBoxWidth, ArrowGraphicsObject::labelBoxHeight};
+
+        drawTextBox(painter, labelBoxRect, label, Qt::white, Qt::transparent, 0.0f, Qt::black);
+    }
+
     void ArrowGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         if (!this->m_tile->hasDirectionArrows())
@@ -81,6 +98,7 @@ namespace Rendering
 
         bool hasLeftArrow = arrowDirections.has(Openstw::Simulation::ArrowDirection::Left);
         bool hasRightArrow = arrowDirections.has(Openstw::Simulation::ArrowDirection::Right);
+        LabelBoxLocation labelLocation{LabelBoxLocation::Top};
 
         // If both arrows are to be drawn, the alignment doesnt matter. The arrows point towards the center.
         if (hasLeftArrow && hasRightArrow)
@@ -89,6 +107,7 @@ namespace Rendering
             leftHalfArrowDirection = Openstw::Simulation::ArrowDirection::Right;
             rightHalfHasArrow = true;
             rightHalfArrowDirection = Openstw::Simulation::ArrowDirection::Left;
+            labelLocation = LabelBoxLocation::Bottom;
         }
         else if (hasLeftArrow)
         {
@@ -102,6 +121,8 @@ namespace Rendering
                 rightHalfHasArrow = true;
                 rightHalfArrowDirection = Openstw::Simulation::ArrowDirection::Left;
             }
+
+            labelLocation = LabelBoxLocation::Top;
         }
         else if (hasRightArrow)
         {
@@ -115,11 +136,16 @@ namespace Rendering
                 rightHalfHasArrow = true;
                 rightHalfArrowDirection = Openstw::Simulation::ArrowDirection::Right;
             }
+
+            labelLocation = LabelBoxLocation::Bottom;
         }
 
         if (leftHalfHasArrow)
             this->drawArrow(painter, leftHalfArrowDirection, leftHalf);
         if (rightHalfHasArrow)
             this->drawArrow(painter, rightHalfArrowDirection, rightHalf);
+
+        if (arrows.hasLabel())
+            this->drawLabel(painter, labelLocation, arrows.label());
     }
 }

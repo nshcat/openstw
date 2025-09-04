@@ -21,9 +21,9 @@
             </BackwardSignal>
         </Tile>
         <Tile x="0" y="2">
-            <Track hasLeuchtMelder="false"></Track>
+            <Track></Track>
 
-            <DirectionArrows>
+            <DirectionArrows label="v.u.n. Essen Pbf.">
                 <Left/>
                 <Right/>
             </DirectionArrows>
@@ -107,9 +107,9 @@
         </Tile>
 
         <Tile x="0" y="6">
-            <Track hasLeuchtMelder="false"></Track>
+            <Track></Track>
 
-            <DirectionArrows alignment="left">
+            <DirectionArrows alignment="left" label="v. Essen Pbf.">
                 <Right/>
             </DirectionArrows>
         </Tile>
@@ -197,9 +197,9 @@
         </Tile>
 
         <Tile x="0" y="5">
-            <Track hasLeuchtMelder="false"></Track>
+            <Track></Track>
 
-            <DirectionArrows alignment="left">
+            <DirectionArrows alignment="left" label="n. Essen Pbf.">
                 <Left/>
             </DirectionArrows>
         </Tile>
@@ -284,9 +284,6 @@
                 <SperrMelder/>
             </BackwardSignal>
         </Tile>
-
-
-
     </TilePanel>
 </Simulation>
 
