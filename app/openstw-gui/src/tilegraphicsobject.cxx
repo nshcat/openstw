@@ -58,6 +58,10 @@ void TileGraphicsObject::createComponentRenderers()
     this->m_arrowRenderer->setup();
     this->scene()->addItem(this->m_arrowRenderer);
 
+    this->m_erlaubnisFeldRenderer = new Rendering::ErlaubsnisFeldGraphicsObject{this};
+    this->m_erlaubnisFeldRenderer->setup();
+    this->scene()->addItem(this->m_erlaubnisFeldRenderer);
+
     this->m_trackRenderer = new Rendering::TrackGraphicsObject{this};
     this->m_trackRenderer->setup();
     this->scene()->addItem(this->m_trackRenderer);

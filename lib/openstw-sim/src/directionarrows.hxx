@@ -19,6 +19,8 @@ namespace Openstw::Simulation
         DirectionArrows();
 
     public:
+        ~DirectionArrows() = default;
+
         // No copy allowed
         DirectionArrows(const DirectionArrows&) = delete;
         DirectionArrows& operator=(const DirectionArrows&) = delete;

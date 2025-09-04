@@ -41,6 +41,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
         src/rendering/arrowgraphicsobject.hxx
         src/rendering/arrowgraphicsobject.cxx
         src/rendering/arrowgraphicsobject.cxx
+        src/rendering/erlaubnisfeldgraphicsobject.hxx
+        src/rendering/erlaubnisfeldgraphicsobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

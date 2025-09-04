@@ -14,6 +14,12 @@ namespace Openstw::Simulation
         Backward = 1 //< Right to left
     };
 
+    enum class AusfahrErlaubnisState
+    {
+        ThisStellwerk = 0,
+        OtherStellwerk = 1
+    };
+
     enum class ArrowDirection
     {
         None = 0,

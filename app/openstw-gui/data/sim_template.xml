@@ -30,10 +30,7 @@
         </Tile>
         <Tile x="1" y="2">
             <Track></Track>          
-            <ForwardSignal name="Hv100">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </ForwardSignal>
+            <ErlaubnisFeld ausfahrLabel="Essen" ausfahrDirection="left"/>
         </Tile>
         <Tile x="2" y="2">
             <Track></Track>

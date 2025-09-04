@@ -4,6 +4,7 @@
 #include <tile.hxx>
 
 #include "rendering/arrowgraphicsobject.hxx"
+#include "rendering/erlaubnisfeldgraphicsobject.hxx"
 #include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
@@ -49,4 +50,5 @@ protected: // == Component renderers
     Rendering::TrackGraphicsObject* m_trackRenderer;
     Rendering::SignalGraphicsObject* m_fwdSignalRenderer;
     Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;
+    Rendering::ErlaubsnisFeldGraphicsObject* m_erlaubnisFeldRenderer;
 };

@@ -26,7 +26,14 @@ namespace Openstw::Simulation
         {
             tile.m_arrows = DirectionArrows::CreateFrom(arrowsNode);
         }
+        // ==
 
+        // == Erlaubnisfeld
+        const auto erlaubnisFeldNode = root.child("ErlaubnisFeld");
+        if (erlaubnisFeldNode)
+        {
+            tile.m_erlaubnisFeld = ErlaubnisFeld::CreateFrom(erlaubnisFeldNode);
+        }
         // ==
 
         // == Track
@@ -91,6 +98,19 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile doesnt contain direction arrows");
 
         return this->m_arrows.value();
+    }
+
+    bool Tile::hasErlaubnisFeld() const
+    {
+        return this->m_erlaubnisFeld.has_value();
+    }
+
+    ErlaubnisFeld& Tile::erlaubnisFeld()
+    {
+        if (!this->hasErlaubnisFeld())
+            throw std::runtime_error("Tile doesnt contain Erlaubnisfeld");
+
+        return this->m_erlaubnisFeld.value();
     }
 
     bool Tile::hasDirectionArrows() const

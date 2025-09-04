@@ -1,6 +1,7 @@
 #pragma once
 
 #include "directionarrows.hxx"
+#include "erlaubnisfeld.hxx"
 #include "signal.hxx"
 #include "tracksegment.hxx"
 #include "utility.hxx"
@@ -38,9 +39,10 @@ namespace Openstw::Simulation
         Signal& signal(const TileElementDirection direction);
         bool hasTrack() const;
         TrackSegment& track();
-
         bool hasDirectionArrows() const;
         DirectionArrows& directionArrows();
+        bool hasErlaubnisFeld() const;
+        ErlaubnisFeld& erlaubnisFeld();
 
     public: // == Signals
         /**
@@ -61,9 +63,8 @@ namespace Openstw::Simulation
         GridPosition m_position{};
         std::optional<Signal> m_forwardSignal{};  //< Signal for traffic going left to right
         std::optional<Signal> m_backwardSignal{}; //< Signal for traffic from right to left
-
         std::optional<TrackSegment> m_track{};
-
         std::optional<DirectionArrows> m_arrows{};
+        std::optional<ErlaubnisFeld> m_erlaubnisFeld{};
     };
 }
