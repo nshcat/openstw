@@ -22,8 +22,11 @@
         </Tile>
         <Tile x="0" y="2">
             <Track hasLeuchtMelder="false"></Track>
-            <LeftArrow/>
-            <RightArrow/>
+
+            <DirectionArrows>
+                <Left/>
+                <Right/>
+            </DirectionArrows>
         </Tile>
         <Tile x="1" y="2">
             <Track></Track>          
@@ -106,7 +109,9 @@
         <Tile x="0" y="6">
             <Track hasLeuchtMelder="false"></Track>
 
-            <RightArrow alignment="left"/>
+            <DirectionArrows alignment="left">
+                <Right/>
+            </DirectionArrows>
         </Tile>
 
         <Tile x="1" y="6">
@@ -194,7 +199,9 @@
         <Tile x="0" y="5">
             <Track hasLeuchtMelder="false"></Track>
 
-            <LeftArrow alignment="left"/>
+            <DirectionArrows alignment="left">
+                <Left/>
+            </DirectionArrows>
         </Tile>
 
         <Tile x="1" y="5">

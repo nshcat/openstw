@@ -1,12 +1,11 @@
 #pragma once
 
-#include <optional>
-
-#include <boost/signals2.hpp>
-
+#include "directionarrows.hxx"
 #include "signal.hxx"
 #include "tracksegment.hxx"
 #include "utility.hxx"
+#include <boost/signals2.hpp>
+#include <optional>
 
 namespace Openstw::Simulation
 {
@@ -40,9 +39,8 @@ namespace Openstw::Simulation
         bool hasTrack() const;
         TrackSegment& track();
 
-        bool hasArrow() const;
-        FlagField<ArrowDirection> arrows() const;
-        ArrowAlignment arrowAlignment() const;
+        bool hasDirectionArrows() const;
+        DirectionArrows& directionArrows();
 
     public: // == Signals
         /**
@@ -66,7 +64,6 @@ namespace Openstw::Simulation
 
         std::optional<TrackSegment> m_track{};
 
-        FlagField<ArrowDirection> m_arrows{ArrowDirection::None};
-        ArrowAlignment m_arrowAlignment{ArrowAlignment::Left};
+        std::optional<DirectionArrows> m_arrows{};
     };
 }

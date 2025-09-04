@@ -26,6 +26,7 @@ add_library(openstw-sim STATIC
   src/vorsignalschirm.hxx src/vorsignalschirm.cxx
   src/imodifysignalschirm.hxx src/imodifysignalschirm.cxx
   src/tracksegment.hxx src/tracksegment.cxx
+  src/directionarrows.hxx src/directionarrows.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)

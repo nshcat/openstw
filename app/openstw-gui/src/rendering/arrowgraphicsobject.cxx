@@ -54,7 +54,13 @@ namespace Rendering
 
     void ArrowGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
-        if (!this->m_tile->hasArrow())
+        if (!this->m_tile->hasDirectionArrows())
+            return;
+
+        const auto& arrows = this->m_tile->directionArrows();
+
+        const auto arrowDirections = arrows.directions();
+        if (!arrowDirections.hasAny())
             return;
 
         // Base class method call sets up clipping region
@@ -73,8 +79,8 @@ namespace Rendering
         bool rightHalfHasArrow{false};
         Openstw::Simulation::ArrowDirection rightHalfArrowDirection;
 
-        bool hasLeftArrow = this->m_tile->arrows().has(Openstw::Simulation::ArrowDirection::Left);
-        bool hasRightArrow = this->m_tile->arrows().has(Openstw::Simulation::ArrowDirection::Right);
+        bool hasLeftArrow = arrowDirections.has(Openstw::Simulation::ArrowDirection::Left);
+        bool hasRightArrow = arrowDirections.has(Openstw::Simulation::ArrowDirection::Right);
 
         // If both arrows are to be drawn, the alignment doesnt matter. The arrows point towards the center.
         if (hasLeftArrow && hasRightArrow)
@@ -86,7 +92,7 @@ namespace Rendering
         }
         else if (hasLeftArrow)
         {
-            if (this->m_tile->arrowAlignment() == Openstw::Simulation::ArrowAlignment::Left)
+            if (arrows.alignment() == Openstw::Simulation::ArrowAlignment::Left)
             {
                 leftHalfHasArrow = true;
                 leftHalfArrowDirection = Openstw::Simulation::ArrowDirection::Left;
@@ -99,7 +105,7 @@ namespace Rendering
         }
         else if (hasRightArrow)
         {
-            if (this->m_tile->arrowAlignment() == Openstw::Simulation::ArrowAlignment::Left)
+            if (arrows.alignment() == Openstw::Simulation::ArrowAlignment::Left)
             {
                 leftHalfHasArrow = true;
                 leftHalfArrowDirection = Openstw::Simulation::ArrowDirection::Right;

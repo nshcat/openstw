@@ -21,19 +21,12 @@ namespace Openstw::Simulation
         // ==
 
         // == Arrows
-        const auto leftArrowNode = root.child("LeftArrow");
-        if (leftArrowNode)
+        const auto arrowsNode = root.child("DirectionArrows");
+        if (arrowsNode)
         {
-            tile.m_arrowAlignment = Tile::ParseArrowAlignment(leftArrowNode);
-            tile.m_arrows.set(ArrowDirection::Left);
+            tile.m_arrows = DirectionArrows::CreateFrom(arrowsNode);
         }
 
-        const auto rightArrowNode = root.child("RightArrow");
-        if (rightArrowNode)
-        {
-            tile.m_arrowAlignment = Tile::ParseArrowAlignment(rightArrowNode);
-            tile.m_arrows.set(ArrowDirection::Right);
-        }
         // ==
 
         // == Track
@@ -59,16 +52,6 @@ namespace Openstw::Simulation
         // ==
 
         return std::move(tile);
-    }
-
-    ArrowAlignment Tile::ParseArrowAlignment(const pugi::xml_node& node)
-    {
-        const std::string arrowAlignmentTxt = node.attribute("alignment").as_string("left");
-        ArrowAlignment arrowAlignment{ArrowAlignment::Left};
-        if (arrowAlignmentTxt == "right")
-            arrowAlignment = ArrowAlignment::Right;
-
-        return arrowAlignment;
     }
 
     bool Tile::hasSignal(const TileElementDirection direction) const
@@ -102,19 +85,17 @@ namespace Openstw::Simulation
         return this->m_track.value();
     }
 
-    bool Tile::hasArrow() const
+    DirectionArrows& Tile::directionArrows()
     {
-        return this->m_arrows.hasAny();
+        if (!this->hasDirectionArrows())
+            throw std::runtime_error("Tile doesnt contain direction arrows");
+
+        return this->m_arrows.value();
     }
 
-    FlagField<ArrowDirection> Tile::arrows() const
+    bool Tile::hasDirectionArrows() const
     {
-        return this->m_arrows;
-    }
-
-    ArrowAlignment Tile::arrowAlignment() const
-    {
-        return this->m_arrowAlignment;
+        return this->m_arrows.has_value();
     }
 
     void Tile::setPosition(const GridPosition& newPosition)
