@@ -21,10 +21,8 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
+
 
     qt_add_executable(openstw-gui
         MANUAL_FINALIZATION
@@ -92,11 +90,8 @@ add_custom_command(
                 ${CMAKE_CURRENT_BINARY_DIR}/sim_template.xml)
 
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
-target_link_libraries(openstw-gui PRIVATE Qt6::Core)
-target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets)
-target_link_libraries(openstw-gui PRIVATE Qt6::Core)
-target_link_libraries(openstw-gui PRIVATE Qt6::Core)
-target_link_libraries(openstw-gui PRIVATE Qt6::Core)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg)
+
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(openstw-gui)

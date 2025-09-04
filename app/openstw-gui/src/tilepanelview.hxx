@@ -22,6 +22,7 @@ public:
     void setTilePanel(Openstw::Simulation::TilePanel* tilePanel);
     bool hasTilePanel() const;
     Openstw::Simulation::TilePanel* tilePanel() const;
+    void saveToSvg(const QString& path) const;
 
 protected: // == Internal helper methods
     void resetSceneRect();
@@ -33,6 +34,7 @@ protected: // == Input events
 
 protected slots:
     void onRecenterView();
+    void onSaveToImageFile();
 
 protected:
     Openstw::Simulation::TilePanel* m_tilePanel{};

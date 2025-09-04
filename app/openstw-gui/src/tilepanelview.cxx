@@ -1,5 +1,8 @@
+#include <QFileDialog>
 #include <QMenu>
+#include <QPainter>
 #include <QWheelEvent>
+#include <QtSvg/QSvgGenerator>
 #include <stdexcept>
 
 #include "tilegraphicsobject.hxx"
@@ -54,6 +57,21 @@ Openstw::Simulation::TilePanel *TilePanelView::tilePanel() const
     return this->m_tilePanel;
 }
 
+void TilePanelView::saveToSvg(const QString& path) const
+{
+    const auto sceneRect = this->m_scene->sceneRect();
+
+    QSvgGenerator generator{};
+    generator.setFileName(path);
+    generator.setSize(sceneRect.size().toSize());
+    generator.setViewBox(QRect{0, 0, static_cast<int>(sceneRect.width()), static_cast<int>(sceneRect.height())});
+
+    QPainter svgPainter{};
+    svgPainter.begin(&generator);
+    this->m_scene->render(&svgPainter);
+    svgPainter.end();
+}
+
 void TilePanelView::resetSceneRect()
 {
     this->setSceneRect(this->m_scene->sceneRect());
@@ -84,8 +102,10 @@ void TilePanelView::contextMenuEvent(QContextMenuEvent* event)
     QMenu contextMenu{this};
 
     QAction* actionRecenter = contextMenu.addAction("&Recenter View");
-
     connect(actionRecenter, &QAction::triggered, this, &TilePanelView::onRecenterView);
+
+    QAction* actionSaveToImageFile = contextMenu.addAction("Save to &Image File");
+    connect(actionSaveToImageFile, &QAction::triggered, this, &TilePanelView::onSaveToImageFile);
 
     contextMenu.exec(event->globalPos());
 }
@@ -94,4 +114,14 @@ void TilePanelView::onRecenterView()
 {
     this->resetTransform();
     this->resetSceneRect();
+}
+
+void TilePanelView::onSaveToImageFile()
+{
+    const auto filePath = QFileDialog::getSaveFileName(this, "Save Image File", "image.svg", "SVG Image Files (*.svg)");
+
+    if (filePath.isEmpty())
+        return;
+
+    this->saveToSvg(filePath);
 }
