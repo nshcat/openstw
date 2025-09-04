@@ -5,6 +5,18 @@
 
 namespace Rendering
 {
+    enum class HorizontalDirection
+    {
+        Left,
+        Right
+    };
+
+    enum class VerticalDirection
+    {
+        Top,
+        Bottom
+    };
+
     /**
      * @brief Adjusts given rect in such a way that when drawn with a pen of given thickness,
      * everything rendered (including the entirety of the border) will lay entirely inside the rectangle.
