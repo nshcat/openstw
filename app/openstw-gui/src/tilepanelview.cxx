@@ -65,6 +65,8 @@ void TilePanelView::saveToSvg(const QString& path) const
     generator.setFileName(path);
     generator.setSize(sceneRect.size().toSize());
     generator.setViewBox(QRect{0, 0, static_cast<int>(sceneRect.width()), static_cast<int>(sceneRect.height())});
+    generator.setTitle("SpDrS60 Simulation Export");
+    generator.setDescription("Vector image containing exported SpDrS60 simulation state");
 
     QPainter svgPainter{};
     svgPainter.begin(&generator);
