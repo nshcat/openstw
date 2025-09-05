@@ -27,6 +27,8 @@ namespace Rendering
         constexpr static QColor displayBorderColor{0x3f, 0x3f, 0x3f};
         constexpr static QColor displayDigitColor{0xf9, 0x6f, 0x71};
 
+        constexpr static qreal compactDisplayDigitPadding = 2.0f;
+
         /* clang-format off */
          
         /**
@@ -46,6 +48,18 @@ namespace Rendering
             SegmentOrientation::Vertical,
             SegmentOrientation::Horizontal
         };
+
+        constexpr static std::array<std::uint8_t, 10> digitSegments{
+            0b0111111,  // 0
+            0b0000110,  // 1
+            0b1011011,  // 2
+            0b1001111,  // 3
+            0b1100110,  // 4
+            0b1101101,  // 5
+            0b1111101,  // 6
+            0b0000111,  // 7
+            0b1111111,  // 8
+        };
         /* clang-format on */
 
     public:
@@ -59,7 +73,9 @@ namespace Rendering
         virtual void positionSelf() override;
 
     protected:
-        void drawDigit(QPainter* painter, const QRectF& location, const char digit) const;
+        void drawCompactDisplay(QPainter* painter, const QString& zugnummer, const QString& label) const;
+
+        void drawDigit(QPainter* painter, const QRectF& location, const qreal segmentThickness, const int digit) const;
 
         QPolygonF calculateSegmentPolygon(const QSizeF digitSize, const qreal segmentThickness,
                                           const int segmentNr) const;

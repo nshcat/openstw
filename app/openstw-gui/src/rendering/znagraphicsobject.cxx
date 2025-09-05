@@ -22,18 +22,57 @@ namespace Rendering
         this->setPos(this->boundingRect().topLeft());
     }
 
-    void ZNAGraphicsObject::drawDigit(QPainter* painter, const QRectF& location, const char digit) const
+    void ZNAGraphicsObject::drawCompactDisplay(QPainter* painter, const QString& zugnummer, const QString& label) const
     {
         painter->save();
+
+        const auto boundingRect = this->boundingRect();
+
+        const qreal displayRectWidth = boundingRect.width() - 2.0f * ZNAGraphicsObject::compactDisplaySidePadding;
+
+        const QRectF displayRect{
+            boundingRect.left() + ZNAGraphicsObject::compactDisplaySidePadding,
+            centerWithin(ZNAGraphicsObject::compactDisplayHeight, boundingRect.height(), boundingRect.top()),
+            displayRectWidth, ZNAGraphicsObject::compactDisplayHeight};
+
+        // Draw background
+        painter->setPen(rectanglePen(ZNAGraphicsObject::displayBorderColor, 1.0f));
+        painter->setBrush(ZNAGraphicsObject::displayBackgroundColor);
+        painter->drawRect(adjustRectForBorder(displayRect, 1.0f));
+
+        // Draw digits
+        const auto digitAreaRect = displayRect.marginsRemoved(QMarginsF{1.0f, 2.0f, 1.0f, 2.0f});
+        const QSizeF digitSize{(digitAreaRect.width() - 5.0f * ZNAGraphicsObject::compactDisplayDigitPadding) / 6.0f,
+                               digitAreaRect.height()};
+
+        std::array<int, 6> zugNummerDigits = {1, 2, 3, 4, 5, 6};
+        for (int digitIdx = 0; digitIdx < 6; ++digitIdx)
+        {
+            if (zugNummerDigits[digitIdx] == -1)
+                continue;
+
+            const QRectF digitRect{digitAreaRect.left() +
+                                       (digitIdx * (digitSize.width() + ZNAGraphicsObject::compactDisplayDigitPadding)),
+                                   digitAreaRect.top(), digitSize.width(), digitSize.height()};
+
+            this->drawDigit(painter, digitRect, 2.0f, zugNummerDigits[digitIdx]);
+        }
+
+        painter->restore();
+    }
+
+    void ZNAGraphicsObject::drawDigit(QPainter* painter, const QRectF& location, const qreal segmentThickness,
+                                      const int digit) const
+    {
+        painter->save();
+
+        if (digit < 0 || digit > 9)
+            throw std::runtime_error("Digit out of range");
 
         const QSizeF digitSize{location.width() - 8, location.height()};
         const QRectF digitBounds = {centerWithin(digitSize.width(), location.width(), location.left()),
                                     centerWithin(digitSize.height(), location.height(), location.top()),
                                     digitSize.width(), digitSize.height()};
-
-        painter->setPen(rectanglePen(ZNAGraphicsObject::displayBackgroundColor, 1.0f));
-        painter->setBrush(ZNAGraphicsObject::displayBackgroundColor);
-        painter->drawRect(adjustRectForBorder(location, 1.0f));
 
         painter->setPen(rectanglePen(ZNAGraphicsObject::displayDigitColor, 0.5f));
         painter->setBrush(ZNAGraphicsObject::displayDigitColor);
@@ -41,16 +80,16 @@ namespace Rendering
         painter->translate(digitBounds.center());
         painter->shear(-0.1, 0.0);
         painter->translate(-digitBounds.center());
-
         painter->translate(digitBounds.topLeft());
+
+        const auto segmentStates = ZNAGraphicsObject::digitSegments[digit];
         for (int i = 0; i < 7; ++i)
         {
-            const auto segmentPolygon = this->calculateSegmentPolygon(digitBounds.size(), 3.0f, i);
-            painter->drawPolygon(segmentPolygon);
-        }
+            const auto segmentPolygon = this->calculateSegmentPolygon(digitBounds.size(), segmentThickness, i);
 
-        /*const auto segmentPolygon = this->calculateSegmentPolygon(location.size(), 2.0f, 1);
-        painter->drawPolygon(segmentPolygon);*/
+            if ((segmentStates >> i) & 1)
+                painter->drawPolygon(segmentPolygon);
+        }
 
         painter->restore();
     }
@@ -133,12 +172,14 @@ namespace Rendering
             return;
 
         const auto& zna = this->m_tile->zugnummernAnzeige();
+        const auto displayType = zna.anzeigeType();
 
         // Base class method call sets up clipping region
         TileComponentGraphicsObject::paint(painter, option, widget);
 
-        const auto boundingRect = this->boundingRect();
-
-        this->drawDigit(painter, QRectF{boundingRect.left() + 10, boundingRect.top() + 10, 38, 60}, '8');
+        if (displayType == Openstw::Simulation::ZugnummernAnzeigeType::Compact)
+        {
+            this->drawCompactDisplay(painter, zna.currentZugNummer(), zna.label());
+        }
     }
 }
