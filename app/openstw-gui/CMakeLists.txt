@@ -42,6 +42,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/rendering/arrowgraphicsobject.cxx
         src/rendering/erlaubnisfeldgraphicsobject.hxx
         src/rendering/erlaubnisfeldgraphicsobject.cxx
+        src/rendering/znagraphicsobject.hxx
+        src/rendering/znagraphicsobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

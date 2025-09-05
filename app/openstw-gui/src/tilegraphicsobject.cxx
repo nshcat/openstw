@@ -75,4 +75,8 @@ void TileGraphicsObject::createComponentRenderers()
         new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Forward};
     this->m_fwdSignalRenderer->setup();
     this->scene()->addItem(this->m_fwdSignalRenderer);
+
+    this->m_znaRenderer = new Rendering::ZNAGraphicsObject{this};
+    this->m_znaRenderer->setup();
+    this->scene()->addItem(this->m_znaRenderer);
 }

@@ -8,6 +8,7 @@
 #include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
+#include "rendering/znagraphicsobject.hxx"
 
 class TileGraphicsObject : public QGraphicsObject
 {
@@ -51,4 +52,5 @@ protected: // == Component renderers
     Rendering::SignalGraphicsObject* m_fwdSignalRenderer;
     Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;
     Rendering::ErlaubsnisFeldGraphicsObject* m_erlaubnisFeldRenderer;
+    Rendering::ZNAGraphicsObject* m_znaRenderer;
 };

@@ -121,6 +121,19 @@ namespace Openstw::Simulation
         return this->m_erlaubnisFeld.value();
     }
 
+    bool Tile::hasZugnummernAnzeige() const
+    {
+        return this->m_zugNummernAnzeige.has_value();
+    }
+
+    ZugnummernAnzeige& Tile::zugnummernAnzeige()
+    {
+        if (!this->hasZugnummernAnzeige())
+            throw std::runtime_error("Tile doesnt contain Zugnummernanzeige");
+
+        return this->m_zugNummernAnzeige.value();
+    }
+
     bool Tile::hasDirectionArrows() const
     {
         return this->m_arrows.has_value();

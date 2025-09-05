@@ -44,6 +44,8 @@ namespace Openstw::Simulation
         DirectionArrows& directionArrows();
         bool hasErlaubnisFeld() const;
         ErlaubnisFeld& erlaubnisFeld();
+        bool hasZugnummernAnzeige() const;
+        ZugnummernAnzeige& zugnummernAnzeige();
 
     public: // == Signals
         /**
