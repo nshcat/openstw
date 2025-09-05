@@ -20,8 +20,7 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    find_package(Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
+    find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
 
 
     qt_add_executable(openstw-gui

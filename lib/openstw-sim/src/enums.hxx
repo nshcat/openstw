@@ -3,6 +3,27 @@
 namespace Openstw::Simulation
 {
     /**
+     * @brief Enum describing the possible states of a lamp that can either
+     * be on or off.
+     */
+    enum class StaticLampState
+    {
+        Off = 0,
+        On = 1
+    };
+
+    /**
+     * @brief Enum describing the three possible states of a lamp that can
+     * blink.
+     */
+    enum class BlinkLampState
+    {
+        Off = 0,
+        On = 1,
+        Blinking = 2
+    };
+
+    /**
      * @brief Somewhat arbitrary labeling of the direction a tile
      * element is facing. We assign elements that are meant for traffic going
      * from left to right the label 'forward', and ones that go in the other

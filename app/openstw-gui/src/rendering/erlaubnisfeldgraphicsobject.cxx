@@ -80,17 +80,18 @@ namespace Rendering
         painter->restore();
     }
 
-    void ErlaubsnisFeldGraphicsObject::drawLamp(QPainter* painter, const QRectF& location, bool lampOn)
+    void ErlaubsnisFeldGraphicsObject::drawAusfahrSperrMelder(QPainter* painter, const QRectF& location, bool lampOn)
     {
         painter->save();
 
-        // XXX Implement active state
-        const QColor lampInnerColor = ErlaubsnisFeldGraphicsObject::inactiveLampColor;
+        const QColor lampInnerColor = lampOn ? ErlaubsnisFeldGraphicsObject::activeAusfahrSperrLampColor
+                                             : ErlaubsnisFeldGraphicsObject::inactiveAusfahrSperrLampColor;
 
         const QRectF lampRect{
-            centerWithin(ErlaubsnisFeldGraphicsObject::lampDiameter, location.width(), location.left()),
-            centerWithin(ErlaubsnisFeldGraphicsObject::lampDiameter, location.height(), location.top()),
-            ErlaubsnisFeldGraphicsObject::lampDiameter, ErlaubsnisFeldGraphicsObject::lampDiameter};
+            centerWithin(ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter, location.width(), location.left()),
+            centerWithin(ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter, location.height(), location.top()),
+            ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter,
+            ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter};
 
         painter->setPen(QPen{Qt::black, 0.5f});
         painter->setBrush(lampInnerColor);
@@ -195,18 +196,20 @@ namespace Rendering
 
         this->drawErlaubnisMelder(painter, ausfahrMelderRect, ausfahrMelderColor, HorizontalDirection::Left);
 
-        // Lamp
-        // XXX implement active state
-        const QRectF lampRect{
-            ausfahrMelderRect.right() + ErlaubsnisFeldGraphicsObject::lampPadding,
-            centerWithin(ErlaubsnisFeldGraphicsObject::lampDiameter, outgoingRect.height(), outgoingRect.top()),
-            ErlaubsnisFeldGraphicsObject::lampDiameter, ErlaubsnisFeldGraphicsObject::lampDiameter};
+        // Ausfahrsperrmelder Lamp
+        const QRectF sperrLampRect{ausfahrMelderRect.right() + ErlaubsnisFeldGraphicsObject::ausfahrSperrLampPadding,
+                                   centerWithin(ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter,
+                                                outgoingRect.height(), outgoingRect.top()),
+                                   ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter,
+                                   ErlaubsnisFeldGraphicsObject::ausfahrSperrLampDiameter};
 
-        this->drawLamp(painter, lampRect, false);
+        const auto sperrLampOn = (erlaubnisFeld.ausfahrSperrMelderState() == Openstw::Simulation::StaticLampState::On);
+
+        this->drawAusfahrSperrMelder(painter, sperrLampRect, sperrLampOn);
 
         // Outgoing label
         const QRectF outgoingLabelRect{
-            lampRect.right() + ErlaubsnisFeldGraphicsObject::lampPadding,
+            sperrLampRect.right() + ErlaubsnisFeldGraphicsObject::ausfahrSperrLampPadding,
             centerWithin(ErlaubsnisFeldGraphicsObject::textBoxHeight, outgoingRect.height(), outgoingRect.top()),
             ErlaubsnisFeldGraphicsObject::textBoxWidth, ErlaubsnisFeldGraphicsObject::textBoxHeight};
         this->drawAusfahrLabel(painter, outgoingLabelRect, erlaubnisFeld.ausfahrRichtungLabel());

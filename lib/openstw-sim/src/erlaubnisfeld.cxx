@@ -36,4 +36,9 @@ namespace Openstw::Simulation
     {
         return this->m_erlaubnisState;
     }
+
+    StaticLampState ErlaubnisFeld::ausfahrSperrMelderState() const
+    {
+        return this->m_ausfahrSperrMelderState;
+    }
 }

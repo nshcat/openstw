@@ -28,9 +28,10 @@ namespace Rendering
         constexpr static qreal horzPaddingToBorder = 10.0f;
         constexpr static qreal buttonLabelPadding = 5.0f;
 
-        constexpr static qreal lampDiameter = 11.0f;
-        constexpr static QColor inactiveLampColor{0x11, 0x1e, 0x3a}; // XXX Implement active state
-        constexpr static qreal lampPadding = 10.0f;
+        constexpr static qreal ausfahrSperrLampDiameter = 11.0f;
+        constexpr static QColor inactiveAusfahrSperrLampColor{0x11, 0x1e, 0x3a};
+        constexpr static QColor activeAusfahrSperrLampColor{0x0, 0x0, 0xFF};
+        constexpr static qreal ausfahrSperrLampPadding = 10.0f;
 
     public:
         ErlaubsnisFeldGraphicsObject(TileGraphicsObject* parent);
@@ -51,6 +52,6 @@ namespace Rendering
         void drawButton(QPainter* painter, const QRectF& location) const;
         void drawEaTLabel(QPainter* painter, const QRectF& location) const;
         void drawAusfahrLabel(QPainter* painter, const QRectF& location, const QString& text) const;
-        void drawLamp(QPainter* painter, const QRectF& location, bool lampOn);
+        void drawAusfahrSperrMelder(QPainter* painter, const QRectF& location, bool lampOn);
     };
 }

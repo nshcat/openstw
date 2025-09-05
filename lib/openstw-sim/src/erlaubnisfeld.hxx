@@ -29,10 +29,12 @@ namespace Openstw::Simulation
         const QString& ausfahrRichtungLabel() const;
         TileElementDirection ausfahrRichtung() const;
         AusfahrErlaubnisState erlaubnisState() const;
+        StaticLampState ausfahrSperrMelderState() const;
 
     protected:
         QString m_ausfahrLabel{""};
         TileElementDirection m_ausfahrtDirection{TileElementDirection::Forward};
         AusfahrErlaubnisState m_erlaubnisState{AusfahrErlaubnisState::ThisStellwerk};
+        StaticLampState m_ausfahrSperrMelderState{StaticLampState::Off};
     };
 }
