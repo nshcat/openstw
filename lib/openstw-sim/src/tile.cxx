@@ -20,6 +20,14 @@ namespace Openstw::Simulation
         tile.m_position = GridPosition{static_cast<std::size_t>(x), static_cast<std::size_t>(y)};
         // ==
 
+        // == Zugnummernanzeige
+        const auto znaNode = root.child("ZugnummernAnzeige");
+        if (znaNode)
+        {
+            tile.m_zugNummernAnzeige = ZugnummernAnzeige::CreateFrom(znaNode);
+        }
+        // ==
+
         // == Arrows
         const auto arrowsNode = root.child("DirectionArrows");
         if (arrowsNode)

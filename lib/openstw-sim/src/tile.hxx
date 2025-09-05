@@ -5,6 +5,7 @@
 #include "signal.hxx"
 #include "tracksegment.hxx"
 #include "utility.hxx"
+#include "zugnummernanzeige.hxx"
 #include <boost/signals2.hpp>
 #include <optional>
 
@@ -66,5 +67,6 @@ namespace Openstw::Simulation
         std::optional<TrackSegment> m_track{};
         std::optional<DirectionArrows> m_arrows{};
         std::optional<ErlaubnisFeld> m_erlaubnisFeld{};
+        std::optional<ZugnummernAnzeige> m_zugNummernAnzeige{};
     };
 }
