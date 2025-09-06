@@ -6,7 +6,6 @@
 #include "tracksegment.hxx"
 #include "utility.hxx"
 #include "zugnummernanzeige.hxx"
-#include <boost/signals2.hpp>
 #include <optional>
 
 #include <QObject>
@@ -20,9 +19,6 @@ namespace Openstw::Simulation
         Q_OBJECT
 
         friend class TilePanel;
-
-    public:
-        using changed_event_t = boost::signals2::signal<void()>;
 
     public:
         Tile(QObject* parent);
@@ -39,6 +35,18 @@ namespace Openstw::Simulation
         static ArrowAlignment ParseArrowAlignment(const pugi::xml_node&);
 
     public: // == Public interface
+        /**
+         * @brief Marks this tile to be dirty. This doesnt cause an invalidation signal
+         * to be emitted right away though - that is done when `invalidateIfDirty` is
+         * eventually called.
+         */
+        void setDirty();
+
+        /**
+         * @brief Notify dependants of changes if this tile is dirty.
+         */
+        void invalidateIfDirty();
+
         const GridPosition& position() const;
         bool hasSignal(const TileElementDirection direction) const;
         Signal& signal(const TileElementDirection direction);
@@ -53,22 +61,14 @@ namespace Openstw::Simulation
         bool hasTileLabel() const;
         const QString& tileLabel() const;
 
-    public: // == Signals
-        /**
-         * Called whenever the tiles state was changed.
-         *
-         * Clients should invalidate and redraw their tile representation
-         * upon receiving this signal.
-         */
-        changed_event_t& on_changed();
+    signals:
+        void invalidated();
 
     protected:
         void setPosition(const GridPosition& newPosition);
 
     protected:
-        changed_event_t m_evtChanged{};
-
-    protected:
+        bool m_isDirty{false};
         GridPosition m_position{};
         std::optional<Signal> m_forwardSignal{};  //< Signal for traffic going left to right
         std::optional<Signal> m_backwardSignal{}; //< Signal for traffic from right to left

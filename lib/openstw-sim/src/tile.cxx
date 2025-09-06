@@ -77,6 +77,20 @@ namespace Openstw::Simulation
         return tile;
     }
 
+    void Tile::setDirty()
+    {
+        this->m_isDirty = true;
+    }
+
+    void Tile::invalidateIfDirty()
+    {
+        if (this->m_isDirty)
+        {
+            emit this->invalidateIfDirty();
+            this->m_isDirty = false;
+        }
+    }
+
     bool Tile::hasSignal(const TileElementDirection direction) const
     {
         if (direction == TileElementDirection::Forward)
@@ -165,10 +179,5 @@ namespace Openstw::Simulation
     const GridPosition& Tile::position() const
     {
         return this->m_position;
-    }
-
-    Tile::changed_event_t& Tile::on_changed()
-    {
-        return this->m_evtChanged;
     }
 }

@@ -1,4 +1,6 @@
 #include "simulation.hxx"
+#include <QtLogging>
+#include <cstdio>
 #include <pugixml.hpp>
 #include <stdexcept>
 

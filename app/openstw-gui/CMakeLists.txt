@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 
     qt_add_executable(openstw-gui
@@ -50,6 +51,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/rendering/labelgraphicsobject.hxx
         src/rendering/labelgraphicsobject.cxx
         data/sim_template_2.xml
+        src/simulationrunner.hxx src/simulationrunner.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -100,6 +102,7 @@ add_custom_command(
 
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 
 

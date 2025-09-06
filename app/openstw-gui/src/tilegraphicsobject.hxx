@@ -44,6 +44,9 @@ public:
 protected:
     void createComponentRenderers();
 
+protected slots:
+    void tileInvalidated();
+
 protected:
     Openstw::Simulation::Tile* m_tile{};
 

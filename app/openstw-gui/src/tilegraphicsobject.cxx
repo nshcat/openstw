@@ -6,6 +6,7 @@
 
 TileGraphicsObject::TileGraphicsObject(Openstw::Simulation::Tile* tile) : m_tile(tile)
 {
+    connect(tile, &Openstw::Simulation::Tile::invalidated, this, &TileGraphicsObject::tileInvalidated);
 }
 
 Openstw::Simulation::Tile* TileGraphicsObject::tile() const
@@ -83,4 +84,9 @@ void TileGraphicsObject::createComponentRenderers()
     this->m_labelRenderer = new Rendering::LabelGraphicsObject{this};
     this->m_labelRenderer->setup();
     this->scene()->addItem(this->m_labelRenderer);
+}
+
+void TileGraphicsObject::tileInvalidated()
+{
+    this->update();
 }

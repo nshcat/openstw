@@ -1,5 +1,6 @@
 #pragma once
 
+#include "simulationrunner.hxx"
 #include "tilepanelview.hxx"
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -20,9 +21,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected slots:
+    void simulationStarted();
+
 private:
     Ui::MainWindow* ui;
     QVBoxLayout* m_layout{};
     TilePanelView* m_tilePanelView{};
-    Openstw::Simulation::Simulation* m_simulation;
+    SimulationRunner* m_simRunner{};
 };
