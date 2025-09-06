@@ -9,6 +9,8 @@
 #include <boost/signals2.hpp>
 #include <optional>
 
+#include <QObject>
+
 namespace Openstw::Simulation
 {
     class TilePanel;

@@ -46,10 +46,12 @@ namespace Rendering
         virtual void afterSetup() override;
 
     protected:
-        void drawCompactDisplay(QPainter* painter, const QString& zugnummer, const QString& label) const;
+        void drawCompactDisplay(QPainter* painter, const Openstw::Simulation::ZugnummernAnzeigeState displayState,
+                                const QString& zugnummer, const QString& label) const;
         void drawCompactLabel(QPainter* painter, const QString& label) const;
 
-        void drawLargeDisplay(QPainter* painter, HorizontalDirection displayPart, const QString& zugnummer);
+        void drawLargeDisplay(QPainter* painter, const Openstw::Simulation::ZugnummernAnzeigeState displayState,
+                              HorizontalDirection displayPart, const QString& zugnummer);
 
         QRectF calculateCompactDisplayRect() const;
         QRectF calculateCompactDisplayDigitsRect() const;

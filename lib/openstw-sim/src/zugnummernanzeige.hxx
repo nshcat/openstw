@@ -20,11 +20,13 @@ namespace Openstw::Simulation
 
     enum class ZugnummernAnzeigeState
     {
-        Static = 0,
+        Off = 0,
 
-        LastDigitBlinking = 1,
+        Static = 1,
 
-        AllDigitsBlinking = 2
+        LastDigitBlinking = 2,
+
+        AllDigitsBlinking = 3
     };
 
     class ZugnummernAnzeige
