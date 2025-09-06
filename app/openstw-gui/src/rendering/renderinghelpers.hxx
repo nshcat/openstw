@@ -50,4 +50,9 @@ namespace Rendering
      * rectangle.
      */
     void adjustFontSizeToFit(QPainter* painter, const QRectF& rect, const int textFlags, const QString& text);
+
+    /**
+     * @brief Adjusts the currently active font to be bold
+     */
+    void makeCurrentFontBold(QPainter* painter);
 }

@@ -50,6 +50,7 @@ namespace Openstw::Simulation
         ZugnummernAnzeigeType anzeigeType() const;
         const QString& currentZugNummer() const;
         const QString& label() const;
+        bool hasLabel() const;
 
     protected:
         ZugnummernAnzeigeType m_type{ZugnummernAnzeigeType::Compact};

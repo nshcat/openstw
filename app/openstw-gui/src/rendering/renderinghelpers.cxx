@@ -62,4 +62,11 @@ namespace Rendering
         f.setPointSizeF(f.pointSizeF() * factor);
         painter->setFont(f);
     }
+
+    void makeCurrentFontBold(QPainter* painter)
+    {
+        QFont currentFont = painter->font();
+        currentFont.setBold(true);
+        painter->setFont(currentFont);
+    }
 }

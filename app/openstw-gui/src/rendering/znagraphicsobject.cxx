@@ -166,6 +166,25 @@ namespace Rendering
         return segment;
     }
 
+    void ZNAGraphicsObject::drawCompactLabel(QPainter* painter, const QString& label) const
+    {
+        painter->save();
+
+        const auto boundingRect = this->boundingRect();
+
+        const QRectF labelRect{
+            centerWithin(ZNAGraphicsObject::compactDisplayLabelWidth, boundingRect.width(), boundingRect.left()),
+            boundingRect.bottom() - ZNAGraphicsObject::compactDisplayLabelBottomPadding -
+                ZNAGraphicsObject::compactDisplayLabelHeight,
+            ZNAGraphicsObject::compactDisplayLabelWidth, ZNAGraphicsObject::compactDisplayLabelHeight};
+
+        makeCurrentFontBold(painter);
+
+        drawTextBox(painter, labelRect, label, Qt::white, Qt::transparent, 0.0, Qt::black);
+
+        painter->restore();
+    }
+
     void ZNAGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         if (!this->m_tile->hasZugnummernAnzeige())
@@ -180,6 +199,11 @@ namespace Rendering
         if (displayType == Openstw::Simulation::ZugnummernAnzeigeType::Compact)
         {
             this->drawCompactDisplay(painter, zna.currentZugNummer(), zna.label());
+
+            if (zna.hasLabel())
+            {
+                this->drawCompactLabel(painter, zna.label());
+            }
         }
     }
 }

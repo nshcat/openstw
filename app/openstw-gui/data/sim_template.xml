@@ -3,9 +3,12 @@
     <TilePanel width="11" height="7">
         <Tile x="0" y="0">
             <Track></Track>
-            <ZugnummernAnzeige/>
         </Tile>
         <Tile x="1" y="0">
+            <Track></Track>
+            <ZugnummernAnzeige label="102"/>
+        </Tile>
+        <Tile x="2" y="0">
             <Track></Track>
 
             <BackwardSignal name="H101" connected="true">
@@ -15,7 +18,7 @@
                 <SperrMelder/>
             </BackwardSignal>
         </Tile>
-        <Tile x="2" y="0">
+        <Tile x="3" y="0">
             <Track></Track>
 
             <BackwardSignal name="H101" connected="true">

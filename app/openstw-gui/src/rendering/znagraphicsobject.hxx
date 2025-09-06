@@ -28,6 +28,9 @@ namespace Rendering
         constexpr static QColor displayDigitColor{0xf9, 0x6f, 0x71};
 
         constexpr static qreal compactDisplayDigitPadding = 2.0f;
+        constexpr static qreal compactDisplayLabelWidth = 120.0f;
+        constexpr static qreal compactDisplayLabelHeight = 26.5f;
+        constexpr static qreal compactDisplayLabelBottomPadding = 2.0f;
 
         /* clang-format off */
          
@@ -82,5 +85,7 @@ namespace Rendering
 
         QPolygonF calculateHorizontalSegmentPolygon(const QSizeF digitSize, const qreal segmentThickness) const;
         QPolygonF calculateVerticalSegmentPolygon(const QSizeF digitSize, const qreal segmentThickness) const;
+
+        void drawCompactLabel(QPainter* painter, const QString& label) const;
     };
 }

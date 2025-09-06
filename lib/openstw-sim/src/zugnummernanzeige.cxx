@@ -45,4 +45,9 @@ namespace Openstw::Simulation
     {
         return this->m_label;
     }
+
+    bool ZugnummernAnzeige::hasLabel() const
+    {
+        return !this->m_label.isEmpty();
+    }
 }
