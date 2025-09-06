@@ -1,5 +1,6 @@
 #pragma once
 
+#include "renderinghelpers.hxx"
 #include "sevensegmentrenderer.hxx"
 #include "tilecomponentgraphicsobject.hxx"
 #include <QObject>
@@ -15,9 +16,8 @@ namespace Rendering
 
     public:
         constexpr static qreal compactDisplayHeight = 32.0f;
-        constexpr static qreal largeDisplayHeight = 50.0f;
         constexpr static qreal compactDisplaySidePadding = 4.0f;
-        constexpr static qreal largeDisplaySidePadding = 40.0f;
+
         constexpr static QColor displayBackgroundColor{0x25, 0x25, 0x25};
         constexpr static QColor displayBorderColor{0x3f, 0x3f, 0x3f};
         constexpr static QColor displayDigitColor{0xf9, 0x6f, 0x71};
@@ -26,6 +26,13 @@ namespace Rendering
         constexpr static qreal compactDisplayLabelWidth = 120.0f;
         constexpr static qreal compactDisplayLabelHeight = 26.5f;
         constexpr static qreal compactDisplayLabelBottomPadding = 2.0f;
+        constexpr static qreal compactDisplaySegmentThickness = 2.0f;
+
+        constexpr static qreal largeDisplaySidePadding = 40.0f;
+        constexpr static qreal largeDisplayHeight = 50.0f;
+        constexpr static qreal largeDisplaySegmentThickness = 3.0f;
+        constexpr static qreal largeDisplayDigitPadding = 6.0f;
+        constexpr static qreal largeDisplayOverdrawAmount = 5.0f;
 
     public:
         ZNAGraphicsObject(TileGraphicsObject* parent);
@@ -42,10 +49,16 @@ namespace Rendering
         void drawCompactDisplay(QPainter* painter, const QString& zugnummer, const QString& label) const;
         void drawCompactLabel(QPainter* painter, const QString& label) const;
 
+        void drawLargeDisplay(QPainter* painter, HorizontalDirection displayPart, const QString& zugnummer);
+
         QRectF calculateCompactDisplayRect() const;
         QRectF calculateCompactDisplayDigitsRect() const;
 
+        QRectF calculateLargeDisplayRect(HorizontalDirection displayPart) const;
+        QRectF calculateLargeDisplayDigitsRect(HorizontalDirection displayPart) const;
+
     protected:
         SevenSegmentRenderer m_compactDigitRenderer{};
+        SevenSegmentRenderer m_largeDigitRenderer{};
     };
 }

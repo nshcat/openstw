@@ -107,6 +107,17 @@
                 <SperrMelder/>
             </ForwardSignal>
         </Tile>
+
+        <Tile x="6" y="2">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeLeftPart"/>
+        </Tile>
+
+        <Tile x="7" y="2">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeRightPart"/>
+        </Tile>
+
         <Tile x="5" y="1">
             <Track></Track>
 
@@ -117,9 +128,7 @@
                 <SperrMelder/>
             </ForwardSignal>
         </Tile>
-        <Tile x="6" y="2">
-            <Track></Track>
-        </Tile>
+
 
         <Tile x="0" y="6">
             <Track></Track>

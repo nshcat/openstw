@@ -73,6 +73,62 @@ namespace Rendering
         painter->restore();
     }
 
+    void ZNAGraphicsObject::drawLargeDisplay(QPainter* painter, HorizontalDirection displayPart,
+                                             const QString& zugnummer)
+    {
+        painter->save();
+
+        auto displayRect = this->calculateLargeDisplayRect(displayPart);
+
+        // We need to make the rectangle a bit bigger to cover
+        // the separator between the two tiles, and to hide the border.
+        // We also need to adjust the clipping rectangle to allows to overdraw.
+        if (displayPart == HorizontalDirection::Left)
+        {
+            displayRect =
+                displayRect.marginsAdded(QMarginsF{0.0f, 0.0f, ZNAGraphicsObject::largeDisplayOverdrawAmount, 0.0f});
+
+            auto currentClipRect = painter->clipBoundingRect();
+            currentClipRect = currentClipRect.marginsAdded(QMarginsF{0.0f, 0.0f, 4.0f, 0.0f});
+            painter->setClipRect(currentClipRect);
+        }
+        else
+        {
+            displayRect =
+                displayRect.marginsAdded(QMarginsF{ZNAGraphicsObject::largeDisplayOverdrawAmount, 0.0f, 0.0f, 0.0f});
+
+            auto currentClipRect = painter->clipBoundingRect();
+            currentClipRect = currentClipRect.marginsAdded(QMarginsF{4.0f, 0.0f, 0.0f, 0.0f});
+            painter->setClipRect(currentClipRect);
+        }
+
+        painter->setPen(rectanglePen(ZNAGraphicsObject::displayBorderColor, 1.0f));
+        painter->setBrush(ZNAGraphicsObject::displayBackgroundColor);
+        painter->drawRect(adjustRectForBorder(displayRect, 1.0f));
+
+        // Draw digits
+        const auto digitAreaRect = this->calculateLargeDisplayDigitsRect(displayPart);
+        const auto digitAreaSize = this->m_largeDigitRenderer.digitAreaSize();
+
+        const auto zugNummerDigits =
+            displayPart == HorizontalDirection::Left ? std::array<int, 3>{1, 2, 3} : std::array<int, 3>{4, 5, 6};
+
+        for (int digitIdx = 0; digitIdx < 3; ++digitIdx)
+        {
+            if (zugNummerDigits[digitIdx] == -1)
+                continue;
+
+            const QRectF digitRect{digitAreaRect.left() + (digitIdx * (digitAreaSize.width() +
+                                                                       ZNAGraphicsObject::largeDisplayDigitPadding)),
+                                   digitAreaRect.top(), digitAreaSize.width(), digitAreaSize.height()};
+
+            this->m_largeDigitRenderer.drawDigit(painter, digitRect, ZNAGraphicsObject::displayDigitColor,
+                                                 zugNummerDigits[digitIdx]);
+        }
+
+        painter->restore();
+    }
+
     QRectF ZNAGraphicsObject::calculateCompactDisplayRect() const
     {
         const auto boundingRect = this->boundingRect();
@@ -90,6 +146,40 @@ namespace Rendering
     QRectF ZNAGraphicsObject::calculateCompactDisplayDigitsRect() const
     {
         return this->calculateCompactDisplayRect().marginsRemoved(QMarginsF{1.0f, 2.0f, 1.0f, 2.0f});
+    }
+
+    QRectF ZNAGraphicsObject::calculateLargeDisplayRect(HorizontalDirection displayPart) const
+    {
+        const auto boundingRect = this->boundingRect();
+
+        const qreal displayWidth = (boundingRect.width() - ZNAGraphicsObject::largeDisplaySidePadding);
+
+        // We overdraw the rect by a few pixels so that the rectangle border isnt visible.
+        if (displayPart == HorizontalDirection::Left)
+        {
+            return QRectF{
+                boundingRect.left() + ZNAGraphicsObject::largeDisplaySidePadding,
+                centerWithin(ZNAGraphicsObject::largeDisplayHeight, boundingRect.height(), boundingRect.top()),
+                displayWidth, ZNAGraphicsObject::largeDisplayHeight};
+        }
+        else
+        {
+            return QRectF{
+                boundingRect.left(),
+                centerWithin(ZNAGraphicsObject::largeDisplayHeight, boundingRect.height(), boundingRect.top()),
+                displayWidth, ZNAGraphicsObject::largeDisplayHeight};
+        }
+    }
+
+    QRectF ZNAGraphicsObject::calculateLargeDisplayDigitsRect(HorizontalDirection displayPart) const
+    {
+        const auto displayRect = this->calculateLargeDisplayRect(displayPart);
+
+        const auto margins = (displayPart == HorizontalDirection::Left)
+                                 ? QMarginsF{2.0f, 4.0f, ZNAGraphicsObject::largeDisplayDigitPadding / 2.0f, 4.0f}
+                                 : QMarginsF{ZNAGraphicsObject::largeDisplayDigitPadding / 2.0f, 4.0f, 2.0f, 4.0f};
+
+        return displayRect.marginsRemoved(margins);
     }
 
     void ZNAGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -112,6 +202,14 @@ namespace Rendering
                 this->drawCompactLabel(painter, zna.label());
             }
         }
+        else
+        {
+            const auto displayPart = (displayType == Openstw::Simulation::ZugnummernAnzeigeType::LargeLeftPart)
+                                         ? HorizontalDirection::Left
+                                         : HorizontalDirection::Right;
+
+            this->drawLargeDisplay(painter, displayPart, zna.currentZugNummer());
+        }
     }
 
     void ZNAGraphicsObject::afterSetup()
@@ -124,7 +222,19 @@ namespace Rendering
                                        6.0f,
                                    digitAreaRect.height()};
 
-        this->m_compactDigitRenderer.setup(digitAreaSize, 2.0f);
+        this->m_compactDigitRenderer.setup(digitAreaSize, ZNAGraphicsObject::compactDisplaySegmentThickness);
+        // ==
+
+        // == Calculate digit size for large-style seven segment display, and setup
+        // its renderer
+        const auto largeDigitAreaRect =
+            this->calculateLargeDisplayDigitsRect(/*Side doesnt matter here.*/ HorizontalDirection::Left);
+
+        const QSizeF largeDigitAreaSize{
+            (largeDigitAreaRect.width() - 2.0f * ZNAGraphicsObject::largeDisplayDigitPadding) / 3.0f,
+            largeDigitAreaRect.height()};
+
+        this->m_largeDigitRenderer.setup(largeDigitAreaSize, ZNAGraphicsObject::largeDisplaySegmentThickness);
         // ==
     }
 }
