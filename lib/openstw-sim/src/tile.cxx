@@ -86,7 +86,7 @@ namespace Openstw::Simulation
     {
         if (this->m_isDirty)
         {
-            emit this->invalidateIfDirty();
+            emit this->invalidated();
             this->m_isDirty = false;
         }
     }
