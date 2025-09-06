@@ -40,6 +40,13 @@ namespace Rendering
          */
         virtual std::optional<Qt::MouseButtons> acceptsMouseInput() const;
 
+        /**
+         * @brief Called by the base class right after the component was layouted.
+         * Can be used by subclasses to setup state that depends on the object bounding box
+         * or location.
+         */
+        virtual void afterSetup();
+
     public:
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 

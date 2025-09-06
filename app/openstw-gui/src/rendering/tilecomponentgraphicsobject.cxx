@@ -14,6 +14,7 @@ namespace Rendering
         const auto mouseButtons = this->acceptsMouseInput();
         this->setAcceptedMouseButtons(mouseButtons.value_or(Qt::MouseButton::NoButton));
         this->positionSelf();
+        this->afterSetup();
     }
 
     TileGraphicsObject* TileComponentGraphicsObject::tileGraphicsObject() const
@@ -24,6 +25,11 @@ namespace Rendering
     std::optional<Qt::MouseButtons> TileComponentGraphicsObject::acceptsMouseInput() const
     {
         return std::nullopt;
+    }
+
+    void TileComponentGraphicsObject::afterSetup()
+    {
+        return;
     }
 
     void TileComponentGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
