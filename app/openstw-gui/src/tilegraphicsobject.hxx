@@ -5,6 +5,7 @@
 
 #include "rendering/arrowgraphicsobject.hxx"
 #include "rendering/erlaubnisfeldgraphicsobject.hxx"
+#include "rendering/labelgraphicsobject.hxx"
 #include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
@@ -53,4 +54,5 @@ protected: // == Component renderers
     Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;
     Rendering::ErlaubsnisFeldGraphicsObject* m_erlaubnisFeldRenderer;
     Rendering::ZNAGraphicsObject* m_znaRenderer;
+    Rendering::LabelGraphicsObject* m_labelRenderer;
 };

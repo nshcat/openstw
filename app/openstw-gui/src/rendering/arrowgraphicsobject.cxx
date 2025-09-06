@@ -113,31 +113,31 @@ namespace Rendering
         {
             if (arrows.alignment() == Openstw::Simulation::ArrowAlignment::Left)
             {
+                labelLocation = LabelBoxLocation::Top;
                 leftHalfHasArrow = true;
                 leftHalfArrowDirection = Openstw::Simulation::ArrowDirection::Left;
             }
             else
             {
+                labelLocation = LabelBoxLocation::Bottom;
                 rightHalfHasArrow = true;
                 rightHalfArrowDirection = Openstw::Simulation::ArrowDirection::Left;
             }
-
-            labelLocation = LabelBoxLocation::Top;
         }
         else if (hasRightArrow)
         {
             if (arrows.alignment() == Openstw::Simulation::ArrowAlignment::Left)
             {
+                labelLocation = LabelBoxLocation::Bottom;
                 leftHalfHasArrow = true;
                 leftHalfArrowDirection = Openstw::Simulation::ArrowDirection::Right;
             }
             else
             {
+                labelLocation = LabelBoxLocation::Top;
                 rightHalfHasArrow = true;
                 rightHalfArrowDirection = Openstw::Simulation::ArrowDirection::Right;
             }
-
-            labelLocation = LabelBoxLocation::Bottom;
         }
 
         if (leftHalfHasArrow)

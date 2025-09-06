@@ -1,312 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulation>
     <TilePanel width="11" height="7">
-        <Tile x="0" y="0">
-            <Track></Track>
-        </Tile>
-        <Tile x="1" y="0">
-            <Track></Track>
-            <ZugnummernAnzeige label="102"/>
-        </Tile>
-        <Tile x="2" y="0">
-            <Track></Track>
-        </Tile>
-        <Tile x="3" y="0">
-            <Track>
-                <LabelBox label="102"/>
-            </Track>
-        </Tile>
-        <Tile x="4" y="0">
-            <Track></Track>
-        </Tile>
-        <Tile x="5" y="0">
-            <Track></Track>
 
-            <BackwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                    <KennLicht/>
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </BackwardSignal>
-        </Tile>
-        <Tile x="6" y="0">
-            <Track></Track>
-
-            <BackwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                    <KennLicht/>
-                </PrimarySignalSchirm>
-            </BackwardSignal>
-        </Tile>
-        <Tile x="0" y="2">
-            <Track></Track>
-
-            <DirectionArrows label="v.u.n. Essen Pbf.">
-                <Left/>
-                <Right/>
-            </DirectionArrows>
-        </Tile>
-        <Tile x="1" y="2">
-            <Track></Track>          
-            <ErlaubnisFeld ausfahrLabel="Essen" ausfahrDirection="left"/>
-        </Tile>
-        <Tile x="2" y="2">
-            <Track></Track>
-            <ForwardSignal name="H100">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-
-                <SecondarySignalSchirm type="VorSignalSchirm">
-                    <KennLicht/>
-                </SecondarySignalSchirm>
-            </ForwardSignal>
-        </Tile>
-        <Tile x="3" y="2">
-            <Track></Track>
-            <ForwardSignal name="H100">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-
-                <SecondarySignalSchirm type="VorSignalSchirm">
-                </SecondarySignalSchirm>
-
-                <SperrMelder/>
-            </ForwardSignal>
-
-            <BackwardSignal name="Hv200">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                    <KennLicht/>
-                </PrimarySignalSchirm>
-            </BackwardSignal>
-        </Tile>
-        <Tile x="4" y="2">
-            <Track></Track>
-
-            <ForwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                    <KennLicht/>
-                </PrimarySignalSchirm>
-            </ForwardSignal>
-        </Tile>
-        <Tile x="4" y="1">
-            <Track></Track>
-
-            <ForwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </ForwardSignal>
-        </Tile>
-        <Tile x="5" y="2">
-            <Track></Track>
-
-            <ForwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                    <KennLicht/>
-                    <RangierSignal/>
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
-        </Tile>
 
         <Tile x="6" y="2">
+            <ZugnummernAnzeige type="largeLeftPart"/>
+        </Tile>
+        <Tile x="7" y="2">
+            <ZugnummernAnzeige type="largeRightPart"/>
+        </Tile>
+        <Tile x="8" y="2">
+            <LabelBox label="V993"/>
+        </Tile>
+
+
+        <Tile x="1" y="3">
+            <Track></Track>
+        </Tile>
+        <Tile x="1" y="3">
+            <Track></Track>
+        </Tile>
+        <Tile x="2" y="3">
+            <Track></Track>
+            <BackwardSignal name="B793">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+        </Tile>
+        <Tile x="3" y="3">
+            <Track>
+                <LabelBox label="793"/>
+            </Track>
+        </Tile>
+        <Tile x="4" y="3">
+            <Track></Track>
+            <BackwardSignal>
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </BackwardSignal>
+        </Tile>
+        <Tile x="5" y="3">
+            <Track></Track>
+        </Tile>
+        <Tile x="6" y="3">
             <Track></Track>
             <ZugnummernAnzeige type="largeLeftPart"/>
         </Tile>
-
-        <Tile x="7" y="2">
+        <Tile x="7" y="3">
             <Track></Track>
             <ZugnummernAnzeige type="largeRightPart"/>
         </Tile>
-
-        <Tile x="5" y="1">
-            <Track></Track>
-
-            <ForwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                    <RangierSignal/>
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
+        <Tile x="8" y="3">
+            <Track>
+                <LabelBox label="993" alternativeMarker="false"/>
+            </Track>
         </Tile>
-
-
-        <Tile x="0" y="6">
-            <Track></Track>
-
-            <DirectionArrows alignment="left" label="v. Essen Pbf.">
-                <Right/>
-            </DirectionArrows>
-        </Tile>
-
-        <Tile x="1" y="6">
-            <Track></Track>
-
-            <ForwardSignal name="H100" isBlockSignal="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="2" y="6">
-            <Track></Track>
-
-            <ForwardSignal name="Hv100" isBlockSignal="true">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="3" y="6">
+        <Tile x="9" y="3">
             <Track></Track>
         </Tile>
-
-        <Tile x="4" y="6">
-            <Track></Track>
-
-            <ForwardSignal name="H101" isBlockSignal="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="5" y="6">
-            <Track></Track>
-
-            <ForwardSignal name="Hv100" isBlockSignal="true">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="6" y="6">
-            <Track></Track>
-        </Tile>
-
-        <Tile x="7" y="6">
-            <Track></Track>
-
-            <ForwardSignal name="H101" isBlockSignal="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-                <SecondarySignalSchirm type="VorSignalSchirm">
-                </SecondarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="8" y="6">
-            <Track></Track>
-        </Tile>
-
-        <Tile x="9" y="6">
-            <Track></Track>
-            <ForwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="10" y="6">
-            <Track></Track>
-
-            <ForwardSignal name="H101" connected="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                    <KennLicht/>
-                    <RangierSignal/>
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </ForwardSignal>
-        </Tile>
-
-        <Tile x="0" y="5">
-            <Track></Track>
-
-            <DirectionArrows alignment="left" label="n. Essen Pbf.">
+        <Tile x="10" y="3">
+            <Track hasLeuchtMelder="false"></Track>
+            <DirectionArrows label="v. E.-Kray-N." alignment="right">
                 <Left/>
             </DirectionArrows>
         </Tile>
 
-        <Tile x="1" y="5">
+
+        <Tile x="1" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="1" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="2" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="3" y="4">
+            <Track>
+                <LabelBox label="794"/>
+            </Track>
+        </Tile>
+        <Tile x="4" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="5" y="4">
             <Track></Track>
 
-            <BackwardSignal name="H100" isBlockSignal="true">
+            <ForwardSignal name="H100">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
                 </PrimarySignalSchirm>
                 <SperrMelder/>
-            </BackwardSignal>
+            </ForwardSignal>
         </Tile>
-
-        <Tile x="2" y="5">
+        <Tile x="6" y="4">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeLeftPart"/>
+        </Tile>
+        <Tile x="7" y="4">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeRightPart"/>
+        </Tile>
+        <Tile x="8" y="4">
+            <Track>
+                <LabelBox label="994" alternativeMarker="false"/>
+            </Track>
+        </Tile>
+        <Tile x="9" y="4">
             <Track></Track>
         </Tile>
-
-        <Tile x="3" y="5">
-            <Track></Track>
-
-            <BackwardSignal name="H100">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </BackwardSignal>
-        </Tile>
-
-        <Tile x="4" y="5">
-            <Track></Track>
-
-            <BackwardSignal name="H100" isBlockSignal="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </BackwardSignal>
-        </Tile>
-
-        <Tile x="5" y="5">
-            <Track></Track>
-        </Tile>
-
-        <Tile x="6" y="5">
-            <Track></Track>
-
-            <BackwardSignal name="H100">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </BackwardSignal>
-        </Tile>
-
-        <Tile x="7" y="5">
-            <Track></Track>
-
-            <BackwardSignal name="H100" isBlockSignal="true">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </BackwardSignal>
-        </Tile>
-
-        <Tile x="8" y="5">
-            <Track></Track>
-        </Tile>
-
-        <Tile x="9" y="5">
-            <Track></Track>
-
-            <BackwardSignal name="H100">
-                <PrimarySignalSchirm type="VorSignalSchirm">
-                </PrimarySignalSchirm>
-            </BackwardSignal>
-        </Tile>
-
-        <Tile x="10" y="5">
-            <Track></Track>
-
-            <BackwardSignal name="H101">
-                <PrimarySignalSchirm type="HauptSignalSchirm">
-                    <KennLicht/>
-                    <RangierSignal/>
-                </PrimarySignalSchirm>
-                <SperrMelder/>
-            </BackwardSignal>
+        <Tile x="10" y="4">
+            <Track hasLeuchtMelder="false"></Track>
+            <DirectionArrows label="n. E.-Kray-N." alignment="right">
+                <Right/>
+            </DirectionArrows>
         </Tile>
     </TilePanel>
 </Simulation>

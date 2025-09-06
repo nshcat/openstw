@@ -20,6 +20,14 @@ namespace Openstw::Simulation
         tile.m_position = GridPosition{static_cast<std::size_t>(x), static_cast<std::size_t>(y)};
         // ==
 
+        // == Tile label
+        const auto labelNode = root.child("LabelBox");
+        if (labelNode)
+        {
+            tile.m_tileLabel = QString{labelNode.attribute("label").as_string("")};
+        }
+        // ==
+
         // == Zugnummernanzeige
         const auto znaNode = root.child("ZugnummernAnzeige");
         if (znaNode)
@@ -132,6 +140,16 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile doesnt contain Zugnummernanzeige");
 
         return this->m_zugNummernAnzeige.value();
+    }
+
+    bool Tile::hasTileLabel() const
+    {
+        return !this->m_tileLabel.isEmpty();
+    }
+
+    const QString& Tile::tileLabel() const
+    {
+        return this->m_tileLabel;
     }
 
     bool Tile::hasDirectionArrows() const

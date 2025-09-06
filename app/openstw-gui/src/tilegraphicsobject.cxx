@@ -79,4 +79,8 @@ void TileGraphicsObject::createComponentRenderers()
     this->m_znaRenderer = new Rendering::ZNAGraphicsObject{this};
     this->m_znaRenderer->setup();
     this->scene()->addItem(this->m_znaRenderer);
+
+    this->m_labelRenderer = new Rendering::LabelGraphicsObject{this};
+    this->m_labelRenderer->setup();
+    this->scene()->addItem(this->m_labelRenderer);
 }

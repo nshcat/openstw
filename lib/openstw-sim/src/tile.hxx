@@ -46,6 +46,8 @@ namespace Openstw::Simulation
         ErlaubnisFeld& erlaubnisFeld();
         bool hasZugnummernAnzeige() const;
         ZugnummernAnzeige& zugnummernAnzeige();
+        bool hasTileLabel() const;
+        const QString& tileLabel() const;
 
     public: // == Signals
         /**
@@ -70,5 +72,6 @@ namespace Openstw::Simulation
         std::optional<DirectionArrows> m_arrows{};
         std::optional<ErlaubnisFeld> m_erlaubnisFeld{};
         std::optional<ZugnummernAnzeige> m_zugNummernAnzeige{};
+        QString m_tileLabel{};
     };
 }

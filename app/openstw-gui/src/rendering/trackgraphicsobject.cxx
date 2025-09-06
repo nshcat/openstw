@@ -37,7 +37,6 @@ namespace Rendering
                                centerWithin(labelHeight, boundingRect.height(), boundingRect.top()), labelWidth,
                                labelHeight};
 
-        // makeCurrentFontBold(painter);
         drawTextBox(painter, labelRect, label, Qt::white, Qt::transparent, 0.0f, Qt::black);
 
         if (withAlternativeMelder)
