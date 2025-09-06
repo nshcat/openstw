@@ -15,23 +15,25 @@ namespace Openstw::Simulation
 {
     class TilePanel;
 
-    class Tile
+    class Tile : public QObject
     {
+        Q_OBJECT
+
         friend class TilePanel;
 
     public:
         using changed_event_t = boost::signals2::signal<void()>;
 
     public:
-        Tile();
+        Tile(QObject* parent);
         Tile(const Tile&) = delete;
         Tile& operator=(const Tile&) = delete;
 
-        Tile(Tile&&) = default;
-        Tile& operator=(Tile&&) = default;
+        Tile(Tile&&) = delete;
+        Tile& operator=(Tile&&) = delete;
 
     public:
-        static Tile CreateFrom(const pugi::xml_node&);
+        static Tile* CreateFrom(QObject* parent, const pugi::xml_node&);
 
     protected:
         static ArrowAlignment ParseArrowAlignment(const pugi::xml_node&);

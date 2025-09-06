@@ -35,7 +35,7 @@ void TilePanelView::setTilePanel(Openstw::Simulation::TilePanel *tilePanel)
     {
         for (std::size_t iy = 0; iy < tilePanel->height(); ++iy)
         {
-            auto *tile = &((*tilePanel)[ix, iy]);
+            auto* tile = tilePanel->operator[](ix, iy);
             auto* tileItem = new TileGraphicsObject(tile);
             tileItem->setPos(ix * TileGraphicsObject::tileWidth, iy * TileGraphicsObject::tileHeight);
             tileGraphicsObject.append(tileItem);

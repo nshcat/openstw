@@ -24,5 +24,5 @@ private:
     Ui::MainWindow* ui;
     QVBoxLayout* m_layout{};
     TilePanelView* m_tilePanelView{};
-    Openstw::Simulation::Simulation m_simulation;
+    Openstw::Simulation::Simulation* m_simulation;
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QObject>
 #include <string>
 
 #include "base.hxx"
@@ -7,10 +8,12 @@
 
 namespace Openstw::Simulation
 {
-    class Simulation: public ISimulationObject
+    class Simulation : public QObject, public ISimulationObject
     {
+        Q_OBJECT
+
     protected:
-        Simulation(TilePanel&& tilePanel);
+        Simulation(QObject* parent);
 
     public:
         ~Simulation() = default;
@@ -18,11 +21,11 @@ namespace Openstw::Simulation
         Simulation(const Simulation&) = delete;
         Simulation& operator=(const Simulation&) = delete;
 
-        Simulation(Simulation&&) = default;
-        Simulation& operator=(Simulation&&) = default;
+        Simulation(Simulation&&) = delete;
+        Simulation& operator=(Simulation&&) = delete;
 
     public:
-        static Simulation FromTemplateFile(const std::string& filePath);
+        static Simulation* FromTemplateFile(QObject* parent, const std::string& filePath);
 
     public:
         TilePanel* tilePanel();
@@ -31,6 +34,6 @@ namespace Openstw::Simulation
         virtual void update(const float deltaTime);
 
     protected:
-        TilePanel m_tilePanel;
+        TilePanel* m_tilePanel;
     };
 }

@@ -2,13 +2,13 @@
 
 namespace Openstw::Simulation
 {
-    Tile::Tile()
+    Tile::Tile(QObject* parent) : QObject(parent)
     {
     }
 
-    Tile Tile::CreateFrom(const pugi::xml_node& root)
+    Tile* Tile::CreateFrom(QObject* parent, const pugi::xml_node& root)
     {
-        Tile tile{};
+        Tile* tile = new Tile(parent);
 
         // == Coordinates
         const auto x = root.attribute("x").as_int();
@@ -17,14 +17,14 @@ namespace Openstw::Simulation
         if (x < 0 || y < 0)
             throw std::runtime_error("Missing or invalid coordinates in tile XML node");
 
-        tile.m_position = GridPosition{static_cast<std::size_t>(x), static_cast<std::size_t>(y)};
+        tile->m_position = GridPosition{static_cast<std::size_t>(x), static_cast<std::size_t>(y)};
         // ==
 
         // == Tile label
         const auto labelNode = root.child("LabelBox");
         if (labelNode)
         {
-            tile.m_tileLabel = QString{labelNode.attribute("label").as_string("")};
+            tile->m_tileLabel = QString{labelNode.attribute("label").as_string("")};
         }
         // ==
 
@@ -32,7 +32,7 @@ namespace Openstw::Simulation
         const auto znaNode = root.child("ZugnummernAnzeige");
         if (znaNode)
         {
-            tile.m_zugNummernAnzeige = ZugnummernAnzeige::CreateFrom(znaNode);
+            tile->m_zugNummernAnzeige = ZugnummernAnzeige::CreateFrom(znaNode);
         }
         // ==
 
@@ -40,7 +40,7 @@ namespace Openstw::Simulation
         const auto arrowsNode = root.child("DirectionArrows");
         if (arrowsNode)
         {
-            tile.m_arrows = DirectionArrows::CreateFrom(arrowsNode);
+            tile->m_arrows = DirectionArrows::CreateFrom(arrowsNode);
         }
         // ==
 
@@ -48,7 +48,7 @@ namespace Openstw::Simulation
         const auto erlaubnisFeldNode = root.child("ErlaubnisFeld");
         if (erlaubnisFeldNode)
         {
-            tile.m_erlaubnisFeld = ErlaubnisFeld::CreateFrom(erlaubnisFeldNode);
+            tile->m_erlaubnisFeld = ErlaubnisFeld::CreateFrom(erlaubnisFeldNode);
         }
         // ==
 
@@ -56,7 +56,7 @@ namespace Openstw::Simulation
         const auto trackNode = root.child("Track");
         if (trackNode)
         {
-            tile.m_track = TrackSegment::CreateFrom(trackNode);
+            tile->m_track = TrackSegment::CreateFrom(trackNode);
         }
         // ==
 
@@ -64,17 +64,17 @@ namespace Openstw::Simulation
         const auto fwdSignalNode = root.child("ForwardSignal");
         if (fwdSignalNode)
         {
-            tile.m_forwardSignal = Signal::CreateFrom(fwdSignalNode);
+            tile->m_forwardSignal = Signal::CreateFrom(fwdSignalNode);
         }
 
         const auto bwdSignalNode = root.child("BackwardSignal");
         if (bwdSignalNode)
         {
-            tile.m_backwardSignal = Signal::CreateFrom(bwdSignalNode);
+            tile->m_backwardSignal = Signal::CreateFrom(bwdSignalNode);
         }
         // ==
 
-        return std::move(tile);
+        return tile;
     }
 
     bool Tile::hasSignal(const TileElementDirection direction) const

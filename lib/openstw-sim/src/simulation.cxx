@@ -4,14 +4,16 @@
 
 namespace Openstw::Simulation
 {
-    Simulation::Simulation(TilePanel&& tilePanel) : m_tilePanel{std::move(tilePanel)}
+    Simulation::Simulation(QObject* parent) : QObject{parent}
     {
     }
 
-    Simulation Simulation::FromTemplateFile(const std::string& filePath)
+    Simulation* Simulation::FromTemplateFile(QObject* parent, const std::string& filePath)
     {
         pugi::xml_document templateDoc{};
         const auto parseResult = templateDoc.load_file(filePath.c_str());
+
+        Simulation* sim = new Simulation(parent);
 
         if (!parseResult)
             throw std::runtime_error(parseResult.description());
@@ -25,15 +27,15 @@ namespace Openstw::Simulation
         if (!tilePanelNode)
             throw std::runtime_error("Simulation template has no TilePanel entry");
 
-        auto tilePanel = TilePanel::CreateFrom(tilePanelNode);
+        sim->m_tilePanel = TilePanel::CreateFrom(sim, tilePanelNode);
         // ==
 
-        return Simulation(std::move(tilePanel));
+        return sim;
     }
 
     TilePanel* Simulation::tilePanel()
     {
-        return &this->m_tilePanel;
+        return this->m_tilePanel;
     }
 
     void Simulation::update(const float deltaTime)
