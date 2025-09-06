@@ -10,6 +10,17 @@
         </Tile>
         <Tile x="2" y="0">
             <Track></Track>
+        </Tile>
+        <Tile x="3" y="0">
+            <Track>
+                <LabelBox label="102"/>
+            </Track>
+        </Tile>
+        <Tile x="4" y="0">
+            <Track></Track>
+        </Tile>
+        <Tile x="5" y="0">
+            <Track></Track>
 
             <BackwardSignal name="H101" connected="true">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
@@ -18,7 +29,7 @@
                 <SperrMelder/>
             </BackwardSignal>
         </Tile>
-        <Tile x="3" y="0">
+        <Tile x="6" y="0">
             <Track></Track>
 
             <BackwardSignal name="H101" connected="true">

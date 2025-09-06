@@ -13,6 +13,13 @@ namespace Openstw::Simulation
         const auto hasLeuchtMelder = node.attribute("hasLeuchtMelder").as_bool(true);
         segment.m_hasLeuchtMelder = hasLeuchtMelder;
 
+        const auto labelNode = node.child("LabelBox");
+        if (labelNode)
+        {
+            segment.m_label = QString{labelNode.attribute("label").as_string("")};
+            segment.m_showAlternativeMelder = labelNode.attribute("alternativeMarker").as_bool(true);
+        }
+
         return segment;
     }
 
@@ -29,5 +36,20 @@ namespace Openstw::Simulation
     bool TrackSegment::hasLeuchtMelder() const
     {
         return this->m_hasLeuchtMelder;
+    }
+
+    bool TrackSegment::hasLabel() const
+    {
+        return !this->m_label.isEmpty();
+    }
+
+    const QString& TrackSegment::label() const
+    {
+        return this->m_label;
+    }
+
+    bool TrackSegment::showAlternativeLeuchtMelder() const
+    {
+        return this->m_showAlternativeMelder;
     }
 }

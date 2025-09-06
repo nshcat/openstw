@@ -23,6 +23,56 @@ namespace Rendering
         this->setPos(this->boundingRect().topLeft());
     }
 
+    void TrackGraphicsObject::drawLabel(QPainter* painter, const QString& label, const bool withAlternativeMelder,
+                                        const Openstw::Simulation::TrackState trackState) const
+    {
+        painter->save();
+
+        const auto boundingRect = this->boundingRect();
+
+        const qreal labelWidth = (boundingRect.width() - 2.0f * TrackGraphicsObject::labelBoxHorzPadding);
+        const qreal labelHeight = (boundingRect.height() - 2.0f * TrackGraphicsObject::labelBoxVertPadding);
+
+        const QRectF labelRect{centerWithin(labelWidth, boundingRect.width(), boundingRect.left()),
+                               centerWithin(labelHeight, boundingRect.height(), boundingRect.top()), labelWidth,
+                               labelHeight};
+
+        // makeCurrentFontBold(painter);
+        drawTextBox(painter, labelRect, label, Qt::white, Qt::transparent, 0.0f, Qt::black);
+
+        if (withAlternativeMelder)
+        {
+            const QRectF trackRect{labelRect.left(), boundingRect.bottom() - TrackGraphicsObject::trackThickness,
+                                   labelRect.width(), TrackGraphicsObject::trackThickness};
+
+            painter->setBrush(Qt::black);
+            painter->setPen(rectanglePen(Qt::black, 1.0f));
+            painter->drawRect(adjustRectForBorder(trackRect, 1.0f));
+
+            this->drawBesetztMelder(painter, trackRect, trackState);
+        }
+
+        painter->restore();
+    }
+
+    void TrackGraphicsObject::drawBesetztMelder(QPainter* painter, const QRectF& trackRect,
+                                                const Openstw::Simulation::TrackState trackState) const
+    {
+        painter->save();
+
+        const auto trackIndicatorRect =
+            QRectF{centerWithin(TrackGraphicsObject::trackIndicatorWidth, trackRect.width(), trackRect.left()),
+                   centerWithin(TrackGraphicsObject::trackIndicatorHeight, trackRect.height(), trackRect.top()),
+                   TrackGraphicsObject::trackIndicatorWidth, TrackGraphicsObject::trackIndicatorHeight};
+
+        const auto trackIndicatorColor = TrackGraphicsObject::colorForTrackState(trackState);
+        painter->setBrush(trackIndicatorColor);
+        painter->setPen(rectanglePen(trackIndicatorColor, 1.0f));
+        painter->drawRect(adjustRectForBorder(trackIndicatorRect, 1.0f));
+
+        painter->restore();
+    }
+
     QColor TrackGraphicsObject::colorForTrackState(const Openstw::Simulation::TrackState trackState)
     {
         switch (trackState)
@@ -65,15 +115,13 @@ namespace Rendering
 
         if (track.hasLeuchtMelder())
         {
-            const auto trackIndicatorRect =
-                QRectF{centerWithin(TrackGraphicsObject::trackIndicatorWidth, trackRect.width(), trackRect.left()),
-                       centerWithin(TrackGraphicsObject::trackIndicatorHeight, trackRect.height(), trackRect.top()),
-                       TrackGraphicsObject::trackIndicatorWidth, TrackGraphicsObject::trackIndicatorHeight};
+            this->drawBesetztMelder(painter, trackRect, track.state());
+        }
 
-            const auto trackIndicatorColor = TrackGraphicsObject::colorForTrackState(track.state());
-            painter->setBrush(trackIndicatorColor);
-            painter->setPen(rectanglePen(trackIndicatorColor, 1.0f));
-            painter->drawRect(adjustRectForBorder(trackIndicatorRect, 1.0f));
+        if (track.hasLabel())
+        {
+            this->drawLabel(painter, track.label(), (track.hasLeuchtMelder() && track.showAlternativeLeuchtMelder()),
+                            track.state());
         }
     }
 }
