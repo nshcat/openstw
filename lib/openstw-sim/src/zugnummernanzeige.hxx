@@ -55,7 +55,7 @@ namespace Openstw::Simulation
     protected:
         ZugnummernAnzeigeType m_type{ZugnummernAnzeigeType::Compact};
         QString m_currentZugNummer{""};
-        ZugnummernAnzeigeState m_displayState{ZugnummernAnzeigeState::Static};
+        ZugnummernAnzeigeState m_displayState{ZugnummernAnzeigeState::LastDigitBlinking};
         QString m_label{""};
     };
 }

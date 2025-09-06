@@ -1,5 +1,6 @@
 #include <QPainter>
 
+#include "../application.hxx"
 #include "../tilegraphicsobject.hxx"
 #include "renderinghelpers.hxx"
 #include "znagraphicsobject.hxx"
@@ -39,11 +40,25 @@ namespace Rendering
         const auto digitAreaRect = this->calculateCompactDisplayDigitsRect();
         const auto digitAreaSize = this->m_compactDigitRenderer.digitAreaSize();
 
+        const auto displayState = this->m_tile->zugnummernAnzeige().displayState();
+
         std::array<int, 6> zugNummerDigits = {1, 2, 3, 4, 5, 6};
         for (int digitIdx = 0; digitIdx < 6; ++digitIdx)
         {
             if (zugNummerDigits[digitIdx] == -1)
                 continue;
+
+            if (displayState == Openstw::Simulation::ZugnummernAnzeigeState::AllDigitsBlinking &&
+                !this->m_blinkingDigitState)
+            {
+                break;
+            }
+
+            if (digitIdx == 5 && displayState == Openstw::Simulation::ZugnummernAnzeigeState::LastDigitBlinking &&
+                !this->m_blinkingDigitState)
+            {
+                break;
+            }
 
             const QRectF digitRect{digitAreaRect.left() + (digitIdx * (digitAreaSize.width() +
                                                                        ZNAGraphicsObject::compactDisplayDigitPadding)),
@@ -113,10 +128,27 @@ namespace Rendering
         const auto zugNummerDigits =
             displayPart == HorizontalDirection::Left ? std::array<int, 3>{1, 2, 3} : std::array<int, 3>{4, 5, 6};
 
+        const auto displayState = this->m_tile->zugnummernAnzeige().displayState();
+
         for (int digitIdx = 0; digitIdx < 3; ++digitIdx)
         {
             if (zugNummerDigits[digitIdx] == -1)
                 continue;
+
+            if (displayState == Openstw::Simulation::ZugnummernAnzeigeState::AllDigitsBlinking &&
+                !this->m_blinkingDigitState)
+            {
+                break;
+            }
+
+            if (displayPart == HorizontalDirection::Right)
+            {
+                if (digitIdx == 2 && displayState == Openstw::Simulation::ZugnummernAnzeigeState::LastDigitBlinking &&
+                    !this->m_blinkingDigitState)
+                {
+                    break;
+                }
+            }
 
             const QRectF digitRect{digitAreaRect.left() + (digitIdx * (digitAreaSize.width() +
                                                                        ZNAGraphicsObject::largeDisplayDigitPadding)),
@@ -182,6 +214,22 @@ namespace Rendering
         return displayRect.marginsRemoved(margins);
     }
 
+    void ZNAGraphicsObject::timerTick()
+    {
+        this->m_blinkingDigitState = !this->m_blinkingDigitState;
+
+        // We have to invalidate ourselves if our display wants to display its digits
+        if (this->m_tile->hasZugnummernAnzeige())
+        {
+            const auto displayState = this->m_tile->zugnummernAnzeige().displayState();
+
+            if (displayState != Openstw::Simulation::ZugnummernAnzeigeState::Static)
+            {
+                this->update();
+            }
+        }
+    }
+
     void ZNAGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
     {
         if (!this->m_tile->hasZugnummernAnzeige())
@@ -236,5 +284,7 @@ namespace Rendering
 
         this->m_largeDigitRenderer.setup(largeDigitAreaSize, ZNAGraphicsObject::largeDisplaySegmentThickness);
         // ==
+
+        connect(gApplication->timer2Hz(), &QTimer::timeout, this, &ZNAGraphicsObject::timerTick);
     }
 }

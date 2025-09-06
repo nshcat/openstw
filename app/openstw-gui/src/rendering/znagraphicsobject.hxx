@@ -57,8 +57,12 @@ namespace Rendering
         QRectF calculateLargeDisplayRect(HorizontalDirection displayPart) const;
         QRectF calculateLargeDisplayDigitsRect(HorizontalDirection displayPart) const;
 
+    protected slots:
+        void timerTick();
+
     protected:
         SevenSegmentRenderer m_compactDigitRenderer{};
         SevenSegmentRenderer m_largeDigitRenderer{};
+        bool m_blinkingDigitState{false};
     };
 }
