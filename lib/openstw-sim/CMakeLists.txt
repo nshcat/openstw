@@ -29,6 +29,7 @@ add_library(openstw-sim STATIC
   src/directionarrows.hxx src/directionarrows.cxx
   src/erlaubnisfeld.hxx src/erlaubnisfeld.cxx
   src/zugnummernanzeige.hxx src/zugnummernanzeige.cxx
+  src/zugnummer.hxx src/zugnummer.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)

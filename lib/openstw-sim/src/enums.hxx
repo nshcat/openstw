@@ -1,7 +1,24 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Openstw::Simulation
 {
+    enum class Digit : std::int8_t
+    {
+        None = -1,
+        D0 = 0,
+        D1 = 1,
+        D2 = 2,
+        D3 = 3,
+        D4 = 4,
+        D5 = 5,
+        D6 = 6,
+        D7 = 7,
+        D8 = 8,
+        D9 = 9
+    };
+
     /**
      * @brief Enum describing the possible states of a lamp that can either
      * be on or off.
