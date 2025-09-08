@@ -60,6 +60,8 @@ namespace Openstw::Simulation
         ZugnummernAnzeige& zugnummernAnzeige();
         bool hasTileLabel() const;
         const QString& tileLabel() const;
+        bool hasZugStrassenTaste() const;
+        TileElementDirection zugStrassenTasteDirection() const;
 
     signals:
         void invalidated();
@@ -76,6 +78,7 @@ namespace Openstw::Simulation
         std::optional<DirectionArrows> m_arrows{};
         std::optional<ErlaubnisFeld> m_erlaubnisFeld{};
         std::optional<ZugnummernAnzeige> m_zugNummernAnzeige{};
+        std::optional<TileElementDirection> m_zugStrassenTaste{};
         QString m_tileLabel{};
     };
 }

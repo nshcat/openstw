@@ -52,6 +52,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/rendering/labelgraphicsobject.cxx
         data/sim_template_2.xml
         src/simulationrunner.hxx src/simulationrunner.cxx
+        src/rendering/zstgraphicsobject.hxx
+        src/rendering/zstgraphicsobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

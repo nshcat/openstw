@@ -101,6 +101,18 @@ void TilePanelView::wheelEvent(QWheelEvent* event)
 
 void TilePanelView::contextMenuEvent(QContextMenuEvent* event)
 {
+    QPointF p = event->pos();
+    QGraphicsItem* item = this->itemAt(p.x(), p.y());
+    if (item != NULL)
+    {
+        auto componentObject = dynamic_cast<Rendering::TileComponentGraphicsObject*>(item);
+        if (componentObject && componentObject->providesContextMenu())
+        {
+            QGraphicsView::contextMenuEvent(event);
+            return;
+        }
+    }
+
     QMenu contextMenu{this};
 
     QAction* actionRecenter = contextMenu.addAction("&Recenter View");

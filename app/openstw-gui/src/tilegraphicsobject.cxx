@@ -84,6 +84,10 @@ void TileGraphicsObject::createComponentRenderers()
     this->m_labelRenderer = new Rendering::LabelGraphicsObject{this};
     this->m_labelRenderer->setup();
     this->scene()->addItem(this->m_labelRenderer);
+
+    this->m_zstRenderer = new Rendering::ZSTGraphicsObject{this};
+    this->m_zstRenderer->setup();
+    this->scene()->addItem(this->m_zstRenderer);
 }
 
 void TileGraphicsObject::tileInvalidated()

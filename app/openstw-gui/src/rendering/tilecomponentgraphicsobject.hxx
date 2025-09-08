@@ -13,7 +13,7 @@ namespace Rendering
     {
         Q_OBJECT
     public:
-        TileComponentGraphicsObject(TileGraphicsObject* parent);
+        TileComponentGraphicsObject(TileGraphicsObject* parent, bool providesContextMenu = false);
 
     public:
         /**
@@ -22,6 +22,7 @@ namespace Rendering
          */
         void setup();
         TileGraphicsObject* tileGraphicsObject() const;
+        bool providesContextMenu() const;
 
     protected:
         /**
@@ -53,5 +54,6 @@ namespace Rendering
     protected:
         Openstw::Simulation::Tile* m_tile{};
         TileGraphicsObject* m_tileGraphicsObj{};
+        bool m_providesContextMenu{false};
     };
 }

@@ -33,6 +33,10 @@ namespace Openstw::Simulation
         Tile* operator[](const std::size_t x, const std::size_t y);
         Tile* operator[](const GridPosition position);
 
+        Tile* tileAt(const std::size_t x, const std::size_t y);
+
+        void invalidateIfDirty();
+
     protected:
         std::size_t linearIndex(const std::size_t x, const std::size_t y) const;
         void setTile(const GridPosition position, Tile* tile);

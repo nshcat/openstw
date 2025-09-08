@@ -10,6 +10,7 @@
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
 #include "rendering/znagraphicsobject.hxx"
+#include "rendering/zstgraphicsobject.hxx"
 
 class TileGraphicsObject : public QGraphicsObject
 {
@@ -57,5 +58,6 @@ protected: // == Component renderers
     Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;
     Rendering::ErlaubsnisFeldGraphicsObject* m_erlaubnisFeldRenderer;
     Rendering::ZNAGraphicsObject* m_znaRenderer;
+    Rendering::ZSTGraphicsObject* m_zstRenderer;
     Rendering::LabelGraphicsObject* m_labelRenderer;
 };

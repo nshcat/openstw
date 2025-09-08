@@ -42,7 +42,8 @@ namespace Openstw::Simulation
 
     void Simulation::update(const float deltaTime)
     {
-        this->m_tilePanel->operator[](0, 0)->setDirty();
-        this->m_tilePanel->operator[](0, 0)->invalidateIfDirty();
+        this->m_simTime += deltaTime;
+
+        this->m_tilePanel->invalidateIfDirty();
     }
 }

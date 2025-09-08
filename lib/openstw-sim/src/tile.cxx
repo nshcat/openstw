@@ -28,6 +28,19 @@ namespace Openstw::Simulation
         }
         // ==
 
+        // == Zugstrassentaste
+        const auto zstNode = root.child("ZugStrassenTaste");
+        if (zstNode)
+        {
+            const QString directionTxt = zstNode.attribute("direction").as_string("forward");
+            TileElementDirection direction{TileElementDirection::Forward};
+            if (directionTxt == "backward")
+                direction = TileElementDirection::Backward;
+
+            tile->m_zugStrassenTaste = direction;
+        }
+        // ==
+
         // == Zugnummernanzeige
         const auto znaNode = root.child("ZugnummernAnzeige");
         if (znaNode)
@@ -164,6 +177,19 @@ namespace Openstw::Simulation
     const QString& Tile::tileLabel() const
     {
         return this->m_tileLabel;
+    }
+
+    bool Tile::hasZugStrassenTaste() const
+    {
+        return this->m_zugStrassenTaste.has_value();
+    }
+
+    TileElementDirection Tile::zugStrassenTasteDirection() const
+    {
+        if (!this->hasZugStrassenTaste())
+            throw std::runtime_error("Tile has no Zugstrassentaste");
+
+        return this->m_zugStrassenTaste.value();
     }
 
     bool Tile::hasDirectionArrows() const

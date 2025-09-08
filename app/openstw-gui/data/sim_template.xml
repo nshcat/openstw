@@ -27,6 +27,7 @@
                 </PrimarySignalSchirm>
                 <SperrMelder/>
             </BackwardSignal>
+            <ZugStrassenTaste direction="backward"/>
         </Tile>
         <Tile x="3" y="3">
             <Track>
@@ -58,6 +59,12 @@
         </Tile>
         <Tile x="9" y="3">
             <Track></Track>
+            <BackwardSignal name="B793">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+            <ZugStrassenTaste direction="backward"/>
         </Tile>
         <Tile x="10" y="3">
             <Track hasLeuchtMelder="false"></Track>

@@ -1,11 +1,13 @@
 #include "tilecomponentgraphicsobject.hxx"
 #include "../tilegraphicsobject.hxx"
+#include <QCursor>
 #include <QPainter>
 
 namespace Rendering
 {
-    TileComponentGraphicsObject::TileComponentGraphicsObject(TileGraphicsObject* parent)
-        : QGraphicsObject(parent), m_tile{parent->tile()}, m_tileGraphicsObj{parent}
+    TileComponentGraphicsObject::TileComponentGraphicsObject(TileGraphicsObject* parent, bool providesContextMenu)
+        : QGraphicsObject(parent), m_tile{parent->tile()}, m_tileGraphicsObj{parent},
+          m_providesContextMenu{providesContextMenu}
     {
     }
 
@@ -13,6 +15,9 @@ namespace Rendering
     {
         const auto mouseButtons = this->acceptsMouseInput();
         this->setAcceptedMouseButtons(mouseButtons.value_or(Qt::MouseButton::NoButton));
+        if (mouseButtons.has_value())
+            this->setCursor(Qt::PointingHandCursor);
+
         this->positionSelf();
         this->afterSetup();
     }
@@ -20,6 +25,11 @@ namespace Rendering
     TileGraphicsObject* TileComponentGraphicsObject::tileGraphicsObject() const
     {
         return this->m_tileGraphicsObj;
+    }
+
+    bool TileComponentGraphicsObject::providesContextMenu() const
+    {
+        return this->m_providesContextMenu;
     }
 
     std::optional<Qt::MouseButtons> TileComponentGraphicsObject::acceptsMouseInput() const

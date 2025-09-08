@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->m_simRunner = new SimulationRunner();
     connect(this->m_simRunner, &SimulationRunner::simulationStarted, this, &MainWindow::simulationStarted);
     this->m_simRunner->startSimulation();
+
+    this->resize(1920, 1440);
 }
 
 MainWindow::~MainWindow()

@@ -64,6 +64,19 @@ namespace Openstw::Simulation
         return this->m_tiles[this->linearIndex(x, y)];
     }
 
+    Tile* TilePanel::tileAt(const std::size_t x, const std::size_t y)
+    {
+        return this->operator[](x, y);
+    }
+
+    void TilePanel::invalidateIfDirty()
+    {
+        for (auto* tile : this->m_tiles)
+        {
+            tile->invalidateIfDirty();
+        }
+    }
+
     Tile* TilePanel::operator[](const GridPosition position)
     {
         return this->operator[](position.x, position.y);

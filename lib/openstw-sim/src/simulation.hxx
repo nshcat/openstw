@@ -35,5 +35,7 @@ namespace Openstw::Simulation
 
     protected:
         TilePanel* m_tilePanel;
+        float m_simTime{0.0f};
+        int m_state{0};
     };
 }
