@@ -14,7 +14,7 @@ namespace Openstw::Simulation
     {
         for (int strIdx = 0; strIdx < qMin(str.length(), 6); ++strIdx)
         {
-            const auto reversedIdx = str.length() - strIdx;
+            const auto reversedIdx = str.length() - 1 - strIdx;
             const auto chr = str[reversedIdx];
 
             Digit digit{Digit::None};

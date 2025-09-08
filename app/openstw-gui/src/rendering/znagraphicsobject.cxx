@@ -25,7 +25,8 @@ namespace Rendering
 
     void ZNAGraphicsObject::drawCompactDisplay(QPainter* painter,
                                                const Openstw::Simulation::ZugnummernAnzeigeState displayState,
-                                               const QString& zugnummer, const QString& label) const
+                                               const Openstw::Simulation::Zugnummer& zugnummer,
+                                               const QString& label) const
     {
         painter->save();
 
@@ -44,10 +45,10 @@ namespace Rendering
             const auto digitAreaRect = this->calculateCompactDisplayDigitsRect();
             const auto digitAreaSize = this->m_compactDigitRenderer.digitAreaSize();
 
-            std::array<int, 6> zugNummerDigits = {1, 2, 3, 4, 5, 6};
             for (int digitIdx = 0; digitIdx < 6; ++digitIdx)
             {
-                if (zugNummerDigits[digitIdx] == -1)
+                const auto currentDigit = zugnummer[digitIdx];
+                if (currentDigit == Openstw::Simulation::Digit::None)
                     continue;
 
                 if (displayState == Openstw::Simulation::ZugnummernAnzeigeState::AllDigitsBlinking &&
@@ -68,7 +69,7 @@ namespace Rendering
                     digitAreaRect.top(), digitAreaSize.width(), digitAreaSize.height()};
 
                 this->m_compactDigitRenderer.drawDigit(painter, digitRect, ZNAGraphicsObject::displayDigitColor,
-                                                       zugNummerDigits[digitIdx]);
+                                                       static_cast<int>(currentDigit));
             }
         }
 
@@ -94,7 +95,8 @@ namespace Rendering
 
     void ZNAGraphicsObject::drawLargeDisplay(QPainter* painter,
                                              const Openstw::Simulation::ZugnummernAnzeigeState displayState,
-                                             HorizontalDirection displayPart, const QString& zugnummer)
+                                             HorizontalDirection displayPart,
+                                             const Openstw::Simulation::Zugnummer& zugnummer)
     {
         painter->save();
 
@@ -132,12 +134,19 @@ namespace Rendering
             const auto digitAreaRect = this->calculateLargeDisplayDigitsRect(displayPart);
             const auto digitAreaSize = this->m_largeDigitRenderer.digitAreaSize();
 
-            const auto zugNummerDigits =
-                displayPart == HorizontalDirection::Left ? std::array<int, 3>{1, 2, 3} : std::array<int, 3>{4, 5, 6};
-
             for (int digitIdx = 0; digitIdx < 3; ++digitIdx)
             {
-                if (zugNummerDigits[digitIdx] == -1)
+                Openstw::Simulation::Digit currentDigit{Openstw::Simulation::Digit::None};
+                if (displayPart == HorizontalDirection::Right)
+                {
+                    currentDigit = zugnummer[digitIdx + 3];
+                }
+                else
+                {
+                    currentDigit = zugnummer[digitIdx];
+                }
+
+                if (currentDigit == Openstw::Simulation::Digit::None)
                     continue;
 
                 if (displayState == Openstw::Simulation::ZugnummernAnzeigeState::AllDigitsBlinking &&
@@ -162,7 +171,7 @@ namespace Rendering
                     digitAreaRect.top(), digitAreaSize.width(), digitAreaSize.height()};
 
                 this->m_largeDigitRenderer.drawDigit(painter, digitRect, ZNAGraphicsObject::displayDigitColor,
-                                                     zugNummerDigits[digitIdx]);
+                                                     static_cast<int>(currentDigit));
             }
         }
 

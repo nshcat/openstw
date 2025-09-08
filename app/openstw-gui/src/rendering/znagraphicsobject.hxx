@@ -47,11 +47,11 @@ namespace Rendering
 
     protected:
         void drawCompactDisplay(QPainter* painter, const Openstw::Simulation::ZugnummernAnzeigeState displayState,
-                                const QString& zugnummer, const QString& label) const;
+                                const Openstw::Simulation::Zugnummer&, const QString& label) const;
         void drawCompactLabel(QPainter* painter, const QString& label) const;
 
         void drawLargeDisplay(QPainter* painter, const Openstw::Simulation::ZugnummernAnzeigeState displayState,
-                              HorizontalDirection displayPart, const QString& zugnummer);
+                              HorizontalDirection displayPart, const Openstw::Simulation::Zugnummer& zugnummer);
 
         QRectF calculateCompactDisplayRect() const;
         QRectF calculateCompactDisplayDigitsRect() const;

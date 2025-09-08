@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utility.hxx"
+#include "zugnummer.hxx"
 #include <QString>
 #include <pugixml.hpp>
 
@@ -50,14 +51,14 @@ namespace Openstw::Simulation
     public:
         ZugnummernAnzeigeState displayState() const;
         ZugnummernAnzeigeType anzeigeType() const;
-        const QString& currentZugNummer() const;
+        const Zugnummer& currentZugNummer() const;
         const QString& label() const;
         bool hasLabel() const;
 
     protected:
         ZugnummernAnzeigeType m_type{ZugnummernAnzeigeType::Compact};
-        QString m_currentZugNummer{""};
-        ZugnummernAnzeigeState m_displayState{ZugnummernAnzeigeState::LastDigitBlinking};
+        Zugnummer m_currentZugNummer{};
+        ZugnummernAnzeigeState m_displayState{ZugnummernAnzeigeState::Off};
         QString m_label{""};
     };
 }

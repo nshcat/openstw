@@ -36,7 +36,7 @@ namespace Openstw::Simulation
         return this->m_type;
     }
 
-    const QString& ZugnummernAnzeige::currentZugNummer() const
+    const Zugnummer& ZugnummernAnzeige::currentZugNummer() const
     {
         return this->m_currentZugNummer;
     }
