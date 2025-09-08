@@ -55,6 +55,9 @@ namespace Openstw::Simulation
         const QString& label() const;
         bool hasLabel() const;
 
+        void setCurrentZugNummer(const Zugnummer& newCurrentZugNummer);
+        void setDisplayState(ZugnummernAnzeigeState newDisplayState);
+
     protected:
         ZugnummernAnzeigeType m_type{ZugnummernAnzeigeType::Compact};
         Zugnummer m_currentZugNummer{};

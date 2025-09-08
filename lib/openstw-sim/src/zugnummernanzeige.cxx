@@ -50,4 +50,14 @@ namespace Openstw::Simulation
     {
         return !this->m_label.isEmpty();
     }
+
+    void ZugnummernAnzeige::setCurrentZugNummer(const Zugnummer& newCurrentZugNummer)
+    {
+        m_currentZugNummer = newCurrentZugNummer;
+    }
+
+    void ZugnummernAnzeige::setDisplayState(ZugnummernAnzeigeState newDisplayState)
+    {
+        m_displayState = newDisplayState;
+    }
 }
