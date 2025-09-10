@@ -52,6 +52,7 @@ namespace Rendering
         void drawTrackClosed(QPainter* painter, const QRectF& location) const;
         void drawCatenaryPowerless(QPainter* painter, const QRectF& location) const;
         void drawCounterTrackInUse(QPainter* painter, const QRectF& location) const;
+        void drawTextMagnet(QPainter* painter, const QRectF& location, const QString& text) const;
 
     protected slots:
         void onRemoveMagnet();

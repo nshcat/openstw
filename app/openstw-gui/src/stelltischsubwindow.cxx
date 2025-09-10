@@ -49,6 +49,34 @@ void StelltischSubWindow::setupToolbar()
     connect(addCounterTractAction, &QAction::triggered, this,
             std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::CounterTrackInUse));
 
+    QAction* addRpAction = magnetMenu->addAction("Räumungsprüfung required");
+    connect(addRpAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::RaeumungsPruefung));
+
+    QAction* addApAction = magnetMenu->addAction("Abschnittsprüfung required");
+    connect(addApAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::AbschnittsPruefung));
+
+    QAction* addKlAction = magnetMenu->addAction("Kleinwagen present");
+    connect(addKlAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::Kleinwagen));
+
+    QAction* addLueAction = magnetMenu->addAction("Lue-train present");
+    connect(addLueAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::LueTrain));
+
+    QAction* addNlfAction = magnetMenu->addAction("No counter track usage");
+    connect(addNlfAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::NoCounterTrackUse));
+
+    QAction* addArbAction = magnetMenu->addAction("Work in progress");
+    connect(addArbAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::WorkInProgress));
+
+    QAction* addBueAction = magnetMenu->addAction("Level crossing malfunction");
+    connect(addBueAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::LevelCrossingMalfunction));
+
     magnetButton->setMenu(magnetMenu);
 
     this->m_toolBar->addWidget(magnetButton);

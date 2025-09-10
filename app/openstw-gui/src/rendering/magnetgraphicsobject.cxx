@@ -62,6 +62,34 @@ namespace Rendering
             this->drawCounterTrackInUse(painter, innerContentRect);
             break;
 
+        case MagnetType::AbschnittsPruefung:
+            this->drawTextMagnet(painter, innerContentRect, "AP");
+            break;
+
+        case MagnetType::RaeumungsPruefung:
+            this->drawTextMagnet(painter, innerContentRect, "RP");
+            break;
+
+        case MagnetType::Kleinwagen:
+            this->drawTextMagnet(painter, innerContentRect, "KL");
+            break;
+
+        case MagnetType::LueTrain:
+            this->drawTextMagnet(painter, innerContentRect, "LUE");
+            break;
+
+        case MagnetType::NoCounterTrackUse:
+            this->drawTextMagnet(painter, innerContentRect, "NLF");
+            break;
+
+        case MagnetType::WorkInProgress:
+            this->drawTextMagnet(painter, innerContentRect, "ARB");
+            break;
+
+        case MagnetType::LevelCrossingMalfunction:
+            this->drawTextMagnet(painter, innerContentRect, "BUE");
+            break;
+
         default:
             break;
         }
@@ -203,6 +231,15 @@ namespace Rendering
         painter->setPen(rectanglePen(Qt::black, 1.0f));
         painter->setBrush(Qt::black);
         painter->drawRect(adjustRectForBorder(arrowStemRect, 1.0f));
+
+        painter->restore();
+    }
+
+    void MagnetGraphicsObject::drawTextMagnet(QPainter* painter, const QRectF& location, const QString& text) const
+    {
+        painter->save();
+
+        drawTextBox(painter, location, text, Qt::white, Qt::transparent, 0.0f, Qt::black);
 
         painter->restore();
     }
