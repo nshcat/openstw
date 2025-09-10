@@ -39,6 +39,7 @@ namespace Rendering
         virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
         virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+        virtual void wheelEvent(QGraphicsSceneWheelEvent* event) override;
 
     protected:
         void drawTrackClosed(QPainter* painter, const QRectF& location) const;
@@ -48,5 +49,6 @@ namespace Rendering
 
     protected:
         MagnetType m_type;
+        bool m_isBeingDragged{false};
     };
 }

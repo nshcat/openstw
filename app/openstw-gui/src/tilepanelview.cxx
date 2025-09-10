@@ -98,6 +98,10 @@ void TilePanelView::wheelEvent(QWheelEvent* event)
 
         this->setTransformationAnchor(oldAnchor);
     }
+    else
+    {
+        QGraphicsView::wheelEvent(event);
+    }
 }
 
 void TilePanelView::contextMenuEvent(QContextMenuEvent* event)

@@ -87,6 +87,7 @@ namespace Rendering
         {
             this->setTransformOriginPoint(this->boundingRect().center());
             this->setScale(1.1f);
+            this->m_isBeingDragged = true;
         }
     }
 
@@ -98,6 +99,7 @@ namespace Rendering
         {
             this->setTransformOriginPoint(this->boundingRect().center());
             this->setScale(1.0f);
+            this->m_isBeingDragged = false;
         }
     }
 
@@ -126,5 +128,14 @@ namespace Rendering
         }
 
         this->deleteLater();
+    }
+
+    void MagnetGraphicsObject::wheelEvent(QGraphicsSceneWheelEvent* event)
+    {
+        if (this->m_isBeingDragged)
+        {
+            const auto currentRotation = this->rotation();
+            this->setRotation(currentRotation + event->delta() * 0.15f);
+        }
     }
 }
