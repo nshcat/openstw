@@ -5,11 +5,13 @@
 #include <optional>
 #include <tile.hxx>
 
+#include "icontextmenuprovider.hxx"
+
 class TileGraphicsObject;
 
 namespace Rendering
 {
-    class TileComponentGraphicsObject : public QGraphicsObject
+    class TileComponentGraphicsObject : public QGraphicsObject, public IContextMenuProvider
     {
         Q_OBJECT
     public:
@@ -22,7 +24,9 @@ namespace Rendering
          */
         void setup();
         TileGraphicsObject* tileGraphicsObject() const;
-        bool providesContextMenu() const;
+
+    public:
+        virtual bool providesContextMenu() const override;
 
     protected:
         /**

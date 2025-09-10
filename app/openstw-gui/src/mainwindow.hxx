@@ -1,8 +1,9 @@
 #pragma once
 
 #include "simulationrunner.hxx"
-#include "tilepanelview.hxx"
+#include "stelltischsubwindow.hxx"
 #include <QMainWindow>
+#include <QMdiArea>
 #include <QVBoxLayout>
 #include <simulation.hxx>
 
@@ -24,9 +25,12 @@ public:
 protected slots:
     void simulationStarted();
 
+private slots:
+    void on_actionExit_triggered();
+
 private:
     Ui::MainWindow* ui;
-    QVBoxLayout* m_layout{};
-    TilePanelView* m_tilePanelView{};
+    QMdiArea* m_mdiArea{};
     SimulationRunner* m_simRunner{};
+    StelltischSubWindow* m_stelltischWindow{};
 };

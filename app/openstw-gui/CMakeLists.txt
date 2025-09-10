@@ -23,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 
     qt_add_executable(openstw-gui
@@ -54,6 +55,11 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/simulationrunner.hxx src/simulationrunner.cxx
         src/rendering/zstgraphicsobject.hxx
         src/rendering/zstgraphicsobject.cxx
+        src/stelltischsubwindow.hxx src/stelltischsubwindow.cxx
+        src/rendering/magnetgraphicsobject.hxx src/rendering/magnetgraphicsobject.cxx
+        src/magnettype.hxx
+        src/rendering/icontextmenuprovider.hxx
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -104,6 +110,7 @@ add_custom_command(
 
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 

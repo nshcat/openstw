@@ -6,7 +6,7 @@
 namespace Rendering
 {
     TileComponentGraphicsObject::TileComponentGraphicsObject(TileGraphicsObject* parent, bool providesContextMenu)
-        : QGraphicsObject(parent), m_tile{parent->tile()}, m_tileGraphicsObj{parent},
+        : QGraphicsObject(parent), IContextMenuProvider(), m_tile{parent->tile()}, m_tileGraphicsObj{parent},
           m_providesContextMenu{providesContextMenu}
     {
     }

@@ -5,6 +5,7 @@
 #include <QtSvg/QSvgGenerator>
 #include <stdexcept>
 
+#include "rendering/icontextmenuprovider.hxx"
 #include "tilegraphicsobject.hxx"
 #include "tilepanelview.hxx"
 
@@ -105,8 +106,8 @@ void TilePanelView::contextMenuEvent(QContextMenuEvent* event)
     QGraphicsItem* item = this->itemAt(p.x(), p.y());
     if (item != NULL)
     {
-        auto componentObject = dynamic_cast<Rendering::TileComponentGraphicsObject*>(item);
-        if (componentObject && componentObject->providesContextMenu())
+        auto contextMenuProvider = dynamic_cast<Rendering::IContextMenuProvider*>(item);
+        if (contextMenuProvider && contextMenuProvider->providesContextMenu())
         {
             QGraphicsView::contextMenuEvent(event);
             return;

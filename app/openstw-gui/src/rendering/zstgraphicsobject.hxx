@@ -34,7 +34,6 @@ namespace Rendering
         virtual void positionSelf() override;
         virtual std::optional<Qt::MouseButtons> acceptsMouseInput() const override;
 
-        // QGraphicsItem interface
     protected:
         virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent* event) override;
     };

@@ -27,6 +27,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
@@ -37,17 +38,11 @@
    <addaction name="menu_View"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
+  </action>
  </widget>
  <resources/>
  <connections/>
