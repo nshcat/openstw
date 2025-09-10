@@ -41,6 +41,14 @@ void StelltischSubWindow::setupToolbar()
     connect(addTrackClosedAction, &QAction::triggered, this,
             std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::TrackClosed));
 
+    QAction* addCatenaryPowerlessAction = magnetMenu->addAction("Caternary powerless");
+    connect(addCatenaryPowerlessAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::CatenaryPowerless));
+
+    QAction* addCounterTractAction = magnetMenu->addAction("Counter track usage");
+    connect(addCounterTractAction, &QAction::triggered, this,
+            std::bind(&StelltischSubWindow::onAddMagnetTriggered, this, MagnetType::CounterTrackInUse));
+
     magnetButton->setMenu(magnetMenu);
 
     this->m_toolBar->addWidget(magnetButton);

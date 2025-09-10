@@ -22,6 +22,13 @@ namespace Rendering
         constexpr static qreal trackClosedSymbolHeight = 45.0f;
         constexpr static qreal trackClosedSymbolThickness = 14.0f;
 
+        constexpr static qreal catenaryPowerlessOuterThickness = 5.0f;
+
+        constexpr static qreal counterTrackInUseArrowHeadWidth = 30.0f;
+        constexpr static qreal counterTrackInUseArrowHeadHeight = 25.0f;
+        constexpr static qreal counterTrackInUseArrowThickness = 8.0f;
+        constexpr static qreal counterTrackInUsePadding = 5.0f;
+
     public:
         MagnetGraphicsObject(const MagnetType type);
 
@@ -43,6 +50,8 @@ namespace Rendering
 
     protected:
         void drawTrackClosed(QPainter* painter, const QRectF& location) const;
+        void drawCatenaryPowerless(QPainter* painter, const QRectF& location) const;
+        void drawCounterTrackInUse(QPainter* painter, const QRectF& location) const;
 
     protected slots:
         void onRemoveMagnet();
