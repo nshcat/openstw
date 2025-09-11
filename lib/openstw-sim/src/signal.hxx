@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QString>
 #include <memory>
 #include <optional>
 #include <pugixml.hpp>
@@ -38,7 +39,8 @@ namespace Openstw::Simulation
         bool isBlockSignal() const;
         BlockSignalType blockSignalType() const;
         bool hasConnector() const;
-        const std::string& name() const;
+        const QString& name() const;
+        bool hasName() const;
         bool hasSperrMelder() const;
         SperrMelderState sperrMelderState() const;
 
@@ -48,9 +50,17 @@ namespace Openstw::Simulation
         VorSignalSchirm* secondarySignalSchirm();
         const VorSignalSchirm* secondarySignalSchirm() const;
 
+        bool hasDWegMelder() const;
+        StaticLampState dWegMelderState() const;
+        bool hasFeststellMelder() const;
+        StaticLampState feststellMelderState() const;
+        bool hasZs1Melder() const;
+        StaticLampState zs1MelderState() const;
+        Zs1MelderLocation zs1MelderLocation() const;
+
     protected:
         TileElementDirection m_direction{TileElementDirection::Forward};
-        std::string m_signalName{""};
+        QString m_signalName{""};
 
         std::unique_ptr<ISignalSchirm> m_primarySchirm{};
         std::optional<std::unique_ptr<VorSignalSchirm>> m_secondarySchirm{}; //< Always is a Vorsignal
@@ -60,5 +70,10 @@ namespace Openstw::Simulation
 
         bool m_hasConnector{false}; //< Used on both signals in a signal that spans multiple tiles
         std::optional<SperrMelderState> m_sperrMelder{};
+
+        std::optional<StaticLampState> m_dWegMelderState{};
+        std::optional<StaticLampState> m_feststellMelderState{};
+        std::optional<StaticLampState> m_zs1MelderState{};
+        Zs1MelderLocation m_zs1MelderLocation{Zs1MelderLocation::Free};
     };
 }

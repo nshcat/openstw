@@ -17,31 +17,362 @@ namespace Rendering
 
     QRectF SignalGraphicsObject::boundingRect() const
     {
-        const auto tileBoundingRect = this->tileGraphicsObject()->innerBoundingRect();
-
-        constexpr auto signalBoundingRectHeight =
-            TileRenderingConstants::halfTileHeight - (TrackGraphicsObject::trackThickness / 2.0f);
-
-        return QRectF{tileBoundingRect.left(), tileBoundingRect.top(), tileBoundingRect.width(),
-                      signalBoundingRectHeight};
+        return this->tileGraphicsObject()->innerBoundingRect();
     }
 
     void SignalGraphicsObject::positionSelf()
     {
-        const auto tileInnerRect = this->tileGraphicsObject()->innerBoundingRect();
+        this->setPos(this->boundingRect().topLeft());
+    }
 
-        if (this->m_direction == Openstw::Simulation::TileElementDirection::Backward)
+    QRectF SignalGraphicsObject::calculateAreaRect(VerticalDirection location) const
+    {
+        const auto tileBoundingRect = this->boundingRect();
+
+        constexpr auto signalBoundingRectHeight =
+            TileRenderingConstants::halfTileHeight - (TrackGraphicsObject::trackThickness / 2.0f);
+
+        QPointF topLeft;
+
+        if (location == VerticalDirection::Top)
         {
-            this->setPos(tileInnerRect.topLeft());
+            topLeft = QPointF{tileBoundingRect.topLeft()};
         }
         else
         {
-            this->setPos(tileInnerRect.left(), tileInnerRect.bottom() - this->boundingRect().height());
+            topLeft = QPointF{tileBoundingRect.left(), tileBoundingRect.bottom() - signalBoundingRectHeight};
+        }
+
+        return QRectF{topLeft.x(), topLeft.y(), tileBoundingRect.width(), signalBoundingRectHeight};
+    }
+
+    QRectF SignalGraphicsObject::calculateSignalArea() const
+    {
+        if (this->m_direction == Openstw::Simulation::TileElementDirection::Backward)
+        {
+            return this->calculateAreaRect(VerticalDirection::Top);
+        }
+        else
+        {
+            return this->calculateAreaRect(VerticalDirection::Bottom);
         }
     }
 
+    QRectF SignalGraphicsObject::calculateMelderArea() const
+    {
+        if (this->m_direction == Openstw::Simulation::TileElementDirection::Backward)
+        {
+            return this->calculateAreaRect(VerticalDirection::Bottom);
+        }
+        else
+        {
+            return this->calculateAreaRect(VerticalDirection::Top);
+        }
+    }
+
+    void SignalGraphicsObject::drawSignalArea(QPainter* painter, const QRectF& location, const bool rotated) const
+    {
+        painter->save();
+
+        // We need to rotate our drawing by 180 degrees if we are rendering a backwards signal
+        if (rotated)
+        {
+            // We want to rotate around the center of the bounding rectangle.
+            const auto locationCenter = location.center();
+
+            painter->translate(locationCenter);
+            painter->rotate(180.0f);
+            painter->translate(-locationCenter);
+        }
+
+        const auto& signal = this->m_tile->signal(this->m_direction);
+        const auto* primarySchirm = signal.primarySignalSchirm();
+
+        switch (primarySchirm->type())
+        {
+        case Openstw::Simulation::SignalSchirmType::HauptSignal:
+            {
+                // Cast down pointer
+                const auto* hauptSignalSchirm =
+                    dynamic_cast<const Openstw::Simulation::HauptSignalSchirm*>(primarySchirm);
+
+                if (!hauptSignalSchirm)
+                    throw std::runtime_error("ISignalSchirm was unexpectedly not HauptSignalSchirm");
+
+                // If we need to display a secondary Signalschirm, we use the compact
+                // rendering style for the Hauptsignal.
+                const auto renderStyle = (signal.hasSecondarySignalSchirm() ? HauptSignalRenderingStyle::Compact
+                                                                            : HauptSignalRenderingStyle::Normal);
+
+                // Measure out how big the Signalschirm would be if rendered.
+                // The returned rect always has position 0,0.
+                const auto hauptSchirmSize = this->measureHauptSignal(renderStyle, hauptSignalSchirm);
+
+                // Lay it out. The top end of the topmost Signalschirm is always fixed to be the same distance
+                // to the tile border.
+                QRectF hauptSchirmRect{location.right() - hauptSchirmSize.width() -
+                                           SignalGraphicsObject::signalToBorderPadding,
+                                       centerWithin(hauptSchirmSize.height(), location.height(), location.top()),
+                                       hauptSchirmSize.width(), hauptSchirmSize.height()};
+
+                // Render it
+                this->drawHauptSignal(painter, renderStyle, hauptSignalSchirm, hauptSchirmRect);
+
+                // We need this later to draw the block signal connection.
+                QRectF mastBaseRect;
+
+                // Also render the vorsignal attached to it if needed
+                if (signal.hasSecondarySignalSchirm())
+                {
+                    const auto* vorSignalSchirm = signal.secondarySignalSchirm();
+
+                    // Measure out Vorsignalschirm
+                    const auto vorSignalSchirmSize = this->measureVorSignal(vorSignalSchirm);
+
+                    // Lay it out. Its right edge is close to the left edge of the Hauptsignalschirm
+                    QRectF vorSignalSchirmRect{
+                        hauptSchirmRect.left() - vorSignalSchirmSize.width() - SignalGraphicsObject::hpVrPadding,
+                        centerWithin(vorSignalSchirmSize.height(), location.height(), location.top()),
+                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
+
+                    // Draw mast segment between Vorsignal and Hauptsignal
+                    const auto mastSegmentRect =
+                        QRectF{vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth,
+                               centerWithin(SignalGraphicsObject::mastBaseHeight, vorSignalSchirmRect.height(),
+                                            vorSignalSchirmRect.top()),
+                               SignalGraphicsObject::mastBaseWidth *
+                                   2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                               SignalGraphicsObject::mastBaseHeight};
+
+                    this->drawMastSegment(painter, mastSegmentRect);
+
+                    // Draw mast base. This depends on whether we have a Sperrmelder or not.
+                    if (signal.hasSperrMelder())
+                    {
+                        const auto mastBaseXPos = location.left() + SignalGraphicsObject::sperrMelderDiameter +
+                                                  SignalGraphicsObject::sperrMelderToBorderPadding +
+                                                  SignalGraphicsObject::sperrMelderMastBasePadding;
+
+                        mastBaseRect = QRectF{mastBaseXPos,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              (vorSignalSchirmRect.left() - mastBaseXPos) + 15.0f,
+                                              SignalGraphicsObject::mastBaseHeight};
+                    }
+                    else
+                    {
+                        mastBaseRect = QRectF{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              SignalGraphicsObject::mastBaseWidth *
+                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                              SignalGraphicsObject::mastBaseHeight};
+                    }
+
+                    // Render the mast base
+                    this->drawMastBase(painter, mastBaseRect);
+
+                    // Render the Vorsignalschirm
+                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+                else
+                {
+                    // Signal either has a mast base or a connector to the next tile - if it is part
+                    // of a multi-tile signal
+                    if (signal.hasConnector())
+                    {
+                        const QRectF mastSegmentRect{location.left(), hauptSchirmRect.top(),
+                                                     (hauptSchirmRect.left() - location.left()),
+                                                     hauptSchirmRect.height()};
+
+                        this->drawMastSegment(painter, mastSegmentRect);
+                    }
+                    else
+                    {
+                        if (signal.hasSperrMelder())
+                        {
+                            const auto mastBaseXPos = location.left() + SignalGraphicsObject::sperrMelderDiameter +
+                                                      SignalGraphicsObject::sperrMelderToBorderPadding +
+                                                      SignalGraphicsObject::sperrMelderMastBasePadding;
+
+                            mastBaseRect =
+                                QRectF{mastBaseXPos,
+                                       centerWithin(SignalGraphicsObject::mastBaseHeight, hauptSchirmRect.height(),
+                                                    hauptSchirmRect.top()),
+                                       (hauptSchirmRect.left() - mastBaseXPos), SignalGraphicsObject::mastBaseHeight};
+                        }
+                        else
+                        {
+                            mastBaseRect =
+                                QRectF{hauptSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                       centerWithin(SignalGraphicsObject::mastBaseHeight, hauptSchirmRect.height(),
+                                                    hauptSchirmRect.top()),
+                                       SignalGraphicsObject::mastBaseWidth, SignalGraphicsObject::mastBaseHeight};
+                        }
+
+                        this->drawMastBase(painter, mastBaseRect);
+                    }
+                }
+
+                if (signal.hasSperrMelder())
+                {
+                    const auto sperrMelderState = signal.sperrMelderState();
+
+                    const QRectF sperrMelderRect{location.left() + SignalGraphicsObject::sperrMelderToBorderPadding,
+                                                 centerWithin(SignalGraphicsObject::sperrMelderDiameter,
+                                                              hauptSchirmRect.height(), hauptSchirmRect.top()),
+                                                 SignalGraphicsObject::sperrMelderDiameter,
+                                                 SignalGraphicsObject::sperrMelderDiameter};
+
+                    this->drawSperrMelder(painter, sperrMelderRect, sperrMelderState);
+                }
+
+                // Blocksignale have a line connecting them to the tracks.
+                if (signal.isBlockSignal() && !signal.hasConnector())
+                {
+                    painter->save();
+
+                    const QRectF blockSignalConnectorRect{mastBaseRect.left(), location.top(),
+                                                          SignalGraphicsObject::mastThickness,
+                                                          (mastBaseRect.bottom() - location.top())};
+
+                    painter->setPen(rectanglePen(Qt::black, 1.0f));
+                    painter->setBrush(Qt::black);
+                    painter->drawRect(adjustRectForBorder(blockSignalConnectorRect, 1.0f));
+
+                    painter->restore();
+                }
+
+                break;
+            }
+
+        case Openstw::Simulation::SignalSchirmType::VorSignal:
+            {
+                // Cast down pointer
+                const auto* vorSignalSchirm = dynamic_cast<const Openstw::Simulation::VorSignalSchirm*>(primarySchirm);
+
+                if (!vorSignalSchirm)
+                    throw std::runtime_error("ISignalSchirm was unexpectedly not VorSignalSchirm");
+
+                const auto vorSignalSchirmSize = this->measureVorSignal(vorSignalSchirm);
+
+                // We have two possible cases here - if we are part of a multi-tile signal, we want to render
+                // at the same distance to tile border as if we were a Hauptsignalschirm.
+                // If we are just an individual vorsignal, center us more within the tile.
+                if (signal.hasConnector())
+                {
+                    // Lay it out. The top end of the topmost Signalschirm is always fixed to be the same distance
+                    // to the tile border.
+                    const QRectF vorSignalSchirmRect{
+                        location.right() - vorSignalSchirmSize.width() - SignalGraphicsObject::signalToBorderPadding,
+                        centerWithin(vorSignalSchirmSize.height(), location.height(), location.top()),
+                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
+
+                    // We have to render the mast base first
+                    const QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              SignalGraphicsObject::mastBaseWidth *
+                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                              SignalGraphicsObject::mastBaseHeight};
+
+                    this->drawMastBase(painter, mastBaseRect);
+
+                    // And then the connector
+                    const qreal mastSegmentStartX = vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth;
+
+                    const QRectF mastSegmentRect{mastSegmentStartX, vorSignalSchirmRect.top(),
+                                                 (location.right() - mastSegmentStartX), vorSignalSchirmRect.height()};
+
+                    this->drawMastSegment(painter, mastSegmentRect);
+
+                    // Finally, draw the Vorsignalschirm
+                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+                else
+                {
+                    // Lay it out so its centered horizontally in the tile
+                    const QRectF vorSignalSchirmRect{
+                        centerWithin(vorSignalSchirmSize.width(), location.width(), location.left()),
+                        centerWithin(vorSignalSchirmSize.height(), location.height(), location.top()),
+                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
+
+                    // We have to render the mast base first
+                    const QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
+                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
+                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
+                                              SignalGraphicsObject::mastBaseWidth *
+                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
+                                              SignalGraphicsObject::mastBaseHeight};
+
+                    this->drawMastBase(painter, mastBaseRect);
+
+                    // Finally, render the Vorsignalschirm
+                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
+                }
+
+                break;
+            }
+
+        default:
+            break;
+        }
+
+        painter->restore();
+    }
+
+    void SignalGraphicsObject::drawMelderArea(QPainter* painter, const QRectF& location, const bool rotated) const
+    {
+        painter->save();
+
+        const auto& signal = this->m_tile->signal(this->m_direction);
+
+        bool hasOnlyLabel = true;
+
+        if (signal.hasFeststellMelder())
+        {
+            hasOnlyLabel = false;
+
+            const QRectF feststellMelderRect{
+                location.right() - SignalGraphicsObject::feststellMelderPaddingToBorder -
+                    SignalGraphicsObject::feststellMelderSideLength,
+                centerWithin(SignalGraphicsObject::feststellMelderSideLength, location.height(), location.top()),
+                SignalGraphicsObject::feststellMelderSideLength, SignalGraphicsObject::feststellMelderSideLength};
+
+            this->drawFeststellMelder(painter, feststellMelderRect, signal.feststellMelderState());
+        }
+
+        if (signal.hasDWegMelder())
+        {
+            hasOnlyLabel = false;
+
+            const QRectF dwegMelderRect{
+                location.left() + SignalGraphicsObject::dwegMelderDiameter,
+                centerWithin(SignalGraphicsObject::dwegMelderDiameter, location.height(), location.top()),
+                SignalGraphicsObject::dwegMelderDiameter, SignalGraphicsObject::dwegMelderDiameter};
+
+            this->drawDWegMelder(painter, dwegMelderRect, signal.dWegMelderState());
+        }
+
+        if (signal.hasName())
+        {
+            const qreal xPos =
+                hasOnlyLabel
+                    ? centerWithin(SignalGraphicsObject::labelWidth, location.width(), location.left())
+                    : location.right() - SignalGraphicsObject::labelPaddingToBorder - SignalGraphicsObject::labelWidth;
+
+            const QRectF labelRect{xPos,
+                                   centerWithin(SignalGraphicsObject::labelHeight, location.height(), location.top()),
+                                   SignalGraphicsObject::labelWidth, SignalGraphicsObject::labelHeight};
+
+            this->drawLabel(painter, labelRect, signal.name());
+        }
+
+        painter->restore();
+    }
+
     void SignalGraphicsObject::drawSperrMelder(QPainter* painter, const QRectF& location,
-                                               const Openstw::Simulation::SperrMelderState state)
+                                               const Openstw::Simulation::SperrMelderState state) const
     {
         painter->save();
 
@@ -62,7 +393,61 @@ namespace Rendering
         painter->restore();
     }
 
-    void SignalGraphicsObject::drawMastBase(QPainter* painter, const QRectF& location)
+    void SignalGraphicsObject::drawDWegMelder(QPainter* painter, const QRectF& location,
+                                              const Openstw::Simulation::StaticLampState state) const
+    {
+        painter->save();
+
+        const auto dwegMelderInnerColor = (state == Openstw::Simulation::StaticLampState::Off)
+                                              ? SignalGraphicsObject::dwegMelderInactiveColor
+                                              : SignalGraphicsObject::dwegMelderActiveColor;
+
+        painter->setPen(QPen{Qt::black, 0.5f});
+        painter->setBrush(dwegMelderInnerColor);
+
+        const QRectF dwegMelderRect{
+            centerWithin(SignalGraphicsObject::dwegMelderDiameter, location.width(), location.left()),
+            centerWithin(SignalGraphicsObject::dwegMelderDiameter, location.height(), location.top()),
+            SignalGraphicsObject::dwegMelderDiameter, SignalGraphicsObject::dwegMelderDiameter};
+
+        painter->drawEllipse(dwegMelderRect);
+
+        painter->restore();
+    }
+
+    void SignalGraphicsObject::drawFeststellMelder(QPainter* painter, const QRectF& location,
+                                                   const Openstw::Simulation::StaticLampState state) const
+    {
+        painter->save();
+
+        const auto feststellMelderInnerColor = (state == Openstw::Simulation::StaticLampState::Off)
+                                                   ? SignalGraphicsObject::feststellMelderInactiveColor
+                                                   : SignalGraphicsObject::feststellMelderActiveColor;
+
+        painter->setPen(rectanglePen(Qt::black, SignalGraphicsObject::feststellMelderBorderThickness));
+        painter->setBrush(feststellMelderInnerColor);
+
+        const QRectF feststellMelderRect{
+            centerWithin(SignalGraphicsObject::feststellMelderSideLength, location.width(), location.left()),
+            centerWithin(SignalGraphicsObject::feststellMelderSideLength, location.height(), location.top()),
+            SignalGraphicsObject::feststellMelderSideLength, SignalGraphicsObject::feststellMelderSideLength};
+
+        painter->drawRect(
+            adjustRectForBorder(feststellMelderRect, SignalGraphicsObject::feststellMelderBorderThickness));
+
+        painter->restore();
+    }
+
+    void SignalGraphicsObject::drawLabel(QPainter* painter, const QRectF& location, const QString& label) const
+    {
+        painter->save();
+
+        drawTextBox(painter, location, label, Qt::white, Qt::transparent, 0.0f, Qt::black);
+
+        painter->restore();
+    }
+
+    void SignalGraphicsObject::drawMastBase(QPainter* painter, const QRectF& location) const
     {
         painter->save();
 
@@ -78,7 +463,7 @@ namespace Rendering
         painter->restore();
     }
 
-    void SignalGraphicsObject::drawMastSegment(QPainter* painter, const QRectF& location)
+    void SignalGraphicsObject::drawMastSegment(QPainter* painter, const QRectF& location) const
     {
         painter->save();
 
@@ -369,250 +754,13 @@ namespace Rendering
 
         const auto boundingRect = this->boundingRect();
 
-        // We need to rotate our drawing by 180 degrees if we are rendering a backwards signal
-        if (this->m_direction == Openstw::Simulation::TileElementDirection::Backward)
-        {
-            // We want to rotate around the center of the bounding rectangle.
-            const auto boundingRectCenter = boundingRect.center();
+        // == Draw area containing the signal graphic
+        const auto signalAreaRect = this->calculateSignalArea();
+        const auto drawRotated = (this->m_direction == Openstw::Simulation::TileElementDirection::Backward);
+        this->drawSignalArea(painter, signalAreaRect, drawRotated);
 
-            painter->translate(boundingRectCenter);
-            painter->rotate(180.0f);
-            painter->translate(-boundingRectCenter);
-        }
-
-        const auto& signal = this->m_tile->signal(this->m_direction);
-        const auto* primarySchirm = signal.primarySignalSchirm();
-
-        switch (primarySchirm->type())
-        {
-        case Openstw::Simulation::SignalSchirmType::HauptSignal:
-            {
-                // Cast down pointer
-                const auto* hauptSignalSchirm =
-                    dynamic_cast<const Openstw::Simulation::HauptSignalSchirm*>(primarySchirm);
-
-                if (!hauptSignalSchirm)
-                    throw std::runtime_error("ISignalSchirm was unexpectedly not HauptSignalSchirm");
-
-                // If we need to display a secondary Signalschirm, we use the compact
-                // rendering style for the Hauptsignal.
-                const auto renderStyle = (signal.hasSecondarySignalSchirm() ? HauptSignalRenderingStyle::Compact
-                                                                            : HauptSignalRenderingStyle::Normal);
-
-                // Measure out how big the Signalschirm would be if rendered.
-                // The returned rect always has position 0,0.
-                const auto hauptSchirmSize = this->measureHauptSignal(renderStyle, hauptSignalSchirm);
-
-                // Lay it out. The top end of the topmost Signalschirm is always fixed to be the same distance
-                // to the tile border.
-                QRectF hauptSchirmRect{
-                    boundingRect.right() - hauptSchirmSize.width() - SignalGraphicsObject::signalToBorderPadding,
-                    centerWithin(hauptSchirmSize.height(), boundingRect.height(), boundingRect.top()),
-                    hauptSchirmSize.width(), hauptSchirmSize.height()};
-
-                // Render it
-                this->drawHauptSignal(painter, renderStyle, hauptSignalSchirm, hauptSchirmRect);
-
-                // We need this later to draw the block signal connection.
-                QRectF mastBaseRect;
-
-                // Also render the vorsignal attached to it if needed
-                if (signal.hasSecondarySignalSchirm())
-                {
-                    const auto* vorSignalSchirm = signal.secondarySignalSchirm();
-
-                    // Measure out Vorsignalschirm
-                    const auto vorSignalSchirmSize = this->measureVorSignal(vorSignalSchirm);
-
-                    // Lay it out. Its right edge is close to the left edge of the Hauptsignalschirm
-                    QRectF vorSignalSchirmRect{
-                        hauptSchirmRect.left() - vorSignalSchirmSize.width() - SignalGraphicsObject::hpVrPadding,
-                        centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
-                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
-
-                    // Draw mast segment between Vorsignal and Hauptsignal
-                    const auto mastSegmentRect =
-                        QRectF{vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth,
-                               centerWithin(SignalGraphicsObject::mastBaseHeight, vorSignalSchirmRect.height(),
-                                            vorSignalSchirmRect.top()),
-                               SignalGraphicsObject::mastBaseWidth *
-                                   2.0, //< In order to extend under the diagonal of the Vorsignalschirm
-                               SignalGraphicsObject::mastBaseHeight};
-
-                    this->drawMastSegment(painter, mastSegmentRect);
-
-                    // Draw mast base. This depends on whether we have a Sperrmelder or not.
-                    if (signal.hasSperrMelder())
-                    {
-                        const auto mastBaseXPos = boundingRect.left() + SignalGraphicsObject::sperrMelderDiameter +
-                                                  SignalGraphicsObject::sperrMelderToBorderPadding +
-                                                  SignalGraphicsObject::sperrMelderMastBasePadding;
-
-                        mastBaseRect = QRectF{mastBaseXPos,
-                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
-                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
-                                              (vorSignalSchirmRect.left() - mastBaseXPos) + 15.0f,
-                                              SignalGraphicsObject::mastBaseHeight};
-                    }
-                    else
-                    {
-                        mastBaseRect = QRectF{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
-                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
-                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
-                                              SignalGraphicsObject::mastBaseWidth *
-                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
-                                              SignalGraphicsObject::mastBaseHeight};
-                    }
-
-                    // Render the mast base
-                    this->drawMastBase(painter, mastBaseRect);
-
-                    // Render the Vorsignalschirm
-                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
-                }
-                else
-                {
-                    // Signal either has a mast base or a connector to the next tile - if it is part
-                    // of a multi-tile signal
-                    if (signal.hasConnector())
-                    {
-                        const QRectF mastSegmentRect{boundingRect.left(), hauptSchirmRect.top(),
-                                                     (hauptSchirmRect.left() - boundingRect.left()),
-                                                     hauptSchirmRect.height()};
-
-                        this->drawMastSegment(painter, mastSegmentRect);
-                    }
-                    else
-                    {
-                        if (signal.hasSperrMelder())
-                        {
-                            const auto mastBaseXPos = boundingRect.left() + SignalGraphicsObject::sperrMelderDiameter +
-                                                      SignalGraphicsObject::sperrMelderToBorderPadding +
-                                                      SignalGraphicsObject::sperrMelderMastBasePadding;
-
-                            mastBaseRect =
-                                QRectF{mastBaseXPos,
-                                       centerWithin(SignalGraphicsObject::mastBaseHeight, hauptSchirmRect.height(),
-                                                    hauptSchirmRect.top()),
-                                       (hauptSchirmRect.left() - mastBaseXPos), SignalGraphicsObject::mastBaseHeight};
-                        }
-                        else
-                        {
-                            mastBaseRect =
-                                QRectF{hauptSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
-                                       centerWithin(SignalGraphicsObject::mastBaseHeight, hauptSchirmRect.height(),
-                                                    hauptSchirmRect.top()),
-                                       SignalGraphicsObject::mastBaseWidth, SignalGraphicsObject::mastBaseHeight};
-                        }
-
-                        this->drawMastBase(painter, mastBaseRect);
-                    }
-                }
-
-                if (signal.hasSperrMelder())
-                {
-                    const auto sperrMelderState = signal.sperrMelderState();
-
-                    const QRectF sperrMelderRect{boundingRect.left() + SignalGraphicsObject::sperrMelderToBorderPadding,
-                                                 centerWithin(SignalGraphicsObject::sperrMelderDiameter,
-                                                              hauptSchirmRect.height(), hauptSchirmRect.top()),
-                                                 SignalGraphicsObject::sperrMelderDiameter,
-                                                 SignalGraphicsObject::sperrMelderDiameter};
-
-                    this->drawSperrMelder(painter, sperrMelderRect, sperrMelderState);
-                }
-
-                // Blocksignale have a line connecting them to the tracks.
-                if (signal.isBlockSignal() && !signal.hasConnector())
-                {
-                    painter->save();
-
-                    const QRectF blockSignalConnectorRect{mastBaseRect.left(), boundingRect.top(),
-                                                          SignalGraphicsObject::mastThickness,
-                                                          (mastBaseRect.bottom() - boundingRect.top())};
-
-                    painter->setPen(rectanglePen(Qt::black, 1.0f));
-                    painter->setBrush(Qt::black);
-                    painter->drawRect(adjustRectForBorder(blockSignalConnectorRect, 1.0f));
-
-                    painter->restore();
-                }
-
-                break;
-            }
-
-        case Openstw::Simulation::SignalSchirmType::VorSignal:
-            {
-                // Cast down pointer
-                const auto* vorSignalSchirm = dynamic_cast<const Openstw::Simulation::VorSignalSchirm*>(primarySchirm);
-
-                if (!vorSignalSchirm)
-                    throw std::runtime_error("ISignalSchirm was unexpectedly not VorSignalSchirm");
-
-                const auto vorSignalSchirmSize = this->measureVorSignal(vorSignalSchirm);
-
-                // We have two possible cases here - if we are part of a multi-tile signal, we want to render
-                // at the same distance to tile border as if we were a Hauptsignalschirm.
-                // If we are just an individual vorsignal, center us more within the tile.
-                if (signal.hasConnector())
-                {
-                    // Lay it out. The top end of the topmost Signalschirm is always fixed to be the same distance
-                    // to the tile border.
-                    const QRectF vorSignalSchirmRect{
-                        boundingRect.right() - vorSignalSchirmSize.width() -
-                            SignalGraphicsObject::signalToBorderPadding,
-                        centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
-                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
-
-                    // We have to render the mast base first
-                    const QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
-                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
-                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
-                                              SignalGraphicsObject::mastBaseWidth *
-                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
-                                              SignalGraphicsObject::mastBaseHeight};
-
-                    this->drawMastBase(painter, mastBaseRect);
-
-                    // And then the connector
-                    const qreal mastSegmentStartX = vorSignalSchirmRect.right() - SignalGraphicsObject::mastBaseWidth;
-
-                    const QRectF mastSegmentRect{mastSegmentStartX, vorSignalSchirmRect.top(),
-                                                 (boundingRect.right() - mastSegmentStartX),
-                                                 vorSignalSchirmRect.height()};
-
-                    this->drawMastSegment(painter, mastSegmentRect);
-
-                    // Finally, draw the Vorsignalschirm
-                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
-                }
-                else
-                {
-                    // Lay it out so its centered horizontally in the tile
-                    const QRectF vorSignalSchirmRect{
-                        centerWithin(vorSignalSchirmSize.width(), boundingRect.width(), boundingRect.left()),
-                        centerWithin(vorSignalSchirmSize.height(), boundingRect.height(), boundingRect.top()),
-                        vorSignalSchirmSize.width(), vorSignalSchirmSize.height()};
-
-                    // We have to render the mast base first
-                    const QRectF mastBaseRect{vorSignalSchirmRect.left() - SignalGraphicsObject::mastBaseWidth,
-                                              centerWithin(SignalGraphicsObject::mastBaseHeight,
-                                                           vorSignalSchirmRect.height(), vorSignalSchirmRect.top()),
-                                              SignalGraphicsObject::mastBaseWidth *
-                                                  2.0, //< In order to extend under the diagonal of the Vorsignalschirm
-                                              SignalGraphicsObject::mastBaseHeight};
-
-                    this->drawMastBase(painter, mastBaseRect);
-
-                    // Finally, render the Vorsignalschirm
-                    this->drawVorSignal(painter, vorSignalSchirm, vorSignalSchirmRect);
-                }
-
-                break;
-            }
-
-        default:
-            break;
-        } 
+        // == Draw area containing the various melder and the signal label
+        const auto melderAreaRect = this->calculateMelderArea();
+        this->drawMelderArea(painter, melderAreaRect, drawRotated);
     }
 }

@@ -2,6 +2,30 @@
 <Simulation>
     <TilePanel width="11" height="7">
 
+        <Tile x="1" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                    <RangierSignal/>
+                    <KennLicht/>
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+                <FeststellMelder/>
+                <DWegMelder/>
+                <Zs1Melder/>
+            </ForwardSignal>
+            <ZugStrassenTaste direction="Forward"/>
+        </Tile>
+
+        <Tile x="2" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+                <Zs1Melder location="onMast"/>
+            </ForwardSignal>
+        </Tile>
 
         <Tile x="6" y="2">
             <ZugnummernAnzeige type="largeLeftPart"/>

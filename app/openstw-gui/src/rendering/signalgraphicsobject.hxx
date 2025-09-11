@@ -2,6 +2,7 @@
 
 #include "hauptsignalschirm.hxx"
 #include "isignalschirm.hxx"
+#include "renderinghelpers.hxx"
 #include "tilecomponentgraphicsobject.hxx"
 #include <QObject>
 #include <enums.hxx>
@@ -49,6 +50,22 @@ namespace Rendering
 
         constexpr static qreal sperrMelderMastBasePadding = 1.0f;
 
+        constexpr static qreal feststellMelderSideLength = 18.0f;
+        constexpr static qreal feststellMelderBorderThickness = 2.0f;
+        constexpr static QColor feststellMelderInactiveColor = inactiveLampColor;
+        constexpr static QColor feststellMelderActiveColor{0xec, 0xfe, 0xbf};
+        constexpr static qreal feststellMelderPaddingToBorder = 15.5f;
+
+        constexpr static qreal labelWidth = 55.0f;
+        constexpr static qreal labelHeight = 18.0f;
+        constexpr static qreal labelPaddingToBorder =
+            feststellMelderPaddingToBorder + feststellMelderSideLength + 10.0f;
+
+        constexpr static qreal dwegMelderDiameter = 14.0f;
+        constexpr static QColor dwegMelderInactiveColor = inactiveLampColor;
+        constexpr static QColor dwegMelderActiveColor{0xFF, 0xFF, 0x0};
+        constexpr static qreal dwegMelderPaddingToBorder = 16.0f;
+
     public:
         SignalGraphicsObject(TileGraphicsObject* parent, const Openstw::Simulation::TileElementDirection direction);
 
@@ -60,11 +77,26 @@ namespace Rendering
         virtual void positionSelf() override;
 
     protected:
-        void drawSperrMelder(QPainter* painter, const QRectF& location,
-                             const Openstw::Simulation::SperrMelderState state);
+        QRectF calculateAreaRect(VerticalDirection location) const;
+        QRectF calculateSignalArea() const;
+        QRectF calculateMelderArea() const;
 
-        void drawMastBase(QPainter* painter, const QRectF& location);
-        void drawMastSegment(QPainter* painter, const QRectF& location);
+        void drawSignalArea(QPainter* painter, const QRectF& location, const bool rotated) const;
+        void drawMelderArea(QPainter* painter, const QRectF& location, const bool rotated) const;
+
+        void drawSperrMelder(QPainter* painter, const QRectF& location,
+                             const Openstw::Simulation::SperrMelderState state) const;
+
+        void drawDWegMelder(QPainter* painter, const QRectF& location,
+                            const Openstw::Simulation::StaticLampState state) const;
+
+        void drawFeststellMelder(QPainter* painter, const QRectF& location,
+                                 const Openstw::Simulation::StaticLampState state) const;
+
+        void drawLabel(QPainter* painter, const QRectF& location, const QString& label) const;
+
+        void drawMastBase(QPainter* painter, const QRectF& location) const;
+        void drawMastSegment(QPainter* painter, const QRectF& location) const;
 
         void drawSignalLamp(QPainter* painter, const QRectF& location, const QColor color, const qreal diameter) const;
 

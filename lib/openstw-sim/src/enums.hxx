@@ -4,6 +4,12 @@
 
 namespace Openstw::Simulation
 {
+    enum class Zs1MelderLocation
+    {
+        Free = 0,
+        OnMast = 1
+    };
+
     enum class Digit : std::int8_t
     {
         None = -1,
