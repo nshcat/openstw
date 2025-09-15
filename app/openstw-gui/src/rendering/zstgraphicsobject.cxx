@@ -21,7 +21,8 @@ namespace Rendering
         if (!this->m_tile->hasZugStrassenTaste())
             return QRectF{};
 
-        if (this->m_tile->zugStrassenTasteDirection() == Openstw::Simulation::TileElementDirection::Forward)
+        const auto direction = this->m_tile->zugStrassenTasteDirection();
+        if (direction == Openstw::Simulation::TileElementDirection::Forward)
         {
             // Aligned to left edge
             return QRectF{
@@ -30,11 +31,19 @@ namespace Rendering
                 centerWithin(ZSTGraphicsObject::buttonOuterDiameter, tileBoundingRect.height(), tileBoundingRect.top()),
                 ZSTGraphicsObject::buttonOuterDiameter, ZSTGraphicsObject::buttonOuterDiameter};
         }
-        else
+        else if (direction == Openstw::Simulation::TileElementDirection::Backward)
         {
             // Aligned to right edge
             return QRectF{
                 tileBoundingRect.left() + ZSTGraphicsObject::buttonToBorderPadding,
+                centerWithin(ZSTGraphicsObject::buttonOuterDiameter, tileBoundingRect.height(), tileBoundingRect.top()),
+                ZSTGraphicsObject::buttonOuterDiameter, ZSTGraphicsObject::buttonOuterDiameter};
+        }
+        else
+        {
+            // Centered
+            return QRectF{
+                centerWithin(ZSTGraphicsObject::buttonOuterDiameter, tileBoundingRect.width(), tileBoundingRect.left()),
                 centerWithin(ZSTGraphicsObject::buttonOuterDiameter, tileBoundingRect.height(), tileBoundingRect.top()),
                 ZSTGraphicsObject::buttonOuterDiameter, ZSTGraphicsObject::buttonOuterDiameter};
         }

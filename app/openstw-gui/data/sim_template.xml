@@ -14,7 +14,7 @@
                 <DWegMelder/>
                 <Zs1Melder/>
             </ForwardSignal>
-            <ZugStrassenTaste direction="Forward"/>
+            <ZugStrassenTaste direction="forward"/>
         </Tile>
 
         <Tile x="2" y="1">
