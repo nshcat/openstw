@@ -2,10 +2,19 @@
 
 #include <initializer_list>
 #include <memory>
+#include <pugixml.hpp>
 #include <type_traits>
+
+#include "enums.hxx"
 
 namespace Openstw::Simulation
 {
+    namespace Xml
+    {
+        TileElementDirection parseDirection(const pugi::xml_attribute& attrib,
+                                            const TileElementDirection defVal = TileElementDirection::Forward);
+    }
+
     template <class T, class U> std::unique_ptr<T> dynamic_pointer_cast(std::unique_ptr<U>&& r) noexcept
     {
         (void)dynamic_cast<T*>(static_cast<U*>(0));

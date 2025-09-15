@@ -32,12 +32,7 @@ namespace Openstw::Simulation
         const auto zstNode = root.child("ZugStrassenTaste");
         if (zstNode)
         {
-            const QString directionTxt = zstNode.attribute("direction").as_string("forward");
-            TileElementDirection direction{TileElementDirection::Forward};
-            if (directionTxt == "backward")
-                direction = TileElementDirection::Backward;
-
-            tile->m_zugStrassenTaste = direction;
+            tile->m_zugStrassenTaste = Xml::parseDirection(zstNode.attribute("direction"));
         }
         // ==
 

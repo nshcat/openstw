@@ -54,8 +54,9 @@ namespace Openstw::Simulation
      */
     enum class TileElementDirection
     {
-        Forward = 0, //< Left to right
-        Backward = 1 //< Right to left
+        Forward = 0,      //< Left to right
+        Backward = 1,     //< Right to left
+        Bidirectional = 2 //< Either way (used for e.g. bidirectional ZST)
     };
 
     enum class AusfahrErlaubnisState
