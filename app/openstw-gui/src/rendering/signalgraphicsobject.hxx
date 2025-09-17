@@ -1,12 +1,15 @@
 #pragma once
 
+#include <QObject>
+
+#include <enums.hxx>
+#include <hauptsignalschirm.hxx>
+#include <isignalschirm.hxx>
+#include <zugdeckungssignalschirm.hxx>
+
 #include "fsmgraphicsobject.hxx"
-#include "hauptsignalschirm.hxx"
-#include "isignalschirm.hxx"
 #include "renderinghelpers.hxx"
 #include "tilecomponentgraphicsobject.hxx"
-#include <QObject>
-#include <enums.hxx>
 
 namespace Rendering
 {
@@ -103,6 +106,12 @@ namespace Rendering
         QSizeF measureVorSignal(const Openstw::Simulation::VorSignalSchirm* vorSignalSchirm) const;
         void drawVorSignal(QPainter* painter, const Openstw::Simulation::VorSignalSchirm* vorSignalSchirm,
                            const QRectF& location) const;
+
+        QSizeF measureZugDeckungsSignal(
+            const Openstw::Simulation::ZugDeckungsSignalSchirm* zugDeckungsSignalSchirm) const;
+        void drawZugDeckungsSignal(QPainter* painter,
+                                   const Openstw::Simulation::ZugDeckungsSignalSchirm* zugDeckungsSignalSchirm,
+                                   const QRectF& location) const;
 
     protected:
         Openstw::Simulation::TileElementDirection m_direction;

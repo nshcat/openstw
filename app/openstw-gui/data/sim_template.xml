@@ -39,6 +39,18 @@
             <ZugStrassenTaste direction="bidirectional"/>
         </Tile>
 
+        <Tile x="5" y="1">
+            <Track hasLeuchtMelder="false"/>
+            <ForwardSignal name="074R1">
+                <PrimarySignalSchirm type="ZugDeckungsSignalSchirm"/>
+            </ForwardSignal>
+            <BackwardSignal name="073R2">
+                <PrimarySignalSchirm type="ZugDeckungsSignalSchirm"/>
+            </BackwardSignal>
+            <FeststellMelder direction="bidirectional"/>
+            <ZugStrassenTaste direction="bidirectional"/>
+        </Tile>
+
         <Tile x="6" y="2">
             <ZugnummernAnzeige type="largeLeftPart"/>
         </Tile>

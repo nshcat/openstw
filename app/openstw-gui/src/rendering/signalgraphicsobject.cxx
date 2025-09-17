@@ -74,6 +74,27 @@ namespace Rendering
 
         switch (primarySchirm->type())
         {
+        case Openstw::Simulation::SignalSchirmType::ZugDeckungsSignal:
+            {
+                // Cast down pointer
+                const auto* zugDeckungsSignalSchirm =
+                    dynamic_cast<const Openstw::Simulation::ZugDeckungsSignalSchirm*>(primarySchirm);
+
+                if (!zugDeckungsSignalSchirm)
+                    throw std::runtime_error("ISignalSchirm was unexpectedly not ZugDeckungsSignalSchirm");
+
+                const auto zugDeckungsSignalSchirmSize = this->measureZugDeckungsSignal(zugDeckungsSignalSchirm);
+
+                const QRectF zugDeckungsSignalSchirmRect{
+                    location.right() - zugDeckungsSignalSchirmSize.width() -
+                        SignalGraphicsObject::signalToBorderPadding,
+                    centerWithin(zugDeckungsSignalSchirmSize.height(), location.height(), location.top()),
+                    zugDeckungsSignalSchirmSize.width(), zugDeckungsSignalSchirmSize.height()};
+
+                this->drawZugDeckungsSignal(painter, zugDeckungsSignalSchirm, zugDeckungsSignalSchirmRect);
+
+                break;
+            }
         case Openstw::Simulation::SignalSchirmType::HauptSignal:
             {
                 // Cast down pointer
@@ -349,7 +370,8 @@ namespace Rendering
 
                 const qreal xPadding = fsmIsCentered ? SignalGraphicsObject::labelPaddingCenteredFSM
                                                      : SignalGraphicsObject::labelPaddingAlignedFSM;
-                const qreal xPos = location.right() - xPadding - SignalGraphicsObject::labelWidth;
+                const qreal xPos = rotated ? location.left() + xPadding
+                                           : location.right() - xPadding - SignalGraphicsObject::labelWidth;
 
                 labelRect =
                     QRectF{xPos, centerWithin(SignalGraphicsObject::labelHeight, location.height(), location.top()),
@@ -708,6 +730,62 @@ namespace Rendering
 
             this->drawSignalLamp(painter, extraKennLichtSpace, kennLampColor, kennLampDiameter);
         }
+
+        painter->restore();
+    }
+
+    QSizeF SignalGraphicsObject::measureZugDeckungsSignal(
+        const Openstw::Simulation::ZugDeckungsSignalSchirm* zugDeckungsSignalSchirm) const
+    {
+        constexpr qreal signalHeight = 18.0f;
+
+        qreal signalWidth = (SignalGraphicsObject::signalLampPadding * 2) + (2 * SignalGraphicsObject::hpSpaceForLamp) +
+                            (SignalGraphicsObject::hpPaddingBetweenLamps);
+
+        return QSizeF{signalWidth, signalHeight};
+    }
+
+    void SignalGraphicsObject::drawZugDeckungsSignal(
+        QPainter* painter, const Openstw::Simulation::ZugDeckungsSignalSchirm* zugDeckungsSignalSchirm,
+        const QRectF& location) const
+    {
+        painter->save();
+
+        painter->setPen(rectanglePen(Qt::black, 1.0f));
+        painter->setBrush(Qt::black);
+        painter->drawRect(adjustRectForBorder(location, 1.0f));
+
+        const auto signalBild = zugDeckungsSignalSchirm->zugDeckungsSignalBild();
+        const auto kennLichtState = zugDeckungsSignalSchirm->kennLichtState();
+
+        const qreal lampYPos = centerWithin(SignalGraphicsObject::hpSpaceForLamp, location.height(), location.top());
+        qreal currentXPos =
+            location.right() - SignalGraphicsObject::signalLampPadding - SignalGraphicsObject::hpSpaceForLamp;
+
+        // == Red lamp
+        const auto redLampOn = (signalBild == Openstw::Simulation::ZugDeckungsSignalBild::Hp0);
+        const auto redLampDiameter =
+            (redLampOn ? SignalGraphicsObject::activeLampDiameter : SignalGraphicsObject::inactiveLampDiameter);
+        const auto redLampColor = redLampOn ? QColor{Qt::red} : SignalGraphicsObject::inactiveLampColor;
+
+        this->drawSignalLamp(
+            painter,
+            QRectF{currentXPos, lampYPos, SignalGraphicsObject::hpSpaceForLamp, SignalGraphicsObject::hpSpaceForLamp},
+            redLampColor, redLampDiameter);
+
+        // == White lamp
+        currentXPos -= SignalGraphicsObject::hpPaddingBetweenLamps + SignalGraphicsObject::hpSpaceForLamp;
+
+        const auto kennLampOn = (kennLichtState == Openstw::Simulation::KennLichtState::On);
+        const auto kennLampDiameter =
+            (kennLampOn ? SignalGraphicsObject::activeLampDiameter : SignalGraphicsObject::inactiveLampDiameter);
+        const auto kennLampColor =
+            kennLampOn ? SignalGraphicsObject::kennLichtColor : SignalGraphicsObject::inactiveLampColor;
+
+        this->drawSignalLamp(
+            painter,
+            QRectF{currentXPos, lampYPos, SignalGraphicsObject::hpSpaceForLamp, SignalGraphicsObject::hpSpaceForLamp},
+            kennLampColor, kennLampDiameter);
 
         painter->restore();
     }
