@@ -31,6 +31,8 @@ add_library(openstw-sim STATIC
   src/zugnummernanzeige.hxx src/zugnummernanzeige.cxx
   src/zugnummer.hxx src/zugnummer.cxx
   src/feststellmelder.hxx src/feststellmelder.cxx
+  src/zugdeckungssignalschirm.hxx
+  src/zugdeckungssignalschirm.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)

@@ -13,7 +13,8 @@ namespace Openstw::Simulation
     enum SignalSchirmType
     {
         HauptSignal = 0,
-        VorSignal = 1
+        VorSignal = 1,
+        ZugDeckungsSignal = 2,
     };
 
     /**

@@ -1,6 +1,7 @@
 #include "isignalschirm.hxx"
 #include "hauptsignalschirm.hxx"
 #include "vorsignalschirm.hxx"
+#include "zugdeckungssignalschirm.hxx"
 #include <stdexcept>
 
 namespace Openstw::Simulation
@@ -24,6 +25,10 @@ namespace Openstw::Simulation
         else if (signalSchirmType == std::string{"VorSignalSchirm"})
         {
             return VorSignalSchirm::CreateFrom(root);
+        }
+        else if (signalSchirmType == std::string{"ZugDeckungsSignalSchirm"})
+        {
+            return ZugDeckungsSignalSchirm::CreateFrom(root);
         }
         else
         {
