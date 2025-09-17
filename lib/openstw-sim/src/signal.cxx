@@ -38,12 +38,6 @@ namespace Openstw::Simulation
             signal.m_sperrMelder = SperrMelderState::Off;
         // ==
 
-        // == Feststellmelder
-        const auto hasFeststellMelder = (bool)root.child("FeststellMelder");
-        if (hasFeststellMelder)
-            signal.m_feststellMelderState = StaticLampState::Off;
-        // ==
-
         // == D-Weg Melder
         const auto hasDWegMelder = (bool)root.child("DWegMelder");
         if (hasDWegMelder)
@@ -177,19 +171,6 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile has no D-Weg Melder");
 
         return this->m_dWegMelderState.value();
-    }
-
-    bool Signal::hasFeststellMelder() const
-    {
-        return this->m_feststellMelderState.has_value();
-    }
-
-    StaticLampState Signal::feststellMelderState() const
-    {
-        if (!this->hasFeststellMelder())
-            throw std::runtime_error("Tile has no Feststellmelder");
-
-        return this->m_feststellMelderState.value();
     }
 
     bool Signal::hasZs1Melder() const

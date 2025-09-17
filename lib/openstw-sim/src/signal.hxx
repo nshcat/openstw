@@ -52,8 +52,6 @@ namespace Openstw::Simulation
 
         bool hasDWegMelder() const;
         StaticLampState dWegMelderState() const;
-        bool hasFeststellMelder() const;
-        StaticLampState feststellMelderState() const;
         bool hasZs1Melder() const;
         StaticLampState zs1MelderState() const;
         Zs1MelderLocation zs1MelderLocation() const;
@@ -72,7 +70,6 @@ namespace Openstw::Simulation
         std::optional<SperrMelderState> m_sperrMelder{};
 
         std::optional<StaticLampState> m_dWegMelderState{};
-        std::optional<StaticLampState> m_feststellMelderState{};
         std::optional<StaticLampState> m_zs1MelderState{};
         Zs1MelderLocation m_zs1MelderLocation{Zs1MelderLocation::Free};
     };

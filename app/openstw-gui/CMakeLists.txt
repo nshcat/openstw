@@ -59,6 +59,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/rendering/magnetgraphicsobject.hxx src/rendering/magnetgraphicsobject.cxx
         src/magnettype.hxx
         src/rendering/icontextmenuprovider.hxx
+        src/rendering/fsmgraphicsobject.hxx
+        src/rendering/fsmgraphicsobject.cxx
 
     )
 # Define target properties for Android with Qt 6 as:

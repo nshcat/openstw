@@ -1,14 +1,15 @@
 #pragma once
 
+#include <QObject>
+#include <optional>
+
 #include "directionarrows.hxx"
 #include "erlaubnisfeld.hxx"
+#include "feststellmelder.hxx"
 #include "signal.hxx"
 #include "tracksegment.hxx"
 #include "utility.hxx"
 #include "zugnummernanzeige.hxx"
-#include <optional>
-
-#include <QObject>
 
 namespace Openstw::Simulation
 {
@@ -62,6 +63,8 @@ namespace Openstw::Simulation
         const QString& tileLabel() const;
         bool hasZugStrassenTaste() const;
         TileElementDirection zugStrassenTasteDirection() const;
+        bool hasFeststellMelder() const;
+        FeststellMelder& feststellMelder();
 
     signals:
         void invalidated();
@@ -79,6 +82,7 @@ namespace Openstw::Simulation
         std::optional<ErlaubnisFeld> m_erlaubnisFeld{};
         std::optional<ZugnummernAnzeige> m_zugNummernAnzeige{};
         std::optional<TileElementDirection> m_zugStrassenTaste{};
+        std::optional<FeststellMelder> m_feststellMelder{};
         QString m_tileLabel{};
     };
 }

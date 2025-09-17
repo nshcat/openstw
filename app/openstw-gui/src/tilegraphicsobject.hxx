@@ -5,7 +5,9 @@
 
 #include "rendering/arrowgraphicsobject.hxx"
 #include "rendering/erlaubnisfeldgraphicsobject.hxx"
+#include "rendering/fsmgraphicsobject.hxx"
 #include "rendering/labelgraphicsobject.hxx"
+#include "rendering/renderinghelpers.hxx"
 #include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
@@ -40,7 +42,11 @@ public: // == QGraphicsItem implementation
 public:
     void setup();
 
-    // XXX Implement signals that are triggered when user clicks on tile elements
+    /**
+     * @brief Calculates the horizontal area over or under the track marker, used for rendering
+     * tile contents such as signals, lamps and buttons.
+     */
+    QRectF horizontalDrawingAreaRect(Rendering::VerticalDirection position) const;
 
 protected:
     void createComponentRenderers();
@@ -60,4 +66,5 @@ protected: // == Component renderers
     Rendering::ZNAGraphicsObject* m_znaRenderer;
     Rendering::ZSTGraphicsObject* m_zstRenderer;
     Rendering::LabelGraphicsObject* m_labelRenderer;
+    Rendering::FSMGraphicsObject* m_fsmRenderer;
 };

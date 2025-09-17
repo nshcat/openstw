@@ -27,23 +27,7 @@ namespace Rendering
 
     QRectF SignalGraphicsObject::calculateAreaRect(VerticalDirection location) const
     {
-        const auto tileBoundingRect = this->boundingRect();
-
-        constexpr auto signalBoundingRectHeight =
-            TileRenderingConstants::halfTileHeight - (TrackGraphicsObject::trackThickness / 2.0f);
-
-        QPointF topLeft;
-
-        if (location == VerticalDirection::Top)
-        {
-            topLeft = QPointF{tileBoundingRect.topLeft()};
-        }
-        else
-        {
-            topLeft = QPointF{tileBoundingRect.left(), tileBoundingRect.bottom() - signalBoundingRectHeight};
-        }
-
-        return QRectF{topLeft.x(), topLeft.y(), tileBoundingRect.width(), signalBoundingRectHeight};
+        return this->tileGraphicsObject()->horizontalDrawingAreaRect(location);
     }
 
     QRectF SignalGraphicsObject::calculateSignalArea() const
@@ -327,20 +311,7 @@ namespace Rendering
 
         const auto& signal = this->m_tile->signal(this->m_direction);
 
-        bool hasOnlyLabel = true;
-
-        if (signal.hasFeststellMelder())
-        {
-            hasOnlyLabel = false;
-
-            const QRectF feststellMelderRect{
-                location.right() - SignalGraphicsObject::feststellMelderPaddingToBorder -
-                    SignalGraphicsObject::feststellMelderSideLength,
-                centerWithin(SignalGraphicsObject::feststellMelderSideLength, location.height(), location.top()),
-                SignalGraphicsObject::feststellMelderSideLength, SignalGraphicsObject::feststellMelderSideLength};
-
-            this->drawFeststellMelder(painter, feststellMelderRect, signal.feststellMelderState());
-        }
+        bool hasOnlyLabel = !this->m_tile->hasFeststellMelder();
 
         if (signal.hasDWegMelder())
         {
@@ -356,14 +327,34 @@ namespace Rendering
 
         if (signal.hasName())
         {
-            const qreal xPos =
-                hasOnlyLabel
-                    ? centerWithin(SignalGraphicsObject::labelWidth, location.width(), location.left())
-                    : location.right() - SignalGraphicsObject::labelPaddingToBorder - SignalGraphicsObject::labelWidth;
+            QRectF labelRect{};
 
-            const QRectF labelRect{xPos,
-                                   centerWithin(SignalGraphicsObject::labelHeight, location.height(), location.top()),
-                                   SignalGraphicsObject::labelWidth, SignalGraphicsObject::labelHeight};
+            if (hasOnlyLabel)
+            {
+                const qreal xPos = centerWithin(SignalGraphicsObject::labelWidth, location.width(), location.left());
+
+                labelRect =
+                    QRectF{xPos, centerWithin(SignalGraphicsObject::labelHeight, location.height(), location.top()),
+                           SignalGraphicsObject::labelWidth, SignalGraphicsObject::labelHeight};
+            }
+            else
+            {
+                // The location of the label depends on where the Feststellmelder is
+                bool fsmIsCentered = false;
+                if (this->m_tile->hasFeststellMelder() && this->m_tile->feststellMelder().direction() ==
+                                                              Openstw::Simulation::TileElementDirection::Bidirectional)
+                {
+                    fsmIsCentered = true;
+                }
+
+                const qreal xPadding = fsmIsCentered ? SignalGraphicsObject::labelPaddingCenteredFSM
+                                                     : SignalGraphicsObject::labelPaddingAlignedFSM;
+                const qreal xPos = location.right() - xPadding - SignalGraphicsObject::labelWidth;
+
+                labelRect =
+                    QRectF{xPos, centerWithin(SignalGraphicsObject::labelHeight, location.height(), location.top()),
+                           SignalGraphicsObject::labelWidth, SignalGraphicsObject::labelHeight};
+            }
 
             this->drawLabel(painter, labelRect, signal.name());
         }
@@ -411,29 +402,6 @@ namespace Rendering
             SignalGraphicsObject::dwegMelderDiameter, SignalGraphicsObject::dwegMelderDiameter};
 
         painter->drawEllipse(dwegMelderRect);
-
-        painter->restore();
-    }
-
-    void SignalGraphicsObject::drawFeststellMelder(QPainter* painter, const QRectF& location,
-                                                   const Openstw::Simulation::StaticLampState state) const
-    {
-        painter->save();
-
-        const auto feststellMelderInnerColor = (state == Openstw::Simulation::StaticLampState::Off)
-                                                   ? SignalGraphicsObject::feststellMelderInactiveColor
-                                                   : SignalGraphicsObject::feststellMelderActiveColor;
-
-        painter->setPen(rectanglePen(Qt::black, SignalGraphicsObject::feststellMelderBorderThickness));
-        painter->setBrush(feststellMelderInnerColor);
-
-        const QRectF feststellMelderRect{
-            centerWithin(SignalGraphicsObject::feststellMelderSideLength, location.width(), location.left()),
-            centerWithin(SignalGraphicsObject::feststellMelderSideLength, location.height(), location.top()),
-            SignalGraphicsObject::feststellMelderSideLength, SignalGraphicsObject::feststellMelderSideLength};
-
-        painter->drawRect(
-            adjustRectForBorder(feststellMelderRect, SignalGraphicsObject::feststellMelderBorderThickness));
 
         painter->restore();
     }

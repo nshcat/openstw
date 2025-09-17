@@ -53,6 +53,27 @@ void TileGraphicsObject::setup()
     this->createComponentRenderers();
 }
 
+QRectF TileGraphicsObject::horizontalDrawingAreaRect(Rendering::VerticalDirection position) const
+{
+    const auto tileBoundingRect = this->innerBoundingRect();
+
+    constexpr auto signalBoundingRectHeight =
+        Rendering::TileRenderingConstants::halfTileHeight - (Rendering::TrackGraphicsObject::trackThickness / 2.0f);
+
+    QPointF topLeft;
+
+    if (position == Rendering::VerticalDirection::Top)
+    {
+        topLeft = QPointF{tileBoundingRect.topLeft()};
+    }
+    else
+    {
+        topLeft = QPointF{tileBoundingRect.left(), tileBoundingRect.bottom() - signalBoundingRectHeight};
+    }
+
+    return QRectF{topLeft.x(), topLeft.y(), tileBoundingRect.width(), signalBoundingRectHeight};
+}
+
 void TileGraphicsObject::createComponentRenderers()
 {
     this->m_arrowRenderer = new Rendering::ArrowGraphicsObject{this};
@@ -88,6 +109,10 @@ void TileGraphicsObject::createComponentRenderers()
     this->m_zstRenderer = new Rendering::ZSTGraphicsObject{this};
     this->m_zstRenderer->setup();
     this->scene()->addItem(this->m_zstRenderer);
+
+    this->m_fsmRenderer = new Rendering::FSMGraphicsObject{this};
+    this->m_fsmRenderer->setup();
+    this->scene()->addItem(this->m_fsmRenderer);
 }
 
 void TileGraphicsObject::tileInvalidated()

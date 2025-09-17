@@ -28,6 +28,15 @@ namespace Openstw::Simulation
         }
         // ==
 
+        // == Feststellmelder
+        const auto feststellMelderNode = root.child("FeststellMelder");
+        if (feststellMelderNode)
+        {
+            tile->m_feststellMelder = FeststellMelder::CreateFrom(feststellMelderNode);
+        }
+
+        // ==
+
         // == Zugstrassentaste
         const auto zstNode = root.child("ZugStrassenTaste");
         if (zstNode)
@@ -185,6 +194,19 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile has no Zugstrassentaste");
 
         return this->m_zugStrassenTaste.value();
+    }
+
+    bool Tile::hasFeststellMelder() const
+    {
+        return this->m_feststellMelder.has_value();
+    }
+
+    FeststellMelder& Tile::feststellMelder()
+    {
+        if (!this->hasFeststellMelder())
+            throw std::runtime_error("Tile has no Feststellmelder");
+
+        return this->m_feststellMelder.value();
     }
 
     bool Tile::hasDirectionArrows() const

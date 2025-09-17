@@ -3,17 +3,17 @@
     <TilePanel width="11" height="7">
 
         <Tile x="1" y="1">
-            <Track></Track>
+            <Track/>
             <ForwardSignal name="B793">
                 <PrimarySignalSchirm type="HauptSignalSchirm">
                     <RangierSignal/>
                     <KennLicht/>
                 </PrimarySignalSchirm>
-                <SperrMelder/>
-                <FeststellMelder/>
+                <SperrMelder/>     
                 <DWegMelder/>
                 <Zs1Melder/>
             </ForwardSignal>
+            <FeststellMelder direction="forward"/>
             <ZugStrassenTaste direction="forward"/>
         </Tile>
 
@@ -25,6 +25,18 @@
                 <SperrMelder/>
                 <Zs1Melder location="onMast"/>
             </ForwardSignal>
+        </Tile>
+
+        <Tile x="3" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+                <Zs1Melder location="onMast"/>
+            </ForwardSignal>
+            <FeststellMelder direction="bidirectional"/>
+            <ZugStrassenTaste direction="bidirectional"/>
         </Tile>
 
         <Tile x="6" y="2">

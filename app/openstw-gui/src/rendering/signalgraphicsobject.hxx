@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fsmgraphicsobject.hxx"
 #include "hauptsignalschirm.hxx"
 #include "isignalschirm.hxx"
 #include "renderinghelpers.hxx"
@@ -50,16 +51,12 @@ namespace Rendering
 
         constexpr static qreal sperrMelderMastBasePadding = 1.0f;
 
-        constexpr static qreal feststellMelderSideLength = 18.0f;
-        constexpr static qreal feststellMelderBorderThickness = 2.0f;
-        constexpr static QColor feststellMelderInactiveColor = inactiveLampColor;
-        constexpr static QColor feststellMelderActiveColor{0xec, 0xfe, 0xbf};
-        constexpr static qreal feststellMelderPaddingToBorder = 15.5f;
-
-        constexpr static qreal labelWidth = 55.0f;
+        constexpr static qreal labelWidth = 45.0f;
         constexpr static qreal labelHeight = 18.0f;
-        constexpr static qreal labelPaddingToBorder =
-            feststellMelderPaddingToBorder + feststellMelderSideLength + 10.0f;
+
+        constexpr static qreal labelPaddingCenteredFSM = signalToBorderPadding;
+        constexpr static qreal labelPaddingAlignedFSM =
+            FSMGraphicsObject::feststellMelderPaddingToBorder + FSMGraphicsObject::feststellMelderSideLength + 10.0f;
 
         constexpr static qreal dwegMelderDiameter = 14.0f;
         constexpr static QColor dwegMelderInactiveColor = inactiveLampColor;
@@ -89,9 +86,6 @@ namespace Rendering
 
         void drawDWegMelder(QPainter* painter, const QRectF& location,
                             const Openstw::Simulation::StaticLampState state) const;
-
-        void drawFeststellMelder(QPainter* painter, const QRectF& location,
-                                 const Openstw::Simulation::StaticLampState state) const;
 
         void drawLabel(QPainter* painter, const QRectF& location, const QString& label) const;
 
