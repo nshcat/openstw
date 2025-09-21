@@ -78,41 +78,32 @@ void TileGraphicsObject::createComponentRenderers()
 {
     this->m_arrowRenderer = new Rendering::ArrowGraphicsObject{this};
     this->m_arrowRenderer->setup();
-    this->scene()->addItem(this->m_arrowRenderer);
 
     this->m_erlaubnisFeldRenderer = new Rendering::ErlaubsnisFeldGraphicsObject{this};
     this->m_erlaubnisFeldRenderer->setup();
-    this->scene()->addItem(this->m_erlaubnisFeldRenderer);
 
     this->m_trackRenderer = new Rendering::TrackGraphicsObject{this};
     this->m_trackRenderer->setup();
-    this->scene()->addItem(this->m_trackRenderer);
 
     this->m_bkwdSignalRenderer =
         new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Backward};
     this->m_bkwdSignalRenderer->setup();
-    this->scene()->addItem(this->m_bkwdSignalRenderer);
 
     this->m_fwdSignalRenderer =
         new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Forward};
     this->m_fwdSignalRenderer->setup();
-    this->scene()->addItem(this->m_fwdSignalRenderer);
 
     this->m_znaRenderer = new Rendering::ZNAGraphicsObject{this};
     this->m_znaRenderer->setup();
-    this->scene()->addItem(this->m_znaRenderer);
 
     this->m_labelRenderer = new Rendering::LabelGraphicsObject{this};
     this->m_labelRenderer->setup();
-    this->scene()->addItem(this->m_labelRenderer);
 
     this->m_zstRenderer = new Rendering::ZSTGraphicsObject{this};
     this->m_zstRenderer->setup();
-    this->scene()->addItem(this->m_zstRenderer);
 
     this->m_fsmRenderer = new Rendering::FSMGraphicsObject{this};
     this->m_fsmRenderer->setup();
-    this->scene()->addItem(this->m_fsmRenderer);
 }
 
 void TileGraphicsObject::tileInvalidated()
