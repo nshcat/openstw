@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <QPainter>
 #include <QtCore>
 
@@ -43,7 +45,8 @@ namespace Rendering
      * text fills the given rectangle as best as possible.
      */
     void drawTextBox(QPainter* painter, const QRectF& rect, const QString& text, QColor backgroundColor,
-                     QColor borderColor, qreal borderThickness, QColor textColor);
+                     QColor borderColor, qreal borderThickness, QColor textColor,
+                     std::optional<qreal> rotation = std::nullopt);
 
     /**
      * @brief Adjusts the size of the currently set font in such a way that the given text fits well into the given

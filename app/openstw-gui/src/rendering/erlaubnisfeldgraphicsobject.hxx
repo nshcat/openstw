@@ -50,8 +50,8 @@ namespace Rendering
                                  const HorizontalDirection direction) const;
 
         void drawButton(QPainter* painter, const QRectF& location) const;
-        void drawEaTLabel(QPainter* painter, const QRectF& location) const;
-        void drawAusfahrLabel(QPainter* painter, const QRectF& location, const QString& text) const;
+        void drawEaTLabel(QPainter* painter, const QRectF& location, const bool rotated) const;
+        void drawAusfahrLabel(QPainter* painter, const QRectF& location, const QString& text, const bool rotated) const;
         void drawAusfahrSperrMelder(QPainter* painter, const QRectF& location, bool lampOn);
     };
 }

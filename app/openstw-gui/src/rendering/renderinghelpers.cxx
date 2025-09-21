@@ -20,7 +20,7 @@ namespace Rendering
     }
 
     void drawTextBox(QPainter* painter, const QRectF& rect, const QString& text, QColor backgroundColor,
-                     QColor borderColor, qreal borderThickness, QColor textColor)
+                     QColor borderColor, qreal borderThickness, QColor textColor, std::optional<qreal> rotation)
     {
         painter->save();
 
@@ -42,6 +42,13 @@ namespace Rendering
         // Draw actual label text
         const auto textRect = rect.marginsRemoved(QMarginsF{3.0f, 1.0f, 3.0f, 1.0f});
         adjustFontSizeToFit(painter, textRect, Qt::TextSingleLine, text);
+
+        if (rotation.has_value())
+        {
+            painter->translate(textRect.center());
+            painter->rotate(rotation.value());
+            painter->translate(-textRect.center());
+        }
 
         painter->setPen(QPen{textColor});
         painter->setBrush(backgroundBrush);

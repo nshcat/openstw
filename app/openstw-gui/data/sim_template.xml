@@ -170,6 +170,16 @@
                 <Right/>
             </DirectionArrows>
         </Tile>
+
+        <Tile x="0" y="6">
+            <Track></Track>
+            <ErlaubnisFeld ausfahrDirection="left" ausfahrLabel="Abc"/>
+        </Tile>
+
+        <Tile x="10" y="6">
+            <Track></Track>
+            <ErlaubnisFeld ausfahrDirection="right" ausfahrLabel="Abc"/>
+        </Tile>
     </TilePanel>
 </Simulation>
 

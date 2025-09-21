@@ -57,7 +57,7 @@ namespace Rendering
         painter->restore();
     }
 
-    void ErlaubsnisFeldGraphicsObject::drawEaTLabel(QPainter* painter, const QRectF& location) const
+    void ErlaubsnisFeldGraphicsObject::drawEaTLabel(QPainter* painter, const QRectF& location, const bool rotated) const
     {
         painter->save();
 
@@ -65,17 +65,19 @@ namespace Rendering
         currentFont.setBold(true);
         painter->setFont(currentFont);
 
-        drawTextBox(painter, location, "EaT", Qt::white, Qt::transparent, 0.0f, Qt::black);
+        drawTextBox(painter, location, "EaT", Qt::white, Qt::transparent, 0.0f, Qt::black,
+                    rotated ? std::optional<qreal>(180.0) : std::nullopt);
 
         painter->restore();
     }
 
-    void ErlaubsnisFeldGraphicsObject::drawAusfahrLabel(QPainter* painter, const QRectF& location,
-                                                        const QString& text) const
+    void ErlaubsnisFeldGraphicsObject::drawAusfahrLabel(QPainter* painter, const QRectF& location, const QString& text,
+                                                        const bool rotated) const
     {
         painter->save();
 
-        drawTextBox(painter, location, text, Qt::white, Qt::transparent, 0.0f, Qt::black);
+        drawTextBox(painter, location, text, Qt::white, Qt::transparent, 0.0f, Qt::black,
+                    rotated ? std::optional<qreal>{180.0} : std::nullopt);
 
         painter->restore();
     }
@@ -132,19 +134,26 @@ namespace Rendering
         if (!this->m_tile->hasErlaubnisFeld())
             return;
 
+        const auto& erlaubnisFeld = this->m_tile->erlaubnisFeld();
+
         // Base class method call sets up clipping region
         TileComponentGraphicsObject::paint(painter, option, widget);
 
-        // XXX Put most of this into methods
-        // XXX Implement the other direction! Everything _besides_ text needs to be rotated.
-        // Maybe pass down a bool indicating whether rotation is active, and if rotate text
-        // again inside the text draw methods here in this class
-
         painter->save();
 
-        const auto& erlaubnisFeld = this->m_tile->erlaubnisFeld();
-
         const auto boundingRect = this->tileGraphicsObject()->innerBoundingRect();
+
+        const auto direction = erlaubnisFeld.ausfahrRichtung();
+        bool rotated = false;
+        if (direction == Openstw::Simulation::TileElementDirection::Forward)
+        {
+            rotated = true;
+
+            // We have to rotate.
+            painter->translate(boundingRect.center());
+            painter->rotate(180.0);
+            painter->translate(-boundingRect.center());
+        }
 
         // Rect containing the EaT button and incoming melder
         const auto incomingRect = this->calculateHemiRect(VerticalDirection::Top);
@@ -161,7 +170,7 @@ namespace Rendering
             centerWithin(ErlaubsnisFeldGraphicsObject::textBoxHeight, incomingRect.height(), incomingRect.top()),
             ErlaubsnisFeldGraphicsObject::textBoxWidth, ErlaubsnisFeldGraphicsObject::textBoxHeight};
 
-        this->drawEaTLabel(painter, eatLabelRect);
+        this->drawEaTLabel(painter, eatLabelRect, rotated);
 
         // Erlaubnismelder for einfahrt
         // Einfahrmelder lamp is on if other Stellwerk has the Erlaubnis
@@ -212,7 +221,7 @@ namespace Rendering
             sperrLampRect.right() + ErlaubsnisFeldGraphicsObject::ausfahrSperrLampPadding,
             centerWithin(ErlaubsnisFeldGraphicsObject::textBoxHeight, outgoingRect.height(), outgoingRect.top()),
             ErlaubsnisFeldGraphicsObject::textBoxWidth, ErlaubsnisFeldGraphicsObject::textBoxHeight};
-        this->drawAusfahrLabel(painter, outgoingLabelRect, erlaubnisFeld.ausfahrRichtungLabel());
+        this->drawAusfahrLabel(painter, outgoingLabelRect, erlaubnisFeld.ausfahrRichtungLabel(), rotated);
 
         painter->restore();
     }
