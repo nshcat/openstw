@@ -28,6 +28,7 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
+BreakTemplateDeclarations: Yes
 BreakBeforeBraces: Allman
 IndentCaseBlocks: true
 NamespaceIndentation: All

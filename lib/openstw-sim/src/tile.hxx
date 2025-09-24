@@ -7,6 +7,7 @@
 #include "erlaubnisfeld.hxx"
 #include "feststellmelder.hxx"
 #include "signal.hxx"
+#include "switch.hxx"
 #include "tracksegment.hxx"
 #include "utility.hxx"
 #include "zugnummernanzeige.hxx"
@@ -65,6 +66,8 @@ namespace Openstw::Simulation
         TileElementDirection zugStrassenTasteDirection() const;
         bool hasFeststellMelder() const;
         FeststellMelder& feststellMelder();
+        bool hasSwitch() const;
+        Switch* getSwitch();
 
     signals:
         void invalidated();
@@ -83,6 +86,7 @@ namespace Openstw::Simulation
         std::optional<ZugnummernAnzeige> m_zugNummernAnzeige{};
         std::optional<TileElementDirection> m_zugStrassenTaste{};
         std::optional<FeststellMelder> m_feststellMelder{};
+        std::optional<std::unique_ptr<Switch>> m_switch{};
         QString m_tileLabel{};
     };
 }

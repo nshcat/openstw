@@ -91,6 +91,14 @@ namespace Openstw::Simulation
         }
         // ==
 
+        // == Switch
+        const auto switchNode = root.child("Switch");
+        if (switchNode)
+        {
+            tile->m_switch = Switch::CreateFrom(switchNode);
+        }
+        // ==
+
         return tile;
     }
 
@@ -207,6 +215,19 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile has no Feststellmelder");
 
         return this->m_feststellMelder.value();
+    }
+
+    bool Tile::hasSwitch() const
+    {
+        return this->m_switch.has_value();
+    }
+
+    Switch* Tile::getSwitch()
+    {
+        if (!this->hasSwitch())
+            throw std::runtime_error("Tile has no switch");
+
+        return this->m_switch.value().get();
     }
 
     bool Tile::hasDirectionArrows() const

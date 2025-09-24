@@ -33,6 +33,8 @@ add_library(openstw-sim STATIC
   src/feststellmelder.hxx src/feststellmelder.cxx
   src/zugdeckungssignalschirm.hxx
   src/zugdeckungssignalschirm.cxx
+  src/switch.hxx src/switch.cxx
+  src/simpleswitch.hxx src/simpleswitch.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)
