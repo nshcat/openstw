@@ -107,6 +107,14 @@ namespace Rendering
         }
     }
 
+    void ZSTGraphicsObject::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+    {
+        if (event->button() & Qt::MouseButton::LeftButton)
+        {
+            qDebug("Left click release on Zugstreckentaste");
+        }
+    }
+
     void ZSTGraphicsObject::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     {
         QMenu contextMenu{event->widget()};

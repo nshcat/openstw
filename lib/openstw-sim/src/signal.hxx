@@ -8,6 +8,7 @@
 
 #include "enums.hxx"
 #include "isignalschirm.hxx"
+#include "tileelement.hxx"
 #include "vorsignalschirm.hxx"
 
 namespace Openstw::Simulation
@@ -16,10 +17,10 @@ namespace Openstw::Simulation
      * @brief Encapsulates a single Signal on a tile, which can contain up to two
      * Signalschirme, represented by ISignalSchirm.
      */
-    class Signal
+    class Signal : public TileElement
     {
     protected:
-        Signal();
+        Signal(Tile* parent);
 
     public:
         ~Signal() = default;
@@ -32,7 +33,7 @@ namespace Openstw::Simulation
         Signal& operator=(Signal&&) = default;
 
     public:
-        static Signal CreateFrom(const pugi::xml_node&);
+        static Signal CreateFrom(Tile*, const pugi::xml_node&);
 
     public:
         TileElementDirection direction() const;

@@ -81,13 +81,13 @@ namespace Openstw::Simulation
         const auto fwdSignalNode = root.child("ForwardSignal");
         if (fwdSignalNode)
         {
-            tile->m_forwardSignal = Signal::CreateFrom(fwdSignalNode);
+            tile->m_forwardSignal = Signal::CreateFrom(tile, fwdSignalNode);
         }
 
         const auto bwdSignalNode = root.child("BackwardSignal");
         if (bwdSignalNode)
         {
-            tile->m_backwardSignal = Signal::CreateFrom(bwdSignalNode);
+            tile->m_backwardSignal = Signal::CreateFrom(tile, bwdSignalNode);
         }
         // ==
 

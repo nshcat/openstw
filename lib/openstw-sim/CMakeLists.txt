@@ -35,6 +35,7 @@ add_library(openstw-sim STATIC
   src/zugdeckungssignalschirm.cxx
   src/switch.hxx src/switch.cxx
   src/simpleswitch.hxx src/simpleswitch.cxx
+  src/tileelement.hxx src/tileelement.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)

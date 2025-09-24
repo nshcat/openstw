@@ -5,13 +5,13 @@
 
 namespace Openstw::Simulation
 {
-    Signal::Signal()
+    Signal::Signal(Tile* parent) : TileElement(parent)
     {
     }
 
-    Signal Signal::CreateFrom(const pugi::xml_node& root)
+    Signal Signal::CreateFrom(Tile* parent, const pugi::xml_node& root)
     {
-        Signal signal{};
+        Signal signal{parent};
 
         // == Direction
         TileElementDirection signalDirection{TileElementDirection::Forward};
