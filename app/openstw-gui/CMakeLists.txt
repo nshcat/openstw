@@ -61,6 +61,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/rendering/icontextmenuprovider.hxx
         src/rendering/fsmgraphicsobject.hxx
         src/rendering/fsmgraphicsobject.cxx
+        src/rendering/platformgraphicsobject.hxx
+        src/rendering/platformgraphicsobject.cxx
 
     )
 # Define target properties for Android with Qt 6 as:

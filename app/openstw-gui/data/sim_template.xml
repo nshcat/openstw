@@ -61,12 +61,9 @@
             <LabelBox label="V993"/>
         </Tile>
 
-
         <Tile x="1" y="3">
             <Track></Track>
-        </Tile>
-        <Tile x="1" y="3">
-            <Track></Track>
+            <Platform location="bottom"/>
         </Tile>
         <Tile x="2" y="3">
             <Track></Track>
@@ -124,9 +121,7 @@
 
         <Tile x="1" y="4">
             <Track></Track>
-        </Tile>
-        <Tile x="1" y="4">
-            <Track></Track>
+            <Platform location="bottom"/>
         </Tile>
         <Tile x="2" y="4">
             <Track></Track>
@@ -174,6 +169,11 @@
         <Tile x="0" y="6">
             <Track></Track>
             <ErlaubnisFeld ausfahrDirection="left" ausfahrLabel="Abc"/>
+        </Tile>
+
+        <Tile x="1" y="5">
+            <Track></Track>
+            <Platform location="both"/>
         </Tile>
 
         <Tile x="10" y="6">

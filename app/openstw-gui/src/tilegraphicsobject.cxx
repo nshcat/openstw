@@ -30,7 +30,7 @@ QRectF TileGraphicsObject::boundingRect() const
 void TileGraphicsObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QColor backgroundColor = QColor{0x96, 0x96, 0x96};
-    QColor backgroundBorderColor = QColor{0x3e, 0x3e, 0x3e};
+    QColor backgroundBorderColor = QColor{0x75, 0x75, 0x75}; // QColor{0x3e, 0x3e, 0x3e};
 
     painter->setBrush(QBrush{backgroundColor});
     painter->setPen(Rendering::rectanglePen(backgroundBorderColor, Rendering::TileRenderingConstants::borderThickness));
@@ -76,6 +76,9 @@ QRectF TileGraphicsObject::horizontalDrawingAreaRect(Rendering::VerticalDirectio
 
 void TileGraphicsObject::createComponentRenderers()
 {
+    this->m_platformRenderer = new Rendering::PlatformGraphicsObject{this};
+    this->m_platformRenderer->setup();
+
     this->m_arrowRenderer = new Rendering::ArrowGraphicsObject{this};
     this->m_arrowRenderer->setup();
 

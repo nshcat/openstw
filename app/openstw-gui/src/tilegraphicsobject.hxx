@@ -7,6 +7,7 @@
 #include "rendering/erlaubnisfeldgraphicsobject.hxx"
 #include "rendering/fsmgraphicsobject.hxx"
 #include "rendering/labelgraphicsobject.hxx"
+#include "rendering/platformgraphicsobject.hxx"
 #include "rendering/renderinghelpers.hxx"
 #include "rendering/signalgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
@@ -67,4 +68,5 @@ protected: // == Component renderers
     Rendering::ZSTGraphicsObject* m_zstRenderer;
     Rendering::LabelGraphicsObject* m_labelRenderer;
     Rendering::FSMGraphicsObject* m_fsmRenderer;
+    Rendering::PlatformGraphicsObject* m_platformRenderer;
 };

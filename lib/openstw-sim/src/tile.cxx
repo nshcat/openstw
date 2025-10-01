@@ -45,6 +45,34 @@ namespace Openstw::Simulation
         }
         // ==
 
+        // == Platform
+        const auto platformNode = root.child("Platform");
+        if (platformNode)
+        {
+            const QString platformLocationStr = platformNode.attribute("location").as_string("");
+            if (!platformLocationStr.isEmpty())
+            {
+                FlagField<Platform> platformLocation{Platform::None};
+
+                if (platformLocationStr == "top")
+                {
+                    platformLocation = FlagField<Platform>{Platform::Top};
+                }
+                else if (platformLocationStr == "bottom")
+                {
+                    platformLocation = FlagField<Platform>{Platform::Bottom};
+                }
+                else if (platformLocationStr == "both")
+                {
+                    platformLocation.set(Platform::Top);
+                    platformLocation.set(Platform::Bottom);
+                }
+
+                tile->m_platforms = platformLocation;
+            }
+        }
+        //==
+
         // == Zugnummernanzeige
         const auto znaNode = root.child("ZugnummernAnzeige");
         if (znaNode)
@@ -228,6 +256,16 @@ namespace Openstw::Simulation
             throw std::runtime_error("Tile has no switch");
 
         return this->m_switch.value().get();
+    }
+
+    bool Tile::hasPlatform() const
+    {
+        return this->m_platforms.hasAny();
+    }
+
+    FlagField<Platform> Tile::platforms() const
+    {
+        return this->m_platforms;
     }
 
     bool Tile::hasDirectionArrows() const

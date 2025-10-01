@@ -68,6 +68,8 @@ namespace Openstw::Simulation
         FeststellMelder& feststellMelder();
         bool hasSwitch() const;
         Switch* getSwitch();
+        bool hasPlatform() const;
+        FlagField<Platform> platforms() const;
 
     signals:
         void invalidated();
@@ -88,5 +90,6 @@ namespace Openstw::Simulation
         std::optional<FeststellMelder> m_feststellMelder{};
         std::optional<std::unique_ptr<Switch>> m_switch{};
         QString m_tileLabel{};
+        FlagField<Platform> m_platforms{Platform::None};
     };
 }
