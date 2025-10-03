@@ -1,3 +1,5 @@
+#include <QString>
+
 #include "simpleswitch.hxx"
 
 namespace Openstw::Simulation
@@ -6,9 +8,17 @@ namespace Openstw::Simulation
     {
     }
 
-    std::unique_ptr<Switch> SimpleSwitch::CreateFrom(const pugi::xml_node&)
+    std::unique_ptr<Switch> SimpleSwitch::CreateFrom(const pugi::xml_node& node)
     {
-        return std::make_unique<SimpleSwitch>();
+        auto sw = std::make_unique<SimpleSwitch>();
+
+        SwitchBranchDirection branchDirection{SwitchBranchDirection::Up};
+        const QString branchDirectionStr{node.attribute("branchDirection").as_string("up")};
+        if (branchDirectionStr == "down")
+            branchDirection = SwitchBranchDirection::Down;
+        sw->m_branchDirection = branchDirection;
+
+        return std::move(sw);
     }
 
     SimpleSwitchDirection SimpleSwitch::currentDirection() const

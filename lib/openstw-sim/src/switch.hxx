@@ -1,9 +1,12 @@
 #pragma once
 
+#include <QString>
 #include <memory>
 #include <pugixml.hpp>
 #include <stdexcept>
 #include <type_traits>
+
+#include "enums.hxx"
 
 namespace Openstw::Simulation
 {
@@ -14,6 +17,12 @@ namespace Openstw::Simulation
 
         // Switch that derails the train if not in straight position
         GleisSperre = 1
+    };
+
+    enum class SwitchBranchDirection
+    {
+        Up = 0,
+        Down = 1
     };
 
     /**
@@ -35,6 +44,11 @@ namespace Openstw::Simulation
 
     public:
         static std::unique_ptr<Switch> CreateFrom(const pugi::xml_node&);
+
+    public:
+        TileElementDirection direction() const;
+        bool hasLabel() const;
+        const QString& label() const;
 
     public:
         SwitchType type() const;
@@ -60,6 +74,8 @@ namespace Openstw::Simulation
         }
 
     protected:
+        QString m_label{""};
         SwitchType m_type;
+        TileElementDirection m_direction{TileElementDirection::Forward};
     };
 }

@@ -63,6 +63,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/rendering/fsmgraphicsobject.cxx
         src/rendering/platformgraphicsobject.hxx
         src/rendering/platformgraphicsobject.cxx
+        src/rendering/switchgraphicsobject.hxx
+        src/rendering/switchgraphicsobject.cxx
 
     )
 # Define target properties for Android with Qt 6 as:

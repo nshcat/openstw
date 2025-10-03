@@ -2,6 +2,7 @@
 
 #include "simpleswitch.hxx"
 #include "switch.hxx"
+#include "utility.hxx"
 
 namespace Openstw::Simulation
 {
@@ -20,9 +21,35 @@ namespace Openstw::Simulation
         if (typeStr.isEmpty())
             throw std::runtime_error("Invalid switch type");
 
+        std::unique_ptr<Switch> sw;
+
         if (typeStr == "simple")
-            return SimpleSwitch::CreateFrom(node);
+            sw = SimpleSwitch::CreateFrom(node);
+
+        // Parse general attributes
+        if (sw)
+        {
+            sw->m_direction = Xml::parseDirection(node.attribute("direction"));
+            sw->m_label = node.attribute("label").as_string("");
+
+            return std::move(sw);
+        }
 
         throw std::runtime_error("Invalid switch type");
+    }
+
+    TileElementDirection Switch::direction() const
+    {
+        return this->m_direction;
+    }
+
+    bool Switch::hasLabel() const
+    {
+        return !this->m_label.isEmpty();
+    }
+
+    const QString& Switch::label() const
+    {
+        return this->m_label;
     }
 }

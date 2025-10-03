@@ -10,6 +10,7 @@
 #include "rendering/platformgraphicsobject.hxx"
 #include "rendering/renderinghelpers.hxx"
 #include "rendering/signalgraphicsobject.hxx"
+#include "rendering/switchgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include "rendering/trackgraphicsobject.hxx"
 #include "rendering/znagraphicsobject.hxx"
@@ -69,4 +70,5 @@ protected: // == Component renderers
     Rendering::LabelGraphicsObject* m_labelRenderer;
     Rendering::FSMGraphicsObject* m_fsmRenderer;
     Rendering::PlatformGraphicsObject* m_platformRenderer;
+    Rendering::SwitchGraphicsObject* m_switchRenderer;
 };
