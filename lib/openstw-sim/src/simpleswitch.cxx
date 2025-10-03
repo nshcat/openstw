@@ -39,6 +39,22 @@ namespace Openstw::Simulation
         }
     }
 
+    void SimpleSwitch::setPartState(const SimpleSwitchPart part, const TrackState state)
+    {
+        switch (part)
+        {
+        case SimpleSwitchPart::Stem:
+            this->m_stemState = state;
+            break;
+        case SimpleSwitchPart::Branch:
+            this->m_branchState = state;
+            break;
+        default:
+            this->m_straightState = state;
+            break;
+        }
+    }
+
     SwitchBranchDirection SimpleSwitch::branchDirection() const
     {
         return this->m_branchDirection;

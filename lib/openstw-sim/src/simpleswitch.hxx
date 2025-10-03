@@ -29,6 +29,7 @@ namespace Openstw::Simulation
     public:
         SimpleSwitchDirection currentDirection() const;
         TrackState partState(const SimpleSwitchPart) const;
+        void setPartState(const SimpleSwitchPart, const TrackState);
         SwitchBranchDirection branchDirection() const;
 
     protected:

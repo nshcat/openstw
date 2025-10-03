@@ -2,6 +2,10 @@
 <Simulation>
     <TilePanel width="11" height="7">
 
+        <Tile x="6" y="0">
+            <Track/>
+        </Tile>
+
         <Tile x="7" y="0">
             <Switch type="simple" direction="backward" branchDirection="down" label="144"/>
         </Tile>
@@ -10,12 +14,24 @@
             <Switch type="simple" direction="forward" branchDirection="down" label="141"/>
         </Tile>
 
+        <Tile x="9" y="0">
+            <Track/>
+        </Tile>
+
+        <Tile x="6" y="1">
+            <Track/>
+        </Tile>
+
         <Tile x="7" y="1">
             <Switch type="simple" direction="forward" branchDirection="up" label="145"/>
         </Tile>
 
         <Tile x="8" y="1">
             <Switch type="simple" direction="backward" branchDirection="up" label="140"/>
+        </Tile>
+
+        <Tile x="9" y="1">
+            <Track/>
         </Tile>
 
         <Tile x="1" y="1">

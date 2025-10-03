@@ -79,6 +79,8 @@ namespace Rendering
             painter->translate(-boundingRect.center());
         }
 
+        const auto switchButtonRect = SwitchGraphicsObject::CalcSwitchButtonLocation(boundingRect, switchDirection);
+
         // First, track background for the horizontal track. This is always the same, no
         // matter the switch orientation
         this->drawHorizontalTrackBase(painter, boundingRect);
@@ -89,9 +91,25 @@ namespace Rendering
         this->drawStraightIndicator(painter, boundingRect, switchDirection,
                                     sw->partState(Openstw::Simulation::SimpleSwitchPart::Straight));
 
+        this->drawBranch(painter, boundingRect, switchButtonRect, switchDirection,
+                         sw->partState(Openstw::Simulation::SimpleSwitchPart::Branch));
+
         this->drawPivot(painter, boundingRect, switchDirection);
 
         painter->restore();
+    }
+
+    QRectF SwitchGraphicsObject::CalcSwitchButtonLocation(const QRectF& boundingRect,
+                                                          Openstw::Simulation::TileElementDirection direction)
+    {
+        const qreal pivotXPos = (direction == Openstw::Simulation::TileElementDirection::Forward)
+                                    ? boundingRect.left() + SwitchGraphicsObject::pivotToBorderPadding
+                                    : boundingRect.right() - SwitchGraphicsObject::pivotToBorderPadding -
+                                          SwitchGraphicsObject::pivotDiameter;
+
+        return QRectF{pivotXPos,
+                      centerWithin(SwitchGraphicsObject::pivotDiameter, boundingRect.height(), boundingRect.top()),
+                      SwitchGraphicsObject::pivotDiameter, SwitchGraphicsObject::pivotDiameter};
     }
 
     void SwitchGraphicsObject::drawHorizontalTrackBase(QPainter* painter, const QRectF& boundingRect) const
@@ -120,9 +138,7 @@ namespace Rendering
                                     : boundingRect.right() - SwitchGraphicsObject::pivotToBorderPadding -
                                           SwitchGraphicsObject::pivotDiameter;
 
-        const QRectF pivotRect{
-            pivotXPos, centerWithin(SwitchGraphicsObject::pivotDiameter, boundingRect.height(), boundingRect.top()),
-            SwitchGraphicsObject::pivotDiameter, SwitchGraphicsObject::pivotDiameter};
+        const QRectF pivotRect = SwitchGraphicsObject::CalcSwitchButtonLocation(boundingRect, direction);
 
         painter->setPen(QPen{SwitchGraphicsObject::pivotOutlineColor, 1.0f});
         painter->setBrush(Qt::black);
@@ -182,9 +198,51 @@ namespace Rendering
         painter->restore();
     }
 
-    void SwitchGraphicsObject::drawBranch(QPainter* painter, const QRectF& boundingRect,
+    void SwitchGraphicsObject::drawBranch(QPainter* painter, const QRectF& boundingRect, const QRectF& switchButtonRect,
                                           Openstw::Simulation::TileElementDirection direction,
                                           Openstw::Simulation::TrackState state) const
     {
+        painter->save();
+
+        const qreal trackCrossSection = TrackGraphicsObject::trackThickness * 1.135;
+
+        const auto upperHalfRect = this->tileGraphicsObject()->horizontalDrawingAreaRect(VerticalDirection::Top);
+
+        const auto branchIndicatorColor = TrackGraphicsObject::colorForTrackState(state);
+
+        const qreal extraLength = 25.0f;
+
+        const QRectF trackRect{
+            centerWithin(TrackGraphicsObject::trackThickness, switchButtonRect.width(), switchButtonRect.left()),
+            boundingRect.top() - extraLength / 2.0f, TrackGraphicsObject::trackThickness,
+            (switchButtonRect.top() - boundingRect.top()) + extraLength};
+
+        const QRectF indicatorRect{
+            centerWithin(TrackGraphicsObject::trackIndicatorHeight, switchButtonRect.width(), switchButtonRect.left()),
+            switchButtonRect.top() - SwitchGraphicsObject::branchIndicatorToPivotPadding -
+                SwitchGraphicsObject::branchIndicatorLength,
+            TrackGraphicsObject::trackIndicatorHeight, SwitchGraphicsObject::branchIndicatorLength};
+
+        {
+            painter->save();
+
+            painter->translate(switchButtonRect.center());
+            painter->rotate(direction == Openstw::Simulation::TileElementDirection::Forward
+                                ? SwitchGraphicsObject::branchAngle
+                                : -SwitchGraphicsObject::branchAngle);
+            painter->translate(-switchButtonRect.center());
+
+            painter->setPen(rectanglePen(Qt::black, 1.0f));
+            painter->setBrush(Qt::black);
+            painter->drawRect(adjustRectForBorder(trackRect, 1.0f));
+
+            painter->setPen(rectanglePen(branchIndicatorColor, 1.0f));
+            painter->setBrush(branchIndicatorColor);
+            painter->drawRect(adjustRectForBorder(indicatorRect, 1.0f));
+
+            painter->restore();
+        }
+
+        painter->restore();
     }
 }

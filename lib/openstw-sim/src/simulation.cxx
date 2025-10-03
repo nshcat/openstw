@@ -4,6 +4,8 @@
 #include <pugixml.hpp>
 #include <stdexcept>
 
+#include "simpleswitch.hxx"
+
 namespace Openstw::Simulation
 {
     Simulation::Simulation(QObject* parent) : QObject{parent}
@@ -43,6 +45,31 @@ namespace Openstw::Simulation
     void Simulation::update(const float deltaTime)
     {
         this->m_simTime += deltaTime;
+
+        {
+            Tile* tile = this->tilePanel()->tileAt(6, 1);
+            tile->track().setState(TrackState::FahrstrasseSet);
+            tile->setDirty();
+
+            tile = this->tilePanel()->tileAt(7, 1);
+            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Stem, TrackState::FahrstrasseSet);
+            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Branch, TrackState::FahrstrasseSet);
+            tile->setDirty();
+
+            tile = this->tilePanel()->tileAt(7, 0);
+            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Stem, TrackState::FahrstrasseSet);
+            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Branch, TrackState::FahrstrasseSet);
+            tile->setDirty();
+
+            tile = this->tilePanel()->tileAt(8, 0);
+            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Stem, TrackState::FahrstrasseSet);
+            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Straight, TrackState::FahrstrasseSet);
+            tile->setDirty();
+
+            tile = this->tilePanel()->tileAt(9, 0);
+            tile->track().setState(TrackState::FahrstrasseSet);
+            tile->setDirty();
+        }
 
         this->m_tilePanel->invalidateIfDirty();
     }

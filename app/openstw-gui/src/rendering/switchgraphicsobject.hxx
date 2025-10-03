@@ -13,15 +13,20 @@ namespace Rendering
         Q_OBJECT
 
     public:
-        constexpr static qreal pivotToBorderPadding = 40.0f;
+        constexpr static qreal pivotToBorderPadding = 45.0f;
         constexpr static qreal pivotDiameter = 17.0f;
         constexpr static QColor pivotOutlineColor{0x4b, 0x4b, 0x4b};
 
-        constexpr static qreal stemIndicatorWidth = 18.0f;
-        constexpr static qreal stemIndicatorToBorderPadding = 15.0f;
+        constexpr static qreal stemIndicatorWidth = 20.0f;
+        constexpr static qreal stemIndicatorToBorderPadding = 16.0f;
 
         constexpr static qreal straightIndicatorWidth = 37.0f;
-        constexpr static qreal straightIndicatorToBorderPadding = 52.0f;
+        constexpr static qreal straightIndicatorToBorderPadding = 49.0f;
+
+        constexpr static qreal branchIndicatorToPivotPadding = 10.0f;
+        constexpr static qreal branchIndicatorLength = 21.0f;
+
+        constexpr static qreal branchAngle = 27.0;
 
     public:
         SwitchGraphicsObject(TileGraphicsObject* parent);
@@ -29,6 +34,10 @@ namespace Rendering
     public:
         virtual QRectF boundingRect() const override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
+    public:
+        static QRectF CalcSwitchButtonLocation(const QRectF& boundingRect,
+                                               Openstw::Simulation::TileElementDirection direction);
 
     protected:
         virtual void positionSelf() override;
@@ -45,7 +54,7 @@ namespace Rendering
         void drawStraightIndicator(QPainter* painter, const QRectF& boundingRect,
                                    Openstw::Simulation::TileElementDirection direction,
                                    Openstw::Simulation::TrackState state) const;
-        void drawBranch(QPainter* painter, const QRectF& boundingRect,
+        void drawBranch(QPainter* painter, const QRectF& boundingRect, const QRectF& buttonRect,
                         Openstw::Simulation::TileElementDirection direction,
                         Openstw::Simulation::TrackState state) const;
     };
