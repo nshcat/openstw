@@ -38,4 +38,9 @@ namespace Openstw::Simulation
             return this->m_straightState;
         }
     }
+
+    SwitchBranchDirection SimpleSwitch::branchDirection() const
+    {
+        return this->m_branchDirection;
+    }
 }

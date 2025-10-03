@@ -25,6 +25,9 @@ namespace Rendering
         virtual QRectF boundingRect() const override;
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
+    public:
+        static QColor colorForTrackState(const Openstw::Simulation::TrackState);
+
     protected:
         virtual void positionSelf() override;
 
@@ -33,9 +36,6 @@ namespace Rendering
                        const Openstw::Simulation::TrackState trackState) const;
         void drawBesetztMelder(QPainter* painter, const QRectF& trackRect,
                                const Openstw::Simulation::TrackState trackState) const;
-
-    protected:
-        static QColor colorForTrackState(const Openstw::Simulation::TrackState);
     };
 
 } // namespace Rendering
