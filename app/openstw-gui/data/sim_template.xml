@@ -71,6 +71,14 @@
             <ZugStrassenTaste direction="bidirectional"/>
         </Tile>
 
+        <Tile x="4" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
+        </Tile>
+
         <Tile x="5" y="1">
             <Track hasLeuchtMelder="false"/>
             <ForwardSignal name="074R1">

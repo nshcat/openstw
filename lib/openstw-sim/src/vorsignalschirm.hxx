@@ -31,7 +31,7 @@ namespace Openstw::Simulation
         virtual void setKennLichtState(const KennLichtState state) override;
 
     protected:
-        VorSignalBild m_vorSignalBild{VorSignalBild::Vr0};
+        VorSignalBild m_vorSignalBild{VorSignalBild::Off};
         bool m_hasKennLicht{false};
         KennLichtState m_kennLichtState{KennLichtState::Off};
     };
