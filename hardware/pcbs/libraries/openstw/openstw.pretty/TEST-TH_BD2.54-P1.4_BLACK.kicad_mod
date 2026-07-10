@@ -1,0 +1,106 @@
+(footprint "TEST-TH_BD2.54-P1.4_BLACK"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -4 0)
+		(layer "F.SilkS")
+		(uuid "d3b84119-f969-4b9d-b81a-3d944137b87b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TEST-TH_BD2.54-P1.4_BLACK"
+		(at 0 4 0)
+		(layer "F.Fab")
+		(uuid "496b1924-c2db-4673-85a5-3108e74de3ae")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5afd5280-0724-4fd1-b4ec-e684d38451d8")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e3788dc8-a8f7-4de9-b0a9-8fce55dff7d5")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_circle
+		(center 0 0)
+		(end 1.27 0)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "2c2d4f45-7ddb-42ab-b859-9139bed397d5")
+	)
+	(fp_circle
+		(center 1.27 -1.27)
+		(end 1.3 -1.27)
+		(stroke
+			(width 0.06)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "970f2b33-de74-49b3-a1d2-349e513b99aa")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "9047a018-54e6-4f8c-8a62-f36b3f2373ef")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 1.9 1.9)
+		(drill 1.38999)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "9bfeae3a-744b-4256-9302-2b5e5385270a")
+	)
+	(embedded_fonts no)
+	(model "./../openstw.3dshapes/TEST-TH_BD2.54-P1.4_BLACK.wrl"
+		(offset
+			(xyz 0 -0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

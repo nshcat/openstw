@@ -1,0 +1,228 @@
+(footprint "CONN-SMD_5P-P1.50_ZX-ZH1.5-5PLT"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 -5.02 0)
+		(layer "F.SilkS")
+		(uuid "1c23bfe5-aa61-4dfb-a6e4-2041dd556637")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "CONN-SMD_5P-P1.50_ZX-ZH1.5-5PLT"
+		(at 0 5.02 0)
+		(layer "F.Fab")
+		(uuid "8ea813d0-7731-4bbc-a259-e07874f90df5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0af960e2-2a94-45b9-8065-ef4a71639d75")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6872105c-bc0b-4ab4-a84d-a1aa2e32b8da")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -5.24 -2.76)
+		(end -5.24 -2.41)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "73ec434d-8e8b-49be-a5f3-5b11cd0a8c97")
+	)
+	(fp_line
+		(start -5.24 0.35)
+		(end -5.24 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0cb53c8d-762a-4275-bd7b-8a14a378b173")
+	)
+	(fp_line
+		(start -5.24 1.14)
+		(end -3.73 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "cec1175a-e729-4fda-8982-ddf1bb18e4a4")
+	)
+	(fp_line
+		(start -2.26 1.14)
+		(end -2.23 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "533b6051-9543-41ff-9b0c-a1113edfd327")
+	)
+	(fp_line
+		(start -0.76 1.14)
+		(end -0.73 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "bc2623b6-b675-4031-b3fb-b021fad1b163")
+	)
+	(fp_line
+		(start 0.74 1.14)
+		(end 0.77 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "f2d954b7-6cf5-403d-a961-98dc603135c5")
+	)
+	(fp_line
+		(start 2.24 1.14)
+		(end 2.27 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c03f6a6f-7b09-404d-a0bb-499a8ab8e3c1")
+	)
+	(fp_line
+		(start 3.74 1.14)
+		(end 5.27 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5f87c1c8-fd18-4991-aa04-9c6a4bf5853b")
+	)
+	(fp_line
+		(start 5.25 -2.76)
+		(end -5.24 -2.76)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "73a97fda-651f-4335-816f-36212afa8db1")
+	)
+	(fp_line
+		(start 5.25 -2.76)
+		(end 5.25 -2.41)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0f569c45-742f-4465-b17c-24635c8f9fb4")
+	)
+	(fp_line
+		(start 5.27 0.35)
+		(end 5.27 1.14)
+		(stroke
+			(width 0.25)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0de817f5-0590-41fc-97b9-4aed02eb85f9")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "efbb17a7-67b6-4be3-b633-cea707075e24")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -3 1.02)
+		(size 1 3.6)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "b4938e13-35a5-43e7-9495-d8b41ae08058")
+	)
+	(pad "2" smd rect
+		(at -1.5 1.02)
+		(size 1 3.6)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "7881ae56-a964-4ef4-809e-7564893d55d7")
+	)
+	(pad "3" smd rect
+		(at 0 1.02)
+		(size 1 3.6)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "b679235f-6ea8-41ea-86ea-649b04e93eef")
+	)
+	(pad "4" smd rect
+		(at 1.5 1.02)
+		(size 1 3.6)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "c7fc8760-2ed9-4807-9cd8-275d48c9f808")
+	)
+	(pad "5" smd rect
+		(at 3 1.02)
+		(size 1 3.6)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "d49c5afd-9fbe-459d-ac02-38a62efa98e1")
+	)
+	(pad "6" smd rect
+		(at 5.05 -1.02)
+		(size 1.5 2.3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "c65735a7-87e9-4630-9d92-504e9eabfc09")
+	)
+	(pad "7" smd rect
+		(at -5.05 -1.02)
+		(size 1.5 2.3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "78670ef5-a0bf-4108-840a-d6f5151a9cff")
+	)
+	(embedded_fonts no)
+	(model "./../openstw.3dshapes/CONN-SMD_5P-P1.50_ZX-ZH1.5-5PLT.wrl"
+		(offset
+			(xyz 0 0.13 -0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

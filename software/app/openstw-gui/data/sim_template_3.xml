@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Simulation>
+    <TilePanel width="11" height="7">
+
+        <Tile x="6" y="0">
+            <Track/>
+        </Tile>
+
+        <Tile x="7" y="0">
+            <Switch type="simple" direction="backward" branchDirection="down" label="144"/>
+        </Tile>
+
+        <Tile x="8" y="0">
+            <Switch type="simple" direction="forward" branchDirection="down" label="141"/>
+        </Tile>
+
+        <Tile x="9" y="0">
+            <Track/>
+        </Tile>
+
+        <Tile x="6" y="1">
+            <Track/>
+        </Tile>
+
+        <Tile x="7" y="1">
+            <Switch type="simple" direction="forward" branchDirection="up" label="145"/>
+        </Tile>
+
+        <Tile x="8" y="1">
+            <Switch type="simple" direction="backward" branchDirection="up" label="140"/>
+        </Tile>
+
+        <Tile x="9" y="1">
+            <Track/>
+        </Tile>
+
+        <Tile x="1" y="1">
+            <Track/>
+            <ForwardSignal name="B793">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                    <RangierSignal/>
+                    <KennLicht/>
+                </PrimarySignalSchirm>
+                <SperrMelder/>     
+                <DWegMelder/>
+                <Zs1Melder/>
+            </ForwardSignal>
+            <FeststellMelder direction="forward"/>
+            <ZugStrassenTaste direction="forward"/>
+        </Tile>
+
+        <Tile x="2" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+                <Zs1Melder location="onMast"/>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="3" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793" isBlockSignal="true">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+                <Zs1Melder location="onMast"/>
+            </ForwardSignal>
+            <FeststellMelder direction="bidirectional"/>
+            <ZugStrassenTaste direction="bidirectional"/>
+        </Tile>
+
+        <Tile x="4" y="1">
+            <Track></Track>
+            <ForwardSignal name="B793">
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </ForwardSignal>
+        </Tile>
+
+        <Tile x="5" y="1">
+            <Track hasLeuchtMelder="false"/>
+            <ForwardSignal name="074R1">
+                <PrimarySignalSchirm type="ZugDeckungsSignalSchirm"/>
+            </ForwardSignal>
+            <BackwardSignal name="073R2">
+                <PrimarySignalSchirm type="ZugDeckungsSignalSchirm"/>
+            </BackwardSignal>
+            <FeststellMelder direction="bidirectional"/>
+            <ZugStrassenTaste direction="bidirectional"/>
+        </Tile>
+
+        <Tile x="6" y="2">
+            <ZugnummernAnzeige type="largeLeftPart"/>
+        </Tile>
+        <Tile x="7" y="2">
+            <ZugnummernAnzeige type="largeRightPart"/>
+        </Tile>
+        <Tile x="8" y="2">
+            <LabelBox label="V993"/>
+        </Tile>
+
+        <Tile x="1" y="3">
+            <Track></Track>
+            <Platform location="bottom"/>
+        </Tile>
+        <Tile x="2" y="3">
+            <Track></Track>
+            <BackwardSignal name="B793">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+            <ZugStrassenTaste direction="backward"/>
+        </Tile>
+        <Tile x="3" y="3">
+            <Track>
+                <LabelBox label="793"/>
+            </Track>
+        </Tile>
+        <Tile x="4" y="3">
+            <Track></Track>
+            <BackwardSignal>
+                <PrimarySignalSchirm type="VorSignalSchirm">
+                </PrimarySignalSchirm>
+            </BackwardSignal>
+        </Tile>
+        <Tile x="5" y="3">
+            <Track></Track>
+        </Tile>
+        <Tile x="6" y="3">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeLeftPart"/>
+        </Tile>
+        <Tile x="7" y="3">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeRightPart"/>
+        </Tile>
+        <Tile x="8" y="3">
+            <Track>
+                <LabelBox label="993" alternativeMarker="false"/>
+            </Track>
+        </Tile>
+        <Tile x="9" y="3">
+            <Track></Track>
+            <BackwardSignal name="B793">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </BackwardSignal>
+            <ZugStrassenTaste direction="backward"/>
+        </Tile>
+        <Tile x="10" y="3">
+            <Track hasLeuchtMelder="false"></Track>
+            <DirectionArrows label="v. E.-Kray-N." alignment="right">
+                <Left/>
+            </DirectionArrows>
+        </Tile>
+
+
+        <Tile x="1" y="4">
+            <Track></Track>
+            <Platform location="bottom"/>
+        </Tile>
+        <Tile x="2" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="3" y="4">
+            <Track>
+                <LabelBox label="794"/>
+            </Track>
+        </Tile>
+        <Tile x="4" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="5" y="4">
+            <Track></Track>
+
+            <ForwardSignal name="H100">
+                <PrimarySignalSchirm type="HauptSignalSchirm">
+                </PrimarySignalSchirm>
+                <SperrMelder/>
+            </ForwardSignal>
+        </Tile>
+        <Tile x="6" y="4">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeLeftPart"/>
+        </Tile>
+        <Tile x="7" y="4">
+            <Track></Track>
+            <ZugnummernAnzeige type="largeRightPart"/>
+        </Tile>
+        <Tile x="8" y="4">
+            <Track>
+                <LabelBox label="994" alternativeMarker="false"/>
+            </Track>
+        </Tile>
+        <Tile x="9" y="4">
+            <Track></Track>
+        </Tile>
+        <Tile x="10" y="4">
+            <Track hasLeuchtMelder="false"></Track>
+            <DirectionArrows label="n. E.-Kray-N." alignment="right">
+                <Right/>
+            </DirectionArrows>
+        </Tile>
+
+        <Tile x="0" y="6">
+            <Track></Track>
+            <ErlaubnisFeld ausfahrDirection="left" ausfahrLabel="Abc"/>
+        </Tile>
+
+        <Tile x="1" y="5">
+            <Track></Track>
+            <Platform location="both"/>
+        </Tile>
+
+        <Tile x="10" y="6">
+            <Track></Track>
+            <ErlaubnisFeld ausfahrDirection="right" ausfahrLabel="Abc"/>
+        </Tile>
+    </TilePanel>
+</Simulation>
+
