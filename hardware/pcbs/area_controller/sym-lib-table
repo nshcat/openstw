@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "openstw") (type "KiCad") (uri "${KIPRJMOD}/../libraries/openstw/openstw.kicad_sym") (options "") (descr ""))
+)
