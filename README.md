@@ -14,7 +14,7 @@ A project aiming to design a physical replica of a German Sp Dr S60 relais signa
 ## Non-goals
 - **Interfacing with model train setups** - I personally am neither interested in nor experienced with model train setups, and thus this project will not be designed or implemented with that in mind. Although the already existing software and hardware architecture design does leave the possibility open, if anyone else dares to try :)
 
-- **Have everything be hand-solderable** - I have decided against this right from the start. The small size of the Stelltisch tiles make it almost a neccasity to use very small SMT components, and since access to PCB assembly is easy and comparatively cheap nowadays, I felt that it would be silly to restrict my design to being hand solderable and risk compromising my goal of realism.
+- **Have everything be hand-solderable** - I have decided against this right from the start. The small size of the Stelltisch tiles make it almost a neccasity to use very small SMT components, and since access to PCB assembly is easy and comparatively cheap nowadays, I felt that it would be silly to restrict my design to being hand solderable and risk compromising my goal of realism. And one can still use a stencil, solder paste and a cheap mini hot plate to assemble the boards, if so desired.
 
 ## Repository structure
 
