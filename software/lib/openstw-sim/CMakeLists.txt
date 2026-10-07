@@ -56,3 +56,4 @@ target_include_directories(openstw-sim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_definitions(openstw-sim PRIVATE OPENSTW_SIM_LIBRARY)
 
 target_link_libraries(openstw-sim PUBLIC openstw-topo)
+target_link_libraries(openstw-sim PUBLIC openstw-interlocking)
