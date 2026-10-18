@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Topology>
+    <Nodes>
+        <Node Type="Signal" Name="S1">
+        </Node>
+        <Node Type="Signal" Name="S2">
+        </Node>
+        <Node Type="Connector" Name="C1">
+        </Node>
+    </Nodes>
+    <Edges>
+        <Edge Type="Track" Name="T1" Length="150.0" MaximumSpeed="80">
+        </Edge>
+    </Edges>
+</Topology>

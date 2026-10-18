@@ -1,5 +1,6 @@
 #include "node.hxx"
 #include "element.hxx"
+#include "elementcategory.hxx"
 #include <QException>
 #include <stdexcept>
 
@@ -7,9 +8,8 @@ namespace Openstw
 {
     namespace Topology
     {
-
         Node::Node(NodeType type, QSpan<const Port> ports, const QString& identifier, QObject* parent)
-            : Element{identifier, parent}, m_type{type}, m_ports{ports.cbegin(), ports.cend()}
+            : Element{ElementCategory::Node, identifier, parent}, m_type{type}, m_ports{ports.cbegin(), ports.cend()}
         {
             // A node without any ports is not allowed
             if (this->m_ports.size() == 0)
@@ -18,7 +18,7 @@ namespace Openstw
             }
         }
 
-        bool Node::has_port(Port port) const
+        bool Node::hasPort(Port port) const
         {
             return this->m_ports.contains(port);
         }

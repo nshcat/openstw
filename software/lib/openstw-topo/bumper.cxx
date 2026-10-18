@@ -9,7 +9,7 @@ namespace Openstw
         {
         }
 
-        QVector<Port> Bumper::outgoing_ports_for(Port incomingPort) const
+        QVector<Port> Bumper::outgoingPortsFor(Port incomingPort) const
         {
             if (incomingPort != Port::Center)
             {

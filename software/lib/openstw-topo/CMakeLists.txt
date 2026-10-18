@@ -25,6 +25,11 @@ add_library(openstw-topo STATIC
   bumper.hxx bumper.cxx
   simpleswitch.hxx simpleswitch.cxx
   frontbacknode.hxx frontbacknode.cxx
+  elementcategory.hxx
+  edge.hxx edge.cxx
+  edgetype.hxx
+  track.hxx track.cxx
+  exception.hxx
 )
 
 set(BOOST_MIN_VERSION 1.79.0)
@@ -32,9 +37,11 @@ set(BOOST_MIN_VERSION 1.79.0)
 find_package(
   Boost ${BOOST_MIN_VERSION} REQUIRED
 )
-target_link_libraries(openstw-sim PUBLIC
+target_link_libraries(openstw-topo PUBLIC
   Boost::boost
 )
+
+target_include_directories(openstw-topo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(openstw-topo PUBLIC pugixml-static)
 

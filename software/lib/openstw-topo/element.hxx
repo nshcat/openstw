@@ -1,5 +1,6 @@
 #pragma once
 
+#include "elementcategory.hxx"
 #include <QObject>
 
 namespace Openstw
@@ -13,14 +14,19 @@ namespace Openstw
             Q_OBJECT
 
         public:
-            explicit Element(const QString& identifier, QObject* parent = nullptr);
+            explicit Element(ElementCategory category, const QString& identifier, QObject* parent = nullptr);
 
         public:
             const QString& identifier() const;
-            void set_identifier(const QString& identifier);
+            void setIdentifier(const QString& identifier);
+
+            bool isNode() const;
+            bool isEdge() const;
+            ElementCategory category() const;
 
         protected:
-            QString m_identifier{}; //< Unique identifier for this element.
+            ElementCategory m_category;
+            QString m_identifier; //< Unique identifier for this element.
         };
     }
 }

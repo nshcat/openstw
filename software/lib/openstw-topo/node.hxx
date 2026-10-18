@@ -22,7 +22,7 @@ namespace Openstw
             explicit Node(NodeType type, QSpan<const Port> ports, const QString& identifier, QObject* parent = nullptr);
 
         public:
-            bool has_port(Port port) const;
+            bool hasPort(Port port) const;
             NodeType type() const;
             QVector<Port> ports() const;
 
@@ -34,7 +34,7 @@ namespace Openstw
             // Gerade and Abzweig ports are reachable; whereas coming
             // from the Gerade or Abzweig ports, only the Wurzel port
             // is reachable.
-            virtual QVector<Port> outgoing_ports_for(Port incomingPort) const = 0;
+            virtual QVector<Port> outgoingPortsFor(Port incomingPort) const = 0;
 
         protected:
             NodeType m_type;

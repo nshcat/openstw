@@ -9,7 +9,7 @@ namespace Openstw
         {
         }
 
-        QVector<Port> SimpleSwitch::outgoing_ports_for(Port incomingPort) const
+        QVector<Port> SimpleSwitch::outgoingPortsFor(Port incomingPort) const
         {
             // Possible outgoing nodes depends on the direction we are entering
             // the switch node.

@@ -10,7 +10,7 @@ namespace Openstw
         {
         }
 
-        QVector<Port> FrontBackNode::outgoing_ports_for(Port incomingPort) const
+        QVector<Port> FrontBackNode::outgoingPortsFor(Port incomingPort) const
         {
             // Node simply lets traffic traverse itself in the direction its
             // coming from.

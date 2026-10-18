@@ -9,7 +9,7 @@ namespace Openstw
         {
         }
 
-        QVector<Port> Boundary::outgoing_ports_for(Port incomingPort) const
+        QVector<Port> Boundary::outgoingPortsFor(Port incomingPort) const
         {
             if (incomingPort != Port::Center)
             {

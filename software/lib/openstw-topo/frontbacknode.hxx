@@ -16,7 +16,7 @@ namespace Openstw
             explicit FrontBackNode(NodeType type, const QString& identifier, QObject* parent = nullptr);
 
         public:
-            virtual QVector<Port> outgoing_ports_for(Port incomingPort) const override;
+            virtual QVector<Port> outgoingPortsFor(Port incomingPort) const override;
         };
     }
 }
