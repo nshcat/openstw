@@ -1,0 +1,44 @@
+#pragma once
+
+#include "element.hxx"
+#include "nodetype.hxx"
+#include "port.hxx"
+#include <QSet>
+#include <QSpan>
+#include <QVector>
+
+namespace Openstw
+{
+    namespace Topology
+    {
+        // Base class for all topology graph nodes.
+        // Each type of node knows what kinds of ports it has,
+        // which is used during validation of topology input data
+        // before constructing the graph. This makes sure that no
+        // invalid edges can exist within the graph.
+        class Node : public Element
+        {
+        public:
+            explicit Node(NodeType type, QSpan<const Port> ports, const QString& identifier, QObject* parent = nullptr);
+
+        public:
+            bool has_port(Port port) const;
+            NodeType type() const;
+            QVector<Port> ports() const;
+
+        public:
+            // Determine which outgoing ports can be reached from given
+            // incoming port.
+            // For example, with a simple three-way switch, coming from
+            // the Wurzel port, both the elements connected to the
+            // Gerade and Abzweig ports are reachable; whereas coming
+            // from the Gerade or Abzweig ports, only the Wurzel port
+            // is reachable.
+            virtual QVector<Port> outgoing_ports_for(Port incomingPort) const = 0;
+
+        protected:
+            NodeType m_type;
+            QSet<Port> m_ports;
+        };
+    }
+}

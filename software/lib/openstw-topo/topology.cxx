@@ -2,7 +2,8 @@
 
 namespace Openstw::Topology
 {
-    Topology::Topology()
+    Topology::Topology(QObject* parent)
+        : QObject{parent}
     {
     }
 }

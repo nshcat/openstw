@@ -1,0 +1,22 @@
+#pragma once
+
+#include "node.hxx"
+#include <QList>
+
+namespace Openstw
+{
+    namespace Topology
+    {
+        // Helper class that represents a topology graph node
+        // that has two ports, Front and Back, and allows traversal in the
+        // 'expected' way - meaning both from front to back and back to front.
+        class FrontBackNode : public Node
+        {
+        public:
+            explicit FrontBackNode(NodeType type, const QString& identifier, QObject* parent = nullptr);
+
+        public:
+            virtual QVector<Port> outgoing_ports_for(Port incomingPort) const override;
+        };
+    }
+}
