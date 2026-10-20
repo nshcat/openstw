@@ -18,18 +18,19 @@ add_library(openstw-topo STATIC
   port.hxx
   node.hxx node.cxx
   nodetype.hxx
-  connector.hxx connector.cxx
-  signal.hxx signal.cxx
-  axlecounter.hxx axlecounter.cxx
-  boundary.hxx boundary.cxx
-  bumper.hxx bumper.cxx
-  simpleswitch.hxx simpleswitch.cxx
-  frontbacknode.hxx frontbacknode.cxx
+  nodes/connector.hxx nodes/connector.cxx
+  nodes/signal.hxx nodes/signal.cxx
+  nodes/axlecounter.hxx nodes/axlecounter.cxx
+  nodes/boundary.hxx nodes/boundary.cxx
+  nodes/bumper.hxx nodes/bumper.cxx
+  nodes/simpleswitch.hxx nodes/simpleswitch.cxx
+  nodes/frontbacknode.hxx nodes/frontbacknode.cxx
   elementcategory.hxx
   edge.hxx edge.cxx
   edgetype.hxx
-  track.hxx track.cxx
+  edges/track.hxx edges/track.cxx
   exception.hxx
+  nodes/routedestination.hxx nodes/routedestination.cxx
 )
 
 set(BOOST_MIN_VERSION 1.79.0)

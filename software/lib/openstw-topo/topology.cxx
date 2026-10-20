@@ -1,12 +1,13 @@
 #include "topology.hxx"
-#include "axlecounter.hxx"
-#include "boundary.hxx"
-#include "bumper.hxx"
-#include "connector.hxx"
+#include "edges/track.hxx"
 #include "exception.hxx"
-#include "signal.hxx"
-#include "simpleswitch.hxx"
-#include "track.hxx"
+#include "nodes/axlecounter.hxx"
+#include "nodes/boundary.hxx"
+#include "nodes/bumper.hxx"
+#include "nodes/connector.hxx"
+#include "nodes/routedestination.hxx"
+#include "nodes/signal.hxx"
+#include "nodes/simpleswitch.hxx"
 #include <QFile>
 #include <format>
 #include <stdexcept>
@@ -126,6 +127,10 @@ namespace Openstw::Topology
             else if (nodeTypeName == "Bumper")
             {
                 newNode = new Bumper(nodeName.toString(), this);
+            }
+            else if (nodeTypeName == "RouteDestination")
+            {
+                newNode = new RouteDestination(nodeName.toString(), this);
             }
             else
             {
