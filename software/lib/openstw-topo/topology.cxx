@@ -30,8 +30,13 @@ namespace Openstw::Topology
             throw ArgumentError("Nullptr passed as node");
         }
 
+        return this->lookupNode(node->identifier());
+    }
+
+    std::optional<Topology::VertexDescriptor> Topology::lookupNode(QStringView nodeIdentifier) const
+    {
         // The node might not be part of the graph.
-        const auto iter = this->m_nodes.find(node->identifier());
+        const auto iter = this->m_nodes.find(nodeIdentifier);
 
         if (iter == this->m_nodes.end())
         {
@@ -144,6 +149,13 @@ namespace Openstw::Topology
                                    xmlReader->lineNumber());
             }
 
+            // Check whether the identifier is unique.
+            if (this->m_elements.contains(nodeName))
+            {
+                throw RuntimeError("Topology XML: Line {}: Node element has non-unique identifier '{}'",
+                                   xmlReader->lineNumber(), nodeName);
+            }
+
             // Construct node object instance of the correct type,
             // reading more information as required by each specific node type.
             Node* newNode{nullptr};
@@ -220,6 +232,13 @@ namespace Openstw::Topology
                                    xmlReader->lineNumber());
             }
 
+            // Check whether the identifier is unique.
+            if (this->m_elements.contains(edgeName))
+            {
+                throw RuntimeError("Topology XML: Line {}: Edge element has non-unique identifier '{}'",
+                                   xmlReader->lineNumber(), edgeName);
+            }
+
             // Construct edge based on type given in attributes
             Edge* newEdge{nullptr};
 
@@ -271,13 +290,69 @@ namespace Openstw::Topology
             {
                 // Every edge element contains sub elements describing
                 // which elements and ports it connects.
-
                 // Figure out which ports on which nodes the edge connects.
+                std::optional<QPair<QString, Port>> fromLink, toLink;
 
-                this->m_edges.insert(newEdge->identifier(), newEdge);
+                // Try to find the "From" and "To" elements
+                while (xmlReader->readNextStartElement())
+                {
+                    const auto elementName = xmlReader->name();
 
-                // XXX this needs to go after child element parsing has been implemented
-                xmlReader->skipCurrentElement();
+                    if (elementName == "From" || elementName == "To")
+                    {
+                        // Found link element, parse it
+                        const auto link = this->parseConnection(xmlReader);
+
+                        if (elementName == "From")
+                        {
+                            fromLink = link;
+                        }
+                        else
+                        {
+                            toLink = link;
+                        }
+                    }
+                    else
+                    {
+                        throw RuntimeError(
+                            "Topology XML: Line {}: Encountered invalid subelement '{}' within Edge element",
+                            xmlReader->lineNumber(), elementName);
+                    }
+                }
+
+                // Assert that we have found both a from and to link
+                if (!fromLink.has_value() || !toLink.has_value())
+                {
+                    throw RuntimeError("Topology XML: Line {}: Edge '{}' requires both a From and To link element",
+                                       xmlReader->lineNumber(), edgeName);
+                }
+
+                // Retrieve node descriptors in order to insert edge into graph
+                const auto fromNode = this->lookupNode(fromLink->first);
+                if (!fromNode.has_value())
+                {
+                    throw RuntimeError("Topology XML: Line {}: From-link for edge '{}' refers to nonexistant Node '{}'",
+                                       xmlReader->lineNumber(), edgeName, fromLink.value().first);
+                }
+
+                const auto toNode = this->lookupNode(toLink->first);
+                if (!toNode.has_value())
+                {
+                    throw RuntimeError("Topology XML: Line {}: To-link for edge '{}' refers to nonexistant Node '{}'",
+                                       xmlReader->lineNumber(), edgeName, toLink.value().first);
+                }
+
+                // Actually insert edge into graph
+                // XXX Verify that the edge isnt a duplicate?
+                const auto edgeDescriptor =
+                    boost::add_edge(*fromNode, *toNode, EdgeProperties{newEdge, fromLink->second, toLink->second},
+                                    this->m_topologyGraph)
+                        .first;
+
+                this->m_edges.insert(newEdge->identifier(), qMakePair(newEdge, edgeDescriptor));
+                this->m_elements.insert(newEdge->identifier(), newEdge);
+
+                // xmlReader->skipCurrentElement();
             }
         }     
     }

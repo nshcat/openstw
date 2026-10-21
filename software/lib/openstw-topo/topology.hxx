@@ -69,6 +69,10 @@ namespace Openstw::Topology
         // is part of the topology graph.
         std::optional<VertexDescriptor> lookupNode(Node* node) const;
 
+        // Retrieve graph vertex descriptor for given node identifier, if the node
+        // is part of the topology graph.
+        std::optional<VertexDescriptor> lookupNode(QStringView nodeIdentifier) const;
+
         // Retrieve graph edge descriptor for given edge, if the edge
         // is part of the topology graph.
         std::optional<EdgeDescriptor> lookupEdge(Edge* edge) const;
