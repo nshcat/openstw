@@ -8,8 +8,11 @@
 #include "nodes/routedestination.hxx"
 #include "nodes/signal.hxx"
 #include "nodes/simpleswitch.hxx"
+#include "utility.hxx"
 #include <QFile>
+#include <boost/graph/graphviz.hpp>
 #include <format>
+#include <sstream>
 #include <stdexcept>
 
 namespace Openstw::Topology
@@ -21,6 +24,22 @@ namespace Openstw::Topology
 
     std::optional<Path> Topology::findPath(Node* from, Node* to) const
     {
+        return std::nullopt;
+    }
+
+    QString Topology::dumpAsGraphVizDot()
+    {
+        boost::dynamic_properties dp;
+        dp.property("node_id", get(&VertexProperties::identifier, this->m_topologyGraph));
+        dp.property("weight", get(&EdgeProperties::length, this->m_topologyGraph));
+        dp.property("taillabel", get(&EdgeProperties::fromPort, this->m_topologyGraph));
+        dp.property("headlabel", get(&EdgeProperties::toPort, this->m_topologyGraph));
+
+        std::ostringstream dotOutput{};
+
+        write_graphviz_dp(dotOutput, this->m_topologyGraph, dp, "node_id");
+
+        return QString::fromStdString(dotOutput.str());
     }
 
     std::optional<Topology::VertexDescriptor> Topology::lookupNode(Node* node) const
@@ -184,6 +203,10 @@ namespace Openstw::Topology
             {
                 newNode = new RouteDestination(nodeName.toString(), this);
             }
+            else if (nodeTypeName == "SimpleSwitch")
+            {
+                newNode = new SimpleSwitch(nodeName.toString(), this);
+            }
             else
             {
                 throw RuntimeError("Topology XML: Line {}: Encountered unknown node type '{}'", xmlReader->lineNumber(),
@@ -196,7 +219,7 @@ namespace Openstw::Topology
             {
                 this->m_elements.insert(newNode->identifier(), newNode);
 
-                const auto nodeDescriptor = boost::add_vertex({newNode}, this->m_topologyGraph);
+                const auto nodeDescriptor = boost::add_vertex({newNode, newNode->identifier()}, this->m_topologyGraph);
 
                 this->m_nodes.insert(newNode->identifier(), qMakePair(newNode, nodeDescriptor));
             }
@@ -344,8 +367,11 @@ namespace Openstw::Topology
 
                 // Actually insert edge into graph
                 // XXX Verify that the edge isnt a duplicate?
+
                 const auto edgeDescriptor =
-                    boost::add_edge(*fromNode, *toNode, EdgeProperties{newEdge, fromLink->second, toLink->second},
+                    boost::add_edge(*fromNode, *toNode,
+                                    EdgeProperties{newEdge, newEdge->identifier(), newEdge->weight(), fromLink->second,
+                                                   toLink->second},
                                     this->m_topologyGraph)
                         .first;
 

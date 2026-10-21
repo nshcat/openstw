@@ -18,5 +18,10 @@ namespace Openstw
         {
             return this->m_maxSpeed;
         }
+
+        double Track::weight() const
+        {
+            return this->length();
+        }
     }
 }

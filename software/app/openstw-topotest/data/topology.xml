@@ -4,20 +4,66 @@
         <Node Type="Boundary" Name="Bleft"/>
         <Node Type="Signal" Name="S1"/>
         <Node Type="Signal" Name="S2"/>
+        <Node Type="Signal" Name="S3"/>
+        <Node Type="Signal" Name="S4"/>
+        <Node Type="Signal" Name="S5"/>
+        <Node Type="Signal" Name="S6"/>
+        <Node Type="SimpleSwitch" Name="W1"/>
+        <Node Type="SimpleSwitch" Name="W2"/>
         <Node Type="Boundary" Name="Bright"/>
     </Nodes>
     <Edges>
-        <Edge Type="Track" Name="T1" Length="25.0" MaximumSpeed="80">
+        <!-- Left boundary -->
+        <Edge Type="Track" Name="T1" Length="150.0" MaximumSpeed="80">
             <From Port="Center">Bleft</From>
             <To Port="Back">S1</To>
         </Edge>
-        <Edge Type="Track" Name="T2" Length="150.0" MaximumSpeed="80">
+        <Edge Type="Track" Name="T2" Length="50.0" MaximumSpeed="80">
             <From Port="Front">S1</From>
-            <To Port="Back">S2</To>
+            <To Port="Wurzel">W1</To>
         </Edge>
+
+        <!-- Top branch -->
         <Edge Type="Track" Name="T3" Length="50.0" MaximumSpeed="80">
-            <From Port="Front">S2</From>
-            <To Port="Center">Bright</To>
+            <From Port="Gerade">W1</From>
+            <To Port="Front">S2</To>
         </Edge>
+
+        <Edge Type="Track" Name="T4" Length="100.0" MaximumSpeed="80">
+            <From Port="Back">S2</From>
+            <To Port="Back">S4</To>
+        </Edge>
+
+        <Edge Type="Track" Name="T5" Length="50.0" MaximumSpeed="80">
+            <From Port="Front">S4</From>
+            <To Port="Gerade">W2</To>
+        </Edge>
+
+        <!-- Bottom branch -->
+        <Edge Type="Track" Name="T6" Length="50.0" MaximumSpeed="80">
+            <From Port="Abzweig">W1</From>
+            <To Port="Front">S3</To>
+        </Edge>
+
+        <Edge Type="Track" Name="T7" Length="100.0" MaximumSpeed="80">
+            <From Port="Back">S3</From>
+            <To Port="Back">S5</To>
+        </Edge>
+
+        <Edge Type="Track" Name="T8" Length="50.0" MaximumSpeed="80">
+            <From Port="Front">S5</From>
+            <To Port="Abzweig">W2</To>
+        </Edge>
+
+    <!-- Right boundary -->
+    <Edge Type="Track" Name="T9" Length="150.0" MaximumSpeed="80">
+        <From Port="Wurzel">W2</From>
+        <To Port="Front">S6</To>
+    </Edge>
+    <Edge Type="Track" Name="T10" Length="50.0" MaximumSpeed="80">
+        <From Port="Back">S6</From>
+        <To Port="Center">Bright</To>
+    </Edge>
+
     </Edges>
 </Topology>

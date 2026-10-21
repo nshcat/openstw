@@ -30,12 +30,21 @@ namespace Openstw::Topology
         {
             // Node object associated with this vertex
             Node* node;
+
+            // Node identifier
+            QString identifier;
         };
 
         struct EdgeProperties
         {
             // Edge object associated with this edge
             Edge* edge;
+
+            // Edge identifier
+            QString identifier;
+
+            // Edge length
+            double length;
 
             // Port the edge is connected to at the source
             Port fromPort;
@@ -63,6 +72,9 @@ namespace Openstw::Topology
 
         // Find a path from given node to given other node.
         std::optional<Path> findPath(Node* from, Node* to) const;
+
+    public: // == Debug methods
+        QString dumpAsGraphVizDot();
 
     protected: // == Interaction with topology graph
         // Retrieve graph vertex descriptor for given node, if the node

@@ -15,6 +15,7 @@ namespace Openstw
         public:
             double length() const;
             double maximumSpeed() const;
+            virtual double weight() const;
 
         protected:
             double m_length;

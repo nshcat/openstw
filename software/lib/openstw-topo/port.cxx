@@ -1,4 +1,5 @@
 #include "port.hxx"
+#include "exception.hxx"
 #include <QString>
 
 namespace Openstw
@@ -54,6 +55,33 @@ namespace Openstw
             default:
                 return "<unknown>";
             }
+        }
+
+        std::ostream& operator<<(std::ostream& os, const Port& port)
+        {
+            const auto portName = portToString(port);
+
+            os << portName.toStdString();
+
+            return os;
+        }
+
+        std::istream& operator>>(std::istream& is, Port& port)
+        {
+            std::string portName{};
+
+            is >> portName;
+
+            const auto maybePort = parsePort(QString::fromStdString(portName));
+
+            if (!maybePort.has_value())
+            {
+                throw RuntimeError("Encountered invalid port name '{}'", portName);
+            }
+
+            port = *maybePort;
+
+            return is;
         }
     }
 }

@@ -33,6 +33,7 @@ add_library(openstw-topo STATIC
   nodes/routedestination.hxx nodes/routedestination.cxx
   path.hxx path.cxx
   port.cxx
+  utility.hxx
 )
 
 set(BOOST_MIN_VERSION 1.79.0)

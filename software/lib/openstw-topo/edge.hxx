@@ -15,6 +15,7 @@ namespace Openstw
 
         public:
             EdgeType type() const;
+            virtual double weight() const = 0;
 
         protected:
             EdgeType m_type;

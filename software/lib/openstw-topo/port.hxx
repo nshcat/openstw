@@ -2,6 +2,7 @@
 
 #include <QStringView>
 #include <cstdint>
+#include <iostream>
 #include <optional>
 
 namespace Openstw
@@ -31,5 +32,11 @@ namespace Openstw
 
         // Convert port enum value to string representation.
         QString portToString(Port port);
+
+        // Stream output operator for ports
+        std::ostream& operator<<(std::ostream& os, const Port& port);
+
+        // Stream input operator for ports
+        std::istream& operator>>(std::istream& is, Port& port);
     }
 }
