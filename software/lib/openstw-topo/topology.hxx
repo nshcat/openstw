@@ -68,7 +68,10 @@ namespace Openstw::Topology
 
     public: // == Interacting with the topology network
         // Retrieve topology network element by its identifier.
-        std::optional<Element*> findElement(const QString& identifier);
+        std::optional<Element*> findElement(const QString& identifier) const;
+
+        // Retrieve node within topology network by its identifier.
+        std::optional<Node*> findNode(const QString& identifier) const;
 
         // Find a path from given node to given other node.
         std::optional<Path> findPath(Node* from, Node* to) const;

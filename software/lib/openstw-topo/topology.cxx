@@ -101,7 +101,23 @@ namespace Openstw::Topology
         return topology;
     }
 
-    std::optional<Element*> Topology::findElement(const QString& identifier)
+    std::optional<Node*> Topology::findNode(const QString& identifier) const
+    {
+        const auto it = this->m_elements.find(identifier);
+        if (it == this->m_elements.end())
+        {
+            return std::nullopt;
+        }
+
+        if (!it.value()->isNode())
+        {
+            return std::nullopt;
+        }
+
+        return std::make_optional(dynamic_cast<Node*>(it.value()));
+    }
+
+    std::optional<Element*> Topology::findElement(const QString& identifier) const
     {
         const auto it = this->m_elements.find(identifier);
         if (it == this->m_elements.end())
@@ -351,25 +367,52 @@ namespace Openstw::Topology
                 }
 
                 // Retrieve node descriptors in order to insert edge into graph
-                const auto fromNode = this->lookupNode(fromLink->first);
+                const auto fromNode = this->findNode(fromLink->first);
                 if (!fromNode.has_value())
                 {
                     throw RuntimeError("Topology XML: Line {}: From-link for edge '{}' refers to nonexistant Node '{}'",
                                        xmlReader->lineNumber(), edgeName, fromLink.value().first);
                 }
 
-                const auto toNode = this->lookupNode(toLink->first);
+                const auto fromNodeDesc = this->lookupNode(*fromNode);
+                if (!fromNodeDesc.has_value())
+                {
+                    throw RuntimeError("Topology XML: Line {}: From-link for edge '{}' refers to nonexistant Node '{}'",
+                                       xmlReader->lineNumber(), edgeName, fromLink.value().first);
+                }
+
+                const auto toNode = this->findNode(toLink->first);
                 if (!toNode.has_value())
                 {
                     throw RuntimeError("Topology XML: Line {}: To-link for edge '{}' refers to nonexistant Node '{}'",
                                        xmlReader->lineNumber(), edgeName, toLink.value().first);
                 }
 
-                // Actually insert edge into graph
-                // XXX Verify that the edge isnt a duplicate?
+                const auto toNodeDesc = this->lookupNode(*toNode);
+                if (!toNodeDesc.has_value())
+                {
+                    throw RuntimeError("Topology XML: Line {}: To-link for edge '{}' refers to nonexistant Node '{}'",
+                                       xmlReader->lineNumber(), edgeName, toLink.value().first);
+                }
 
+                // Verify that the nodes have the ports the links refer to
+                if (!(*fromNode)->hasPort(fromLink->second))
+                {
+                    throw RuntimeError(
+                        "Topology XML: Line {}: Edge '{}' refers to nonexisting source port '{}' on node '{}'",
+                        xmlReader->lineNumber(), edgeName, portToString(fromLink->second), (*fromNode)->identifier());
+                }
+
+                if (!(*toNode)->hasPort(toLink->second))
+                {
+                    throw RuntimeError(
+                        "Topology XML: Line {}: Edge '{}' refers to nonexisting destination port '{}' on node '{}'",
+                        xmlReader->lineNumber(), edgeName, portToString(toLink->second), (*toNode)->identifier());
+                }
+
+                // Actually insert edge into graph
                 const auto edgeDescriptor =
-                    boost::add_edge(*fromNode, *toNode,
+                    boost::add_edge(*fromNodeDesc, *toNodeDesc,
                                     EdgeProperties{newEdge, newEdge->identifier(), newEdge->weight(), fromLink->second,
                                                    toLink->second},
                                     this->m_topologyGraph)
@@ -377,8 +420,6 @@ namespace Openstw::Topology
 
                 this->m_edges.insert(newEdge->identifier(), qMakePair(newEdge, edgeDescriptor));
                 this->m_elements.insert(newEdge->identifier(), newEdge);
-
-                // xmlReader->skipCurrentElement();
             }
         }     
     }
