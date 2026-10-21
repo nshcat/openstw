@@ -19,6 +19,46 @@ namespace Openstw::Topology
     {
     }
 
+    std::optional<Path> Topology::findPath(Node* from, Node* to) const
+    {
+    }
+
+    std::optional<Topology::VertexDescriptor> Topology::lookupNode(Node* node) const
+    {
+        if (!node)
+        {
+            throw ArgumentError("Nullptr passed as node");
+        }
+
+        // The node might not be part of the graph.
+        const auto iter = this->m_nodes.find(node->identifier());
+
+        if (iter == this->m_nodes.end())
+        {
+            return std::nullopt;
+        }
+
+        return std::make_optional<Topology::VertexDescriptor>(iter->second);
+    }
+
+    std::optional<Topology::EdgeDescriptor> Topology::lookupEdge(Edge* edge) const
+    {
+        if (!edge)
+        {
+            throw ArgumentError("Nullptr passed as edge");
+        }
+
+        // The edge might not be part of the graph.
+        const auto iter = this->m_edges.find(edge->identifier());
+
+        if (iter == this->m_edges.end())
+        {
+            return std::nullopt;
+        }
+
+        return std::make_optional<Topology::EdgeDescriptor>(iter->second);
+    }
+
     Topology* Topology::readFromFile(const QString& filePath, QObject* parent)
     {
         auto* topology = new Topology(parent);
@@ -139,13 +179,14 @@ namespace Openstw::Topology
             }
 
             // Have we actually constructed a new node?
-            // If so, add it to our collections.
+            // If so, add it to our collections, and to the graph.
             if (newNode != nullptr)
             {
                 this->m_elements.insert(newNode->identifier(), newNode);
-                this->m_nodes.insert(newNode->identifier(), newNode);
 
-                // XXX Add node to graph as vertex
+                const auto nodeDescriptor = boost::add_vertex({newNode}, this->m_topologyGraph);
+
+                this->m_nodes.insert(newNode->identifier(), qMakePair(newNode, nodeDescriptor));
             }
 
             xmlReader->skipCurrentElement();
@@ -231,14 +272,36 @@ namespace Openstw::Topology
                 // Every edge element contains sub elements describing
                 // which elements and ports it connects.
 
-                // XXX Parse From and To tags, validate referenced nodes and ports
-                // exist, and add to graph.
+                // Figure out which ports on which nodes the edge connects.
 
                 this->m_edges.insert(newEdge->identifier(), newEdge);
 
                 // XXX this needs to go after child element parsing has been implemented
                 xmlReader->skipCurrentElement();
             }
+        }     
+    }
+
+    QPair<QString, Port> Topology::parseConnection(QXmlStreamReader* xmlReader)
+    {
+        // Read the port attribute.
+        const auto portName = xmlReader->attributes().value("Port");
+
+        if (portName.isNull())
+        {
+            throw RuntimeError("Topology XML: Line {}: Edge link element has no port attribute",
+                               xmlReader->lineNumber());
         }
+
+        const auto port = parsePort(portName);
+
+        if (!port.has_value())
+        {
+            throw RuntimeError("Topology XML: Line {}: Edge link element has invalid port attribute value '{}'",
+                               xmlReader->lineNumber(), portName);
+        }
+
+        // The referenced node is specified by its identifier, given as the element text.
+        return qMakePair(xmlReader->readElementText(), port.value());
     }
 }

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <QStringView>
 #include <cstdint>
+#include <optional>
 
 namespace Openstw
 {
@@ -23,5 +25,11 @@ namespace Openstw
             Gerade,
             Abzweig
         };
+
+        // Parse port enum value from string representation.
+        std::optional<Port> parsePort(QStringView portName);
+
+        // Convert port enum value to string representation.
+        QString portToString(Port port);
     }
 }

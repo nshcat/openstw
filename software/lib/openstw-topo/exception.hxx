@@ -39,5 +39,17 @@ namespace Openstw
             {
             }
         };
+
+        // Wrapper around std::invalid_argument that allows easy
+        // use of std::format to set the exception message.
+        class ArgumentError : public std::invalid_argument
+        {
+        public:
+            template <class... Args>
+            ArgumentError(std::format_string<Args...> what_arg_fmt, Args&&... args)
+                : invalid_argument{std::format(what_arg_fmt, std::forward<Args>(args)...)}
+            {
+            }
+        };
     }
 }

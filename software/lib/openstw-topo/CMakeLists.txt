@@ -31,6 +31,8 @@ add_library(openstw-topo STATIC
   edges/track.hxx edges/track.cxx
   exception.hxx
   nodes/routedestination.hxx nodes/routedestination.cxx
+  path.hxx path.cxx
+  port.cxx
 )
 
 set(BOOST_MIN_VERSION 1.79.0)
