@@ -9,7 +9,7 @@ namespace Openstw
         {
         }
 
-        QSpan<const PathSegment> Path::elements() const
+        QSpan<const PathSegment> Path::segments() const
         {
             return {this->m_sequence.cbegin(), this->m_sequence.cend()};
         }

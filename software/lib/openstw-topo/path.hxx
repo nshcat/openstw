@@ -21,7 +21,7 @@ namespace Openstw
 
         public:
             // Retrieve the sequence of segments making up this path.
-            QSpan<const PathSegment> elements() const;
+            QSpan<const PathSegment> segments() const;
 
             // Length of the path, in number of elements.
             qsizetype length() const;
