@@ -330,7 +330,7 @@ namespace Openstw::Topology
                 // Every edge element contains sub elements describing
                 // which elements and ports it connects.
                 // Figure out which ports on which nodes the edge connects.
-                std::optional<QPair<QString, Port>> fromLink, toLink;
+                std::optional<EdgeLink> fromLink, toLink;
 
                 // Try to find the "From" and "To" elements
                 while (xmlReader->readNextStartElement())
@@ -340,7 +340,7 @@ namespace Openstw::Topology
                     if (elementName == "From" || elementName == "To")
                     {
                         // Found link element, parse it
-                        const auto link = this->parseConnection(xmlReader);
+                        const auto link = this->parseAndVerifyLink(xmlReader);
 
                         if (elementName == "From")
                         {
@@ -366,55 +366,11 @@ namespace Openstw::Topology
                                        xmlReader->lineNumber(), edgeName);
                 }
 
-                // Retrieve node descriptors in order to insert edge into graph
-                const auto fromNode = this->findNode(fromLink->first);
-                if (!fromNode.has_value())
-                {
-                    throw RuntimeError("Topology XML: Line {}: From-link for edge '{}' refers to nonexistant Node '{}'",
-                                       xmlReader->lineNumber(), edgeName, fromLink.value().first);
-                }
-
-                const auto fromNodeDesc = this->lookupNode(*fromNode);
-                if (!fromNodeDesc.has_value())
-                {
-                    throw RuntimeError("Topology XML: Line {}: From-link for edge '{}' refers to nonexistant Node '{}'",
-                                       xmlReader->lineNumber(), edgeName, fromLink.value().first);
-                }
-
-                const auto toNode = this->findNode(toLink->first);
-                if (!toNode.has_value())
-                {
-                    throw RuntimeError("Topology XML: Line {}: To-link for edge '{}' refers to nonexistant Node '{}'",
-                                       xmlReader->lineNumber(), edgeName, toLink.value().first);
-                }
-
-                const auto toNodeDesc = this->lookupNode(*toNode);
-                if (!toNodeDesc.has_value())
-                {
-                    throw RuntimeError("Topology XML: Line {}: To-link for edge '{}' refers to nonexistant Node '{}'",
-                                       xmlReader->lineNumber(), edgeName, toLink.value().first);
-                }
-
-                // Verify that the nodes have the ports the links refer to
-                if (!(*fromNode)->hasPort(fromLink->second))
-                {
-                    throw RuntimeError(
-                        "Topology XML: Line {}: Edge '{}' refers to nonexisting source port '{}' on node '{}'",
-                        xmlReader->lineNumber(), edgeName, portToString(fromLink->second), (*fromNode)->identifier());
-                }
-
-                if (!(*toNode)->hasPort(toLink->second))
-                {
-                    throw RuntimeError(
-                        "Topology XML: Line {}: Edge '{}' refers to nonexisting destination port '{}' on node '{}'",
-                        xmlReader->lineNumber(), edgeName, portToString(toLink->second), (*toNode)->identifier());
-                }
-
                 // Actually insert edge into graph
                 const auto edgeDescriptor =
-                    boost::add_edge(*fromNodeDesc, *toNodeDesc,
-                                    EdgeProperties{newEdge, newEdge->identifier(), newEdge->weight(), fromLink->second,
-                                                   toLink->second},
+                    boost::add_edge(fromLink->TargetNodeDescriptor, toLink->TargetNodeDescriptor,
+                                    EdgeProperties{newEdge, newEdge->identifier(), newEdge->weight(),
+                                                   fromLink->NodePort, toLink->NodePort},
                                     this->m_topologyGraph)
                         .first;
 
@@ -424,8 +380,11 @@ namespace Openstw::Topology
         }     
     }
 
-    QPair<QString, Port> Topology::parseConnection(QXmlStreamReader* xmlReader)
+    Topology::EdgeLink Topology::parseAndVerifyLink(QXmlStreamReader* xmlReader)
     {
+        // Create edge link object
+        EdgeLink link;
+
         // Read the port attribute.
         const auto portName = xmlReader->attributes().value("Port");
 
@@ -443,7 +402,45 @@ namespace Openstw::Topology
                                xmlReader->lineNumber(), portName);
         }
 
+        link.NodePort = port.value();
+
         // The referenced node is specified by its identifier, given as the element text.
-        return qMakePair(xmlReader->readElementText(), port.value());
+        const auto nodeIdentifier = xmlReader->readElementText();
+
+        // Try to find the node object pointer
+        const auto node = this->findNode(nodeIdentifier);
+
+        if (!node.has_value())
+        {
+            throw RuntimeError("Topology XML: Line {}: Link refers to nonexistant Node '{}'", xmlReader->lineNumber(),
+                               nodeIdentifier);
+        }
+
+        link.TargetNode = node.value();
+
+        // Look up its vertex descriptor
+        const auto nodeDescriptor = this->lookupNode(link.TargetNode);
+
+        if (!nodeDescriptor.has_value())
+        {
+            throw RuntimeError(
+                "Topology XML: Line {}: Link refers to Node '{}' which is not part of the topology graph",
+                xmlReader->lineNumber(), nodeIdentifier);
+        }
+
+        link.TargetNodeDescriptor = nodeDescriptor.value();
+
+        // Now, perform validation.
+        // First, check if the node actually has a matching port.
+        if (!link.TargetNode->hasPort(link.NodePort))
+        {
+            throw RuntimeError("Topology XML: Line {}: Edge refers to nonexisting source port '{}' on node '{}'",
+                               xmlReader->lineNumber(), portToString(link.NodePort), link.TargetNode->identifier());
+        }
+
+        // Then, check that the port of the node is not already used.
+        // XXX use boost::out_edges
+
+        return link;
     }
 }

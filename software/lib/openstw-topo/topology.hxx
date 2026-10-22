@@ -58,6 +58,21 @@ namespace Openstw::Topology
         using VertexDescriptor = boost::graph_traits<GraphType>::vertex_descriptor;
         using EdgeDescriptor = boost::graph_traits<GraphType>::edge_descriptor;
 
+    protected: // Internal helper structures
+        // Object describing a link between an edge and a port on a node
+        struct EdgeLink
+        {
+            // Vertex descriptor for the node that is referred
+            // to by this link
+            VertexDescriptor TargetNodeDescriptor;
+
+            // Node this link refers to
+            Node* TargetNode;
+
+            // Which port of the target node this link refers to
+            Port NodePort;
+        };
+
     protected:
         Topology(QObject* parent);
 
@@ -105,7 +120,7 @@ namespace Openstw::Topology
         // Parse a "From" or "To" connection element within an Edge element.
         // This requires that the tag was already entered - the method
         // does not care whether this is a "From" or "To" element!
-        QPair<QString, Port> parseConnection(QXmlStreamReader* xmlReader);
+        EdgeLink parseAndVerifyLink(QXmlStreamReader* xmlReader);
 
     protected: // == Attributes
         // Collection of all topology elements associated with the railway network.
