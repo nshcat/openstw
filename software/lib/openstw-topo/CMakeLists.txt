@@ -34,6 +34,7 @@ add_library(openstw-topo STATIC
   path.hxx path.cxx
   port.cxx
   utility.hxx
+  pathsegment.hxx pathsegment.cxx
 )
 
 set(BOOST_MIN_VERSION 1.79.0)

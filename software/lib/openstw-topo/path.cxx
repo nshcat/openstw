@@ -9,7 +9,7 @@ namespace Openstw
         {
         }
 
-        QSpan<Element* const> Path::elements() const
+        QSpan<const PathSegment> Path::elements() const
         {
             return {this->m_sequence.cbegin(), this->m_sequence.cend()};
         }
@@ -19,31 +19,23 @@ namespace Openstw
             return this->m_sequence.length();
         }
 
-        void Path::addElement(Element* element)
+        void Path::addNode(Node* node)
         {
-            if (!element)
+            if (!node)
             {
                 throw RuntimeError("Nullptr passed");
             }
 
-            if (this->length() == 0)
-            {
-                // First element has to be a node.
-                if (!element->isNode())
-                {
-                    throw RuntimeError("First element in path needs to be a node");
-                }
-            }
-            else
+            if (this->length() > 0)
             {
                 // Make sure elements are of alternating type.
-                if (this->m_sequence.last()->category() == element->category())
+                if (this->m_sequence.last().isNode())
                 {
                     throw RuntimeError("Elements within path need to be of alternating category");
                 }
             }
 
-            this->m_sequence.append(element);
+            this->m_sequence.append(PathSegment{node});
         }
 
         Node* Path::start() const
@@ -53,7 +45,7 @@ namespace Openstw
                 throw RuntimeError("Path is empty");
             }
 
-            return dynamic_cast<Node*>(this->m_sequence.first());
+            return this->m_sequence.first().node();
         }
 
         Node* Path::end() const
@@ -63,17 +55,17 @@ namespace Openstw
                 throw RuntimeError("Path is empty");
             }
 
-            auto* lastElement = this->m_sequence.last();
+            const auto& lastElement = this->m_sequence.last();
 
             // Verify that its actually a node. It might not be if we are
             // not done with constructing the path (even though it should not be
             // used in that case, but one never knows..)
-            if (!lastElement->isNode())
+            if (!lastElement.isNode())
             {
                 throw RuntimeError("Last path element is not a node, path is probably not completely constructed yet");
             }
 
-            return dynamic_cast<Node*>(lastElement);
+            return lastElement.node();
         }
     }
 }

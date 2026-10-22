@@ -2,6 +2,7 @@
 
 #include "element.hxx"
 #include "node.hxx"
+#include "pathsegment.hxx"
 #include <QObject>
 #include <QVector>
 
@@ -19,15 +20,21 @@ namespace Openstw
             Path();
 
         public:
-            // Retrieve the sequence of elements making up this path.
-            QSpan<Element* const> elements() const;
+            // Retrieve the sequence of segments making up this path.
+            QSpan<const PathSegment> elements() const;
 
             // Length of the path, in number of elements.
             qsizetype length() const;
 
-            // Add an element to the end of the sequence, extending it.
+            // Add a path segment containing a node the end of the path, extending it.
             // Note that a node always has to follow an edge, and vice versa.
-            void addElement(Element* element);
+            void addNode(Node* node);
+
+            // Add a path segment containing an edge the end of the path, extending it,
+            // connected to port "from" on the previous node, and to port "to" on the
+            // following node.
+            // Note that a node always has to follow an edge, and vice versa.
+            void addEdge(Edge* edge, Port from, Port to);
 
             // Retrieve node that is the start of the path.
             Node* start() const;
@@ -39,7 +46,7 @@ namespace Openstw
             // We are using a vector here, since that allows us to
             // return a QSpan to the user (continuous memory).
             // (Even if that means that appending is costly)
-            QVector<Element*> m_sequence{};
+            QVector<PathSegment> m_sequence{};
         };
     }
 }
