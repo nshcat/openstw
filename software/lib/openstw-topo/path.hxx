@@ -28,19 +28,26 @@ namespace Openstw
 
             // Add a path segment containing a node the end of the path, extending it.
             // Note that a node always has to follow an edge, and vice versa.
-            void addNode(Node* node);
+            void addNode(const Node* node, Port entryPort, Port exitPort);
 
             // Add a path segment containing an edge the end of the path, extending it,
             // connected to port "from" on the previous node, and to port "to" on the
             // following node.
             // Note that a node always has to follow an edge, and vice versa.
-            void addEdge(Edge* edge, Port from, Port to);
+            void addEdge(const Edge* edge, Port from, Port to);
 
             // Retrieve node that is the start of the path.
-            Node* start() const;
+            const Node* start() const;
 
             // Retrieve node that is the end of the path.
-            Node* end() const;
+            const Node* end() const;
+
+            // Reverse the order of elements within the path.
+            // This is used during path finding.
+            void reverse();
+
+            // Dump path as a graph, in graphviz dot format.
+            QString dumpGraph() const;
 
         protected:
             // We are using a vector here, since that allows us to

@@ -12,6 +12,9 @@ namespace Openstw
         // Descriptors for the various ports a topology graph node can have.
         enum class Port : std::uint32_t
         {
+            // Internal port type, used for path finding etc.
+            None,
+
             // For nodes with a single port, such as bumpers and boundary
             // nodes
             Center,

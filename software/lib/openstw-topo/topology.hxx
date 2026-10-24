@@ -73,6 +73,52 @@ namespace Openstw::Topology
             Port NodePort;
         };
 
+        // State of graph path finding is unique if we attach the port from which we have entered to
+        // the vertex we are in.
+        struct PathFindingStateKey : public std::pair<VertexDescriptor, Port>
+        {
+            using BaseType = std::pair<VertexDescriptor, Port>;
+
+            PathFindingStateKey();
+
+            PathFindingStateKey(const VertexDescriptor& vertex, Port entryPort);
+
+            // The vertex we are currently at.
+            const VertexDescriptor& vertex() const;
+
+            // The port from which we have entered the vertex.
+            Port entryPort() const;
+        };
+
+        // State of path finding algorithm within topology graph
+        struct PathFindingState
+        {
+            // Uniquely identifies the path finding state - since our graph
+            // is augmented by the port system, we have to remember on which
+            // port we entered the current vertex.
+            PathFindingStateKey key;
+
+            // Accumulated distance so far
+            double distance;
+
+            bool operator>(const PathFindingState& other) const;
+        };
+
+        // Information about a states predecessor
+        struct PathFindingPredecessorInfo
+        {
+            // The state the algorithm was in before arriving at the state
+            // that has this predecessor info associated with it
+            PathFindingStateKey previousState;
+
+            // Edge the algorithm has taken to get from the predecessor state to
+            // next state
+            EdgeDescriptor takenEdge;
+
+            // Port used to leave vertex associated with previous state
+            Port exitPort;
+        };
+
     protected:
         Topology(QObject* parent);
 
@@ -88,16 +134,17 @@ namespace Openstw::Topology
         // Retrieve node within topology network by its identifier.
         std::optional<Node*> findNode(const QString& identifier) const;
 
-        // Find a path from given node to given other node.
-        std::optional<Path> findPath(Node* from, Node* to) const;
+        // Find a path from given node to given other node, with given ports as exit
+        // and entry.
+        std::optional<Path> findPath(const Node* from, const Node* to, Port fromExitPort, Port toEntryPort) const;
 
     public: // == Debug methods
-        QString dumpAsGraphVizDot();
+        QString dumpGraph();
 
     protected: // == Interaction with topology graph
         // Retrieve graph vertex descriptor for given node, if the node
         // is part of the topology graph.
-        std::optional<VertexDescriptor> lookupNode(Node* node) const;
+        std::optional<VertexDescriptor> lookupNode(const Node* node) const;
 
         // Retrieve graph vertex descriptor for given node identifier, if the node
         // is part of the topology graph.
@@ -105,7 +152,10 @@ namespace Openstw::Topology
 
         // Retrieve graph edge descriptor for given edge, if the edge
         // is part of the topology graph.
-        std::optional<EdgeDescriptor> lookupEdge(Edge* edge) const;
+        std::optional<EdgeDescriptor> lookupEdge(const Edge* edge) const;
+
+        // Retrieve the port that the given edge is connected to given vertex on.
+        std::optional<Port> lookupLinkPort(EdgeDescriptor edge, VertexDescriptor vertex) const;
 
     protected: // == Deserializing
         // Populate topology network contents from given XML reader.

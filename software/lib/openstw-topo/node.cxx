@@ -32,5 +32,20 @@ namespace Openstw
         {
             return this->m_type;
         }
+
+        bool Node::canTraverse(Port entry, Port exit) const
+        {
+            // First, check whether the node even has the given ports..
+            if (!this->hasPort(entry) || !this->hasPort(exit))
+            {
+                return false;
+            }
+
+            // Retrieve outgoing ports for given entry port
+            const auto outgoingPorts = this->outgoingPortsFor(entry);
+
+            // Check whether the requested exit port is among those.
+            return outgoingPorts.contains(exit);
+        }
     }
 }

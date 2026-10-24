@@ -26,6 +26,10 @@ namespace Openstw
             NodeType type() const;
             QVector<Port> ports() const;
 
+            // Check whether the node can be left from given exit port, after it was
+            // entered via given entry port.
+            bool canTraverse(Port entry, Port exit) const;
+
         public:
             // Determine which outgoing ports can be reached from given
             // incoming port.

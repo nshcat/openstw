@@ -32,6 +32,10 @@ namespace Openstw
             {
                 return Port::Gerade;
             }
+            else if (portName == "None")
+            {
+                return Port::None;
+            }
 
             return std::nullopt;
         }
@@ -52,6 +56,8 @@ namespace Openstw
                 return "Gerade";
             case Port::Abzweig:
                 return "Abzweig";
+            case Port::None:
+                return "None";
             default:
                 return "<unknown>";
             }
