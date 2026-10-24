@@ -10,6 +10,8 @@ namespace Openstw
         // that can be the beginning and end of a route.
         class Signal : public FrontBackNode
         {
+            Q_OBJECT
+
         public:
             explicit Signal(const QString& identifier, QObject* parent = nullptr);
 

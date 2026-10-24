@@ -8,6 +8,8 @@ namespace Openstw
     {
         class SimpleSwitch : public Node
         {
+            Q_OBJECT
+
         public:
             explicit SimpleSwitch(const QString& identifier, QObject* parent = nullptr);
 

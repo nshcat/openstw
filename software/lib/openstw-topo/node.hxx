@@ -18,6 +18,8 @@ namespace Openstw
         // invalid edges can exist within the graph.
         class Node : public Element
         {
+            Q_OBJECT
+
         public:
             explicit Node(NodeType type, QSpan<const Port> ports, const QString& identifier, QObject* parent = nullptr);
 
@@ -30,6 +32,9 @@ namespace Openstw
             // entered via given entry port.
             bool canTraverse(Port entry, Port exit) const;
 
+            // Traverse this node, notifying listeners about it.
+            void traverse(Port entry, Port exit) const;
+
         public:
             // Determine which outgoing ports can be reached from given
             // incoming port.
@@ -39,6 +44,10 @@ namespace Openstw
             // from the Gerade or Abzweig ports, only the Wurzel port
             // is reachable.
             virtual QVector<Port> outgoingPortsFor(Port incomingPort) const = 0;
+
+        signals:
+            // Emitted whenever an entity traversed the node.
+            void traversed(Openstw::Topology::Port entryPort, Openstw::Topology::Port exitPort) const;
 
         protected:
             NodeType m_type;

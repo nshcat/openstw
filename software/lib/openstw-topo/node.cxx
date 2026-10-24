@@ -47,5 +47,11 @@ namespace Openstw
             // Check whether the requested exit port is among those.
             return outgoingPorts.contains(exit);
         }
+
+        void Node::traverse(Port entry, Port exit) const
+        {
+            // Notify listeners that this node has been traversed.
+            emit this->traversed(entry, exit);
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace Openstw
         // Class representing a track edge within the topology graph.
         class Track : public Edge
         {
+            Q_OBJECT
+
         public:
             Track(const QString& identifier, double length, double maxSpeed, QObject* parent = nullptr);
 

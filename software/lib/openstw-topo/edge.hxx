@@ -10,6 +10,8 @@ namespace Openstw
         // Base class for edges within the topology graph.
         class Edge : public Element
         {
+            Q_OBJECT
+
         public:
             Edge(EdgeType type, const QString& identifier, QObject* parent = nullptr);
 

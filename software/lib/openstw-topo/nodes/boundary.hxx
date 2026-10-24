@@ -8,6 +8,8 @@ namespace Openstw
     {
         class Boundary : public Node
         {
+            Q_OBJECT
+
         public:
             explicit Boundary(const QString& identifier, QObject* parent = nullptr);
 

@@ -8,6 +8,8 @@ namespace Openstw
     {
         class Bumper : public Node
         {
+            Q_OBJECT
+
         public:
             explicit Bumper(const QString& identifier, QObject* parent = nullptr);
 

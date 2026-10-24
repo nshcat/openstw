@@ -12,6 +12,8 @@ namespace Openstw
         // 'expected' way - meaning both from front to back and back to front.
         class FrontBackNode : public Node
         {
+            Q_OBJECT
+
         public:
             explicit FrontBackNode(NodeType type, const QString& identifier, QObject* parent = nullptr);
 

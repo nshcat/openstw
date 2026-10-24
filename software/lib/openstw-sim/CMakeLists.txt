@@ -57,3 +57,4 @@ target_compile_definitions(openstw-sim PRIVATE OPENSTW_SIM_LIBRARY)
 
 target_link_libraries(openstw-sim PUBLIC openstw-topo)
 target_link_libraries(openstw-sim PUBLIC openstw-interlocking)
+target_link_libraries(openstw-sim PUBLIC openstw-spdr)
