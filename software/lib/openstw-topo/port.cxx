@@ -82,7 +82,7 @@ namespace Openstw
 
             if (!maybePort.has_value())
             {
-                throw RuntimeError("Encountered invalid port name '{}'", portName);
+                throw Core::RuntimeError("Encountered invalid port name '{}'", portName);
             }
 
             port = *maybePort;

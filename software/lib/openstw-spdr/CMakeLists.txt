@@ -14,6 +14,16 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 add_library(openstw-spdr STATIC
   stelltisch.cxx
   stelltisch.hxx
+  tile.hxx tile.cxx
+  elementstate.hxx elementstate.cxx
+  blinkmode.hxx
+  elementcolor.hxx
+  displayelement.hxx displayelement.cxx
+  lampposition.hxx lampposition.cxx
+  featurelayer.hxx featurelayer.cxx
+  featuretype.hxx
+  featureorientation.hxx
+  featuretype.cxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
@@ -21,3 +31,4 @@ target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 target_compile_definitions(openstw-spdr PRIVATE OPENSTW_SPDR_LIBRARY)
 target_link_libraries(openstw-spdr PUBLIC openstw-topo)
 target_link_libraries(openstw-spdr PUBLIC openstw-interlocking)
+target_link_libraries(openstw-spdr PUBLIC openstw-core)

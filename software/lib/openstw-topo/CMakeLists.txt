@@ -29,7 +29,6 @@ add_library(openstw-topo STATIC
   edge.hxx edge.cxx
   edgetype.hxx
   edges/track.hxx edges/track.cxx
-  exception.hxx
   nodes/routedestination.hxx nodes/routedestination.cxx
   path.hxx path.cxx
   port.cxx
@@ -49,6 +48,8 @@ target_link_libraries(openstw-topo PUBLIC
 target_include_directories(openstw-topo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(openstw-topo PUBLIC pugixml-static)
+
+target_link_libraries(openstw-topo PUBLIC openstw-core)
 
 target_link_libraries(openstw-topo PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 

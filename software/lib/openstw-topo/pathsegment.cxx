@@ -35,7 +35,7 @@ namespace Openstw
         {
             if (!this->isNode())
             {
-                throw RuntimeError("Path segment does not represent a node");
+                throw Core::RuntimeError("Path segment does not represent a node");
             }
 
             return dynamic_cast<const Node*>(this->m_segmentElement);
@@ -45,7 +45,7 @@ namespace Openstw
         {
             if (!this->isNode())
             {
-                throw RuntimeError("Path segment does not represent a node");
+                throw Core::RuntimeError("Path segment does not represent a node");
             }
 
             return this->m_fromPort;
@@ -55,7 +55,7 @@ namespace Openstw
         {
             if (!this->isNode())
             {
-                throw RuntimeError("Path segment does not represent a node");
+                throw Core::RuntimeError("Path segment does not represent a node");
             }
 
             return this->m_toPort;
@@ -70,7 +70,7 @@ namespace Openstw
         {
             if (!this->isEdge())
             {
-                throw RuntimeError("Path segment does not represent an edge");
+                throw Core::RuntimeError("Path segment does not represent an edge");
             }
 
             return dynamic_cast<const Edge*>(this->m_segmentElement);
@@ -80,7 +80,7 @@ namespace Openstw
         {
             if (!this->isEdge())
             {
-                throw RuntimeError("Path segment does not contain a from port because its not an edge");
+                throw Core::RuntimeError("Path segment does not contain a from port because its not an edge");
             }
 
             return this->m_fromPort;
@@ -90,7 +90,7 @@ namespace Openstw
         {
             if (!this->isEdge())
             {
-                throw RuntimeError("Path segment does not contain a to port because its not an edge");
+                throw Core::RuntimeError("Path segment does not contain a to port because its not an edge");
             }
 
             return this->m_toPort;

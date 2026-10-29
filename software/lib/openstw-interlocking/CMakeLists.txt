@@ -23,3 +23,4 @@ target_link_libraries(openstw-interlocking PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 target_compile_definitions(openstw-interlocking PRIVATE OPENSTW_INTERLOCKING_LIBRARY)
 
 target_link_libraries(openstw-interlocking PUBLIC openstw-topo)
+target_link_libraries(openstw-interlocking PUBLIC openstw-core)

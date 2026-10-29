@@ -26,7 +26,7 @@ namespace Openstw
         {
             if (!node)
             {
-                throw RuntimeError("Nullptr passed");
+                throw Core::RuntimeError("Nullptr passed");
             }
 
             if (this->length() > 0)
@@ -34,7 +34,7 @@ namespace Openstw
                 // Make sure elements are of alternating type.
                 if (this->m_sequence.last().isNode())
                 {
-                    throw RuntimeError("Elements within path need to be of alternating category");
+                    throw Core::RuntimeError("Elements within path need to be of alternating category");
                 }
             }
 
@@ -45,7 +45,7 @@ namespace Openstw
         {
             if (!edge)
             {
-                throw RuntimeError("Nullptr passed");
+                throw Core::RuntimeError("Nullptr passed");
             }
 
             if (this->length() > 0)
@@ -53,14 +53,14 @@ namespace Openstw
                 // Make sure elements are of alternating type.
                 if (this->m_sequence.last().isEdge())
                 {
-                    throw RuntimeError("Elements within path need to be of alternating category");
+                    throw Core::RuntimeError("Elements within path need to be of alternating category");
                 }
             }
             else
             {
                 // One cant add an edge to an empty path, since a path needs to
                 // to both start and end with a segment representing a node.
-                throw RuntimeError("Cant add edge segment to empty path");
+                throw Core::RuntimeError("Cant add edge segment to empty path");
             }
 
             this->m_sequence.append(PathSegment{edge, fromPort, toPort});
@@ -70,7 +70,7 @@ namespace Openstw
         {
             if (this->length() == 0)
             {
-                throw RuntimeError("Path is empty");
+                throw Core::RuntimeError("Path is empty");
             }
 
             return this->m_sequence.first().node();
@@ -80,7 +80,7 @@ namespace Openstw
         {
             if (this->length() == 0)
             {
-                throw RuntimeError("Path is empty");
+                throw Core::RuntimeError("Path is empty");
             }
 
             const auto& lastElement = this->m_sequence.last();
@@ -90,7 +90,8 @@ namespace Openstw
             // used in that case, but one never knows..)
             if (!lastElement.isNode())
             {
-                throw RuntimeError("Last path element is not a node, path is probably not completely constructed yet");
+                throw Core::RuntimeError(
+                    "Last path element is not a node, path is probably not completely constructed yet");
             }
 
             return lastElement.node();

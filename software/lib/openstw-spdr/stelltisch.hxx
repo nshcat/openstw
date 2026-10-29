@@ -1,6 +1,8 @@
 #pragma once
 
+#include "tile.hxx"
 #include <QObject>
+#include <QVector>
 #include <interlocking.hxx>
 #include <topology.hxx>
 
@@ -19,5 +21,6 @@ namespace Openstw::SpDr
 
     protected:
         Interlocking::Interlocking* m_interlocking;
+        QVector<Tile*> m_tiles{};
     };
 }
