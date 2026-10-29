@@ -1,6 +1,7 @@
 #pragma once
 
 #include "featurelayer.hxx"
+#include "tilelocation.hxx"
 #include <QObject>
 #include <QSpan>
 #include <QVector>
@@ -27,15 +28,21 @@ namespace Openstw::SpDr
         Q_OBJECT
 
     public:
-        explicit Tile(QObject* parent = nullptr);
+        explicit Tile(const TileLocation& location, QObject* parent = nullptr);
 
     public:
+        // Location of this tile on the Stelltisch.
+        const TileLocation& location() const;
+
         // The feature layers that make up this tile.
         QSpan<FeatureLayer const* const> layers() const;
 
     signals:
 
     protected:
+        // Location of the tile on the Stelltisch.
+        TileLocation m_location;
+
         // Collection of feature layers that make up this tile.
         QVector<FeatureLayer*> m_featureLayers{};
     };

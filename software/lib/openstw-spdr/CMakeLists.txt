@@ -24,9 +24,13 @@ add_library(openstw-spdr STATIC
   featuretype.hxx
   featureorientation.hxx
   featuretype.cxx
+  tilelocation.hxx tilelocation.cxx
+  features/trackhorizontalfeature.hxx features/trackhorizontalfeature.cxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+
+target_include_directories(openstw-spdr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_definitions(openstw-spdr PRIVATE OPENSTW_SPDR_LIBRARY)
 target_link_libraries(openstw-spdr PUBLIC openstw-topo)
