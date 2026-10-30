@@ -8,9 +8,9 @@
 -->
 <Stellbereich>
     <!-- General information about the Stellbereich. -->
-    <Info>
+    <Configuration>
         <Name>Teststadt</Name>
-    </Info>
+    </Configuration>
 
     <!-- Topology graph, as a base for everything. -->
     <Topology>
@@ -78,12 +78,17 @@
     </Topology>
 
     <!-- Elements of the interlocking system, based on the topology graph. -->
-    <Interlocking>
+    <Interlocking>  
     </Interlocking>
 
     <!-- Description of the SpDrS60 Stelltisch controlling the Stellbereich. -->
-    <Stelltisch>
-    </Stelltisch>
+    <SpDr>
+        <Configuration>
+        </Configuration>
+
+        <Stelltisch>
+        </Stelltisch>
+    </SpDr>
 
     <!--
         Configuration of the CanLink physical Stelltisch driver. Contains mapping of
