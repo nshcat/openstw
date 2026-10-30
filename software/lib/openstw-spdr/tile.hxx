@@ -1,10 +1,13 @@
 #pragma once
 
+#include "button.hxx"
+#include "buttonstate.hxx"
 #include "featurelayer.hxx"
 #include "tilelocation.hxx"
 #include <QObject>
 #include <QSpan>
 #include <QVector>
+#include <optional>
 
 namespace Openstw::SpDr
 {
@@ -37,7 +40,17 @@ namespace Openstw::SpDr
         // The feature layers that make up this tile.
         QSpan<FeatureLayer const* const> layers() const;
 
+        // Set the state for a SpDr button on this tile, via its identifier.
+        // This method is meant to be called from whatever Ui is displaying
+        // the Stelltisch and its tiles.
+        void setButtonState(QStringView identifier, ButtonState newState);
+
     signals:
+        // Emitted whenever the state of a button on this tile changes.
+        void buttonStateChanged(const Openstw::SpDr::Button* button, Openstw::SpDr::ButtonState newState);
+
+        // Emitted whenever the state of an aperture on this tile changes.
+        void apertureStateChanged(const Openstw::SpDr::Aperture* aperture, Openstw::SpDr::ApertureState newState);
 
     protected:
         // Location of the tile on the Stelltisch.

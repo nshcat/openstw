@@ -15,6 +15,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 add_executable(openstw-topotest
   main.cxx
   data/topology.xml
+  data/teststadt.xml
 )
 target_link_libraries(openstw-topotest PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 
@@ -27,7 +28,25 @@ install(TARGETS openstw-topotest
 )
 
 add_custom_command(
-        TARGET openstw-topotest POST_BUILD
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/topology.xml
         COMMAND ${CMAKE_COMMAND} -E copy
                 ${CMAKE_CURRENT_SOURCE_DIR}/data/topology.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/topology.xml)
+                ${CMAKE_CURRENT_BINARY_DIR}/topology.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/data/topology.xml
+)
+
+add_custom_target(copy_topo_xml DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/topology.xml)
+
+add_dependencies(openstw-topotest copy_topo_xml)
+
+add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/teststadt.xml
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/data/teststadt.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/teststadt.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/data/teststadt.xml
+)
+
+add_custom_target(copy_teststadt_xml DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/teststadt.xml)
+
+add_dependencies(openstw-topotest copy_teststadt_xml)

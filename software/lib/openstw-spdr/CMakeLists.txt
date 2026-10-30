@@ -15,10 +15,10 @@ add_library(openstw-spdr STATIC
   stelltisch.cxx
   stelltisch.hxx
   tile.hxx tile.cxx
-  elementstate.hxx elementstate.cxx
+  aperturestate.hxx aperturestate.cxx
   blinkmode.hxx
-  elementcolor.hxx
-  displayelement.hxx displayelement.cxx
+  aperturecolor.hxx
+  aperture.hxx aperture.cxx
   lampposition.hxx lampposition.cxx
   featurelayer.hxx featurelayer.cxx
   featuretype.hxx
@@ -26,6 +26,9 @@ add_library(openstw-spdr STATIC
   featuretype.cxx
   tilelocation.hxx tilelocation.cxx
   features/trackhorizontalfeature.hxx features/trackhorizontalfeature.cxx
+  buttonstate.hxx
+  button.hxx button.cxx
+  buttonrole.hxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)

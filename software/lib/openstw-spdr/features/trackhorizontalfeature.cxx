@@ -14,9 +14,9 @@ namespace Openstw::SpDr
             // whose state the occupancy indicator on this feature layer
             // displays.
             // The lamp is always the center one.
-            auto* occupancyElement = new DisplayElement("center-occupancy", {{2, 1}}, this);
+            auto* occupancyElement = new Aperture("center-occupancy", this);
 
-            this->addElement(occupancyElement);
+            this->addAperture(occupancyElement);
 
             this->m_occupancyLamp = {occupancyElement};
 

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Data file for 'Test Stadt' SpDrS60 Stellwerk -->
+
+<!--
+    A Stellbereich contains a part of a broader railway network, managed
+    by one SpDrS60 Stellwerk
+-->
+<Stellbereich>
+    <!-- General information about the Stellbereich. -->
+    <Info>
+        <Name>Teststadt</Name>
+    </Info>
+
+    <!-- Topology graph, as a base for everything. -->
+    <Topology>
+        <Nodes>
+            <Node Type="Boundary" Name="Bleft"/>
+            <Node Type="Signal" Name="S1"/>
+            <Node Type="Signal" Name="S2"/>
+            <Node Type="Signal" Name="S3"/>
+            <Node Type="Signal" Name="S4"/>
+            <Node Type="Signal" Name="S5"/>
+            <Node Type="Signal" Name="S6"/>
+            <Node Type="SimpleSwitch" Name="W1"/>
+            <Node Type="SimpleSwitch" Name="W2"/>
+            <Node Type="Boundary" Name="Bright"/>
+        </Nodes>
+        <Edges>
+            <!-- Left boundary -->
+            <Edge Type="Track" Name="T1" Length="150.0" MaximumSpeed="80">
+                <From Port="Center">Bleft</From>
+                <To Port="Back">S1</To>
+            </Edge>
+            <Edge Type="Track" Name="T2" Length="50.0" MaximumSpeed="80">
+                <From Port="Front">S1</From>
+                <To Port="Wurzel">W1</To>
+            </Edge>
+
+            <!-- Top branch -->
+            <Edge Type="Track" Name="T3" Length="50.0" MaximumSpeed="80">
+                <From Port="Gerade">W1</From>
+                <To Port="Front">S2</To>
+            </Edge>
+            <Edge Type="Track" Name="T4" Length="100.0" MaximumSpeed="80">
+                <From Port="Back">S2</From>
+                <To Port="Back">S4</To>
+            </Edge>
+            <Edge Type="Track" Name="T5" Length="50.0" MaximumSpeed="80">
+                <From Port="Front">S4</From>
+                <To Port="Gerade">W2</To>
+            </Edge>
+
+            <!-- Bottom branch -->
+            <Edge Type="Track" Name="T6" Length="50.0" MaximumSpeed="80">
+                <From Port="Abzweig">W1</From>
+                <To Port="Front">S3</To>
+            </Edge>
+            <Edge Type="Track" Name="T7" Length="100.0" MaximumSpeed="80">
+                <From Port="Back">S3</From>
+                <To Port="Back">S5</To>
+            </Edge>
+            <Edge Type="Track" Name="T8" Length="50.0" MaximumSpeed="80">
+                <From Port="Front">S5</From>
+                <To Port="Abzweig">W2</To>
+            </Edge>
+
+            <!-- Right boundary -->
+            <Edge Type="Track" Name="T9" Length="150.0" MaximumSpeed="80">
+                <From Port="Wurzel">W2</From>
+                <To Port="Front">S6</To>
+            </Edge>
+            <Edge Type="Track" Name="T10" Length="50.0" MaximumSpeed="80">
+                <From Port="Back">S6</From>
+                <To Port="Center">Bright</To>
+            </Edge>
+        </Edges>
+    </Topology>
+
+    <!-- Elements of the interlocking system, based on the topology graph. -->
+    <Interlocking>
+    </Interlocking>
+
+    <!-- Description of the SpDrS60 Stelltisch controlling the Stellbereich. -->
+    <Stelltisch>
+    </Stelltisch>
+
+    <!--
+        Configuration of the CanLink physical Stelltisch driver. Contains mapping of
+        abstract tile feature aperture ids and button ids to and from hardware lamp positions
+        and button locations.
+    -->
+    <CanLink>
+        <Tiles>
+            <Tile x="0" y="2">
+                <!-- Mapping of logical apertures to actual lamps. An aperture might use multiple lamps! -->
+                <Apertures>
+                    <Aperture id="sighp0" lamps="0"/>
+                    <Aperture id="sighp1" lamps="1"/>
+                    <Aperture id="siglock" lamps="3"/>
+                </Apertures>
+
+                <!-- Mapping of logical buttons to hardware button indices. -->
+                <Buttons>
+                    <!-- Signaltaste on the tile -->
+                    <Button id="sigt" buttonidx="2"/>
+                </Buttons>
+            </Tile>
+        </Tiles>
+    </CanLink>
+</Stellbereich>

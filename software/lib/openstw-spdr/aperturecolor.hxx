@@ -3,10 +3,10 @@
 namespace Openstw::SpDr
 {
     // Enumeration describing the different colours a
-    // display element can light up in.
-    enum class ElementColor
+    // aperture can light up in.
+    enum class ApertureColor
     {
-        // Element is off.
+        // Aperture is off.
         Off = 0,
 
         Red = 1,

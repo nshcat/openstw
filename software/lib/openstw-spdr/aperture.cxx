@@ -1,43 +1,38 @@
-#include "displayelement.hxx"
+#include "aperture.hxx"
 
 namespace Openstw::SpDr
 {
-    DisplayElement::DisplayElement(const QString& identifier, const QVector<LampPosition>& lamps, QObject* parent)
-        : QObject{parent}, m_identifier{identifier}, m_lamps{lamps}
+    Aperture::Aperture(const QString& identifier, QObject* parent)
+        : QObject{parent}, m_identifier{identifier}
     {
     }
 
-    const ElementState& DisplayElement::state() const
+    const ApertureState& Aperture::state() const
     {
         return this->m_currentState;
     }
 
-    bool DisplayElement::isOff() const
+    bool Aperture::isOff() const
     {
         return this->state().isOff();
     }
 
-    ElementColor DisplayElement::color() const
+    ApertureColor Aperture::color() const
     {
         return this->state().color();
     }
 
-    BlinkMode DisplayElement::blinkMode() const
+    BlinkMode Aperture::blinkMode() const
     {
         return this->state().blinkMode();
     }
 
-    QStringView DisplayElement::identifier() const
+    QStringView Aperture::identifier() const
     {
         return {this->m_identifier};
     }
 
-    QSpan<const LampPosition> DisplayElement::lamps() const
-    {
-        return {this->m_lamps};
-    }
-
-    void DisplayElement::updateState(const ElementState& newState)
+    void Aperture::updateState(const ApertureState& newState)
     {
         // Check if the state is indeed different from our current state.
         if (newState != this->state())

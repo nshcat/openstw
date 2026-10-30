@@ -1,6 +1,6 @@
 #pragma once
 
-#include "displayelement.hxx"
+#include "aperture.hxx"
 #include "featurelayer.hxx"
 #include "featuretype.hxx"
 #include <optional>
@@ -23,6 +23,6 @@ namespace Openstw::SpDr
         bool m_hasOccupancy{false};
 
         // The display element showing the occupancy state
-        std::optional<DisplayElement*> m_occupancyLamp{};
+        std::optional<Aperture*> m_occupancyLamp{};
     };
 }

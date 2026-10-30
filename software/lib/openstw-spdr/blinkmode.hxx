@@ -2,7 +2,7 @@
 
 namespace Openstw::SpDr
 {
-    // Enumeration describing the different ways a display element
+    // Enumeration describing the different ways an aperture
     // can blink.
     enum class BlinkMode
     {
