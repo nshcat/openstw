@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node.hxx"
+#include "../node.hxx"
 #include <QList>
 
 namespace Openstw

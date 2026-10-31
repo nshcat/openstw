@@ -1,4 +1,6 @@
 #include "interlocking.hxx"
+#include "element.hxx"
+#include "elements/tracksection.hxx"
 
 namespace Openstw::Interlocking
 {

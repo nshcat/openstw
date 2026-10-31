@@ -14,6 +14,13 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 add_library(openstw-interlocking STATIC
   interlocking/interlocking.cxx
   interlocking/interlocking.hxx
+  interlocking/element.hxx interlocking/element.cxx
+  interlocking/elementtype.hxx
+  interlocking/elements/tracksection.hxx interlocking/elements/tracksection.cxx
+  interlocking/elements/axlecounterlink.hxx interlocking/elements/axlecounterlink.cxx
+  interlocking/elements/axlecounterfacing.hxx interlocking/elements/axlecounterfacing.cxx
+  interlocking/elements/axlecounteroperation.hxx
+  interlocking/logging.hxx interlocking/logging.cxx
 )
 
 # Allow the project itself to directly include headers,

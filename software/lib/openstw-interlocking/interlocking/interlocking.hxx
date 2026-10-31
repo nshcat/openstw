@@ -1,5 +1,6 @@
 #pragma once
 
+#include "elements/tracksection.hxx"
 #include <QObject>
 #include <topo/topology.hxx>
 

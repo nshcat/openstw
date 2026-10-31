@@ -31,6 +31,7 @@ add_library(openstw-spdr STATIC
   spdr/buttonrole.hxx
   spdr/inputprocessor.hxx spdr/inputprocessor.cxx
   spdr/simulation.hxx spdr/simulation.cxx
+  spdr/logging.hxx spdr/logging.cxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
