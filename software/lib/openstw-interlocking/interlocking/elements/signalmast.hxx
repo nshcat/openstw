@@ -1,11 +1,12 @@
 #pragma once
 
+#include "signal.hxx"
 #include <QObject>
-#include <element.hxx>
 
 namespace Openstw::Interlocking
 {
-    class SignalMast : public Element
+    // A signal mast containing a number of Signalschirme.
+    class SignalMast : public Signal
     {
         Q_OBJECT
 

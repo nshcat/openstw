@@ -25,6 +25,9 @@ add_library(openstw-interlocking STATIC
   interlocking/elements/lockableelement.hxx interlocking/elements/lockableelement.cxx
   interlocking/lockingreason.hxx
   interlocking/lockingreason.cxx
+  interlocking/elements/signal.hxx interlocking/elements/signal.cxx
+
+
 )
 
 # Allow the project itself to directly include headers,
