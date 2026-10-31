@@ -17,9 +17,9 @@ add_library(openstw-interlocking STATIC
   interlocking/element.hxx interlocking/element.cxx
   interlocking/elementtype.hxx
   interlocking/elements/tracksection.hxx interlocking/elements/tracksection.cxx
-  interlocking/elements/axlecounterlink.hxx interlocking/elements/axlecounterlink.cxx
-  interlocking/elements/axlecounterfacing.hxx interlocking/elements/axlecounterfacing.cxx
-  interlocking/elements/axlecounteroperation.hxx
+  interlocking/axlecounterlink.hxx interlocking/axlecounterlink.cxx
+  interlocking/axlecounterfacing.hxx interlocking/axlecounterfacing.cxx
+  interlocking/axlecounteroperation.hxx
   interlocking/logging.hxx interlocking/logging.cxx
 )
 
