@@ -13,6 +13,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(openstw-core STATIC
     core/exception.hxx core/exception.cxx
+    core/enums.hxx
 )
 
 # Allow the project itself to directly include headers,

@@ -3,4 +3,4 @@
 #include <QLoggingCategory>
 #include <QtLogging>
 
-Q_DECLARE_LOGGING_CATEGORY(interlocking)
+Q_DECLARE_LOGGING_CATEGORY(catInterlocking)

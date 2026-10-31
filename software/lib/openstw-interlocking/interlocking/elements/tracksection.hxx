@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../axlecounterlink.hxx"
-#include "../element.hxx"
+#include "lockableelement.hxx"
 #include <QObject>
 #include <QSpan>
 #include <QStringView>
@@ -14,7 +14,7 @@ namespace Openstw::Interlocking
     // It references a set of axle counters, with a counting
     // direction associated with each one of them (some axle counters
     // point into the section, and some point out of the section)
-    class TrackSection : public Element
+    class TrackSection : public LockableElement
     {
         Q_OBJECT
 
@@ -26,29 +26,15 @@ namespace Openstw::Interlocking
         // Whether this track section is currently occupied.
         bool occupied() const;
 
-        // Whether this track section is currently locked because
-        // it is part of a Fahrstraße.
-        bool locked() const;
-
         // The current axle counter value associated with this section.
         int counterValue() const;
 
         // All axle counter links associated with this section.
         QSpan<AxleCounterLink const* const> links() const;
 
-    public:
-        // Lock this track section, as part of a Fahrstraße.
-        void lock();
-
-        // Unlock this track section.
-        void unlock();
-
     signals:
         // Emitted whenever the occupancy state of this track section changes.
         void occupancyChanged(bool isOccupied);
-
-        // Emitted whenever the locked state of this track section changes.
-        void lockedChanged(bool isLocked);
 
         // Emitted whenever the value of the counter kept by this track section changes.
         void counterValueChanged(int counterValue);
@@ -69,9 +55,5 @@ namespace Openstw::Interlocking
 
         // Whether this section is currently occupied by a train.
         bool m_isOccupied{false};
-
-        // Whether this section is currently locked as part of a
-        // Fahrstraße.
-        bool m_isLocked{false};
     };
 }

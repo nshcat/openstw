@@ -13,5 +13,12 @@ namespace Openstw::Interlocking
         // by incrementing or decrementing an internal axle counter value, which
         // in turn determines the occupancy status.
         TrackSection = 0,
+
+        // A mast containing a number of Signalschirme, among them things
+        // like Hautpsignale, Vorsignale, Zusatzsignale, Sperrsignale etc.
+        // Every kind of signal (except virtual signals) is handled by
+        // this element type.
+        // It has a reference to a Signal topography node.
+        SignalMast = 1,
     };
 }

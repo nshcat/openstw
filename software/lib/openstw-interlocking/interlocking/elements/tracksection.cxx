@@ -1,16 +1,17 @@
 #include "tracksection.hxx"
 #include "logging.hxx"
+#include <QSpan>
 
 namespace Openstw::Interlocking
 {
 
     TrackSection::TrackSection(QStringView identifier, QSpan<AxleCounterLink*> axleCounters, QObject* parent)
-        : Element{ElementType::TrackSection, identifier, parent},
+        : LockableElement{ElementType::TrackSection, identifier, {LockingReason::Route}, parent},
           m_axleCounterLinks{axleCounters.begin(), axleCounters.end()}
     {
         // Connect all triggered signals emitted from the axle counter
         // links to our handler slot.
-        for (const auto* link : this->m_axleCounterLinks)
+        for (const auto* link : std::as_const(this->m_axleCounterLinks))
         {
             // clang-format off
             connect(link, &AxleCounterLink::triggered,
@@ -24,11 +25,6 @@ namespace Openstw::Interlocking
         return this->m_isOccupied;
     }
 
-    bool TrackSection::locked() const
-    {
-        return this->m_isLocked;
-    }
-
     int TrackSection::counterValue() const
     {
         return this->m_counterValue;
@@ -37,20 +33,6 @@ namespace Openstw::Interlocking
     QSpan<const AxleCounterLink* const> TrackSection::links() const
     {
         return {this->m_axleCounterLinks};
-    }
-
-    void TrackSection::lock()
-    {
-        this->m_isLocked = true;
-
-        emit this->lockedChanged(true);
-    }
-
-    void TrackSection::unlock()
-    {
-        this->m_isLocked = false;
-
-        emit this->lockedChanged(false);
     }
 
     void TrackSection::onLinkTriggered(AxleCounterOperation operation)
@@ -63,7 +45,7 @@ namespace Openstw::Interlocking
             if (this->m_counterValue == 0)
             {
                 // clang-format off
-                qCWarning(interlocking)
+                qCWarning(catInterlocking)
                     << "Track section '"
                     << this->identifier()
                     << "' encountered count down on counter value 0"

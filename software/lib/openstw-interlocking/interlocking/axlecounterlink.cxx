@@ -49,7 +49,7 @@ namespace Openstw::Interlocking
         {
             // This should never happen.
             // clang-format off
-            qCWarning(interlocking)
+            qCWarning(catInterlocking)
                 << "Encountered invalid traversal in axle counter '"
                 << this->m_axleCounter->identifier()
                 << "': "
