@@ -1,6 +1,6 @@
 #include "port.hxx"
-#include "exception.hxx"
 #include <QString>
+#include <core/exception.hxx>
 
 namespace Openstw
 {

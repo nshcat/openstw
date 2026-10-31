@@ -12,29 +12,33 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(openstw-spdr STATIC
-  stelltisch.cxx
-  stelltisch.hxx
-  tile.hxx tile.cxx
-  aperturestate.hxx aperturestate.cxx
-  blinkmode.hxx
-  aperturecolor.hxx
-  aperture.hxx aperture.cxx
-  lampposition.hxx lampposition.cxx
-  featurelayer.hxx featurelayer.cxx
-  featuretype.hxx
-  featureorientation.hxx
-  featuretype.cxx
-  tilelocation.hxx tilelocation.cxx
-  features/trackhorizontalfeature.hxx features/trackhorizontalfeature.cxx
-  buttonstate.hxx
-  button.hxx button.cxx
-  buttonrole.hxx
-  inputprocessor.hxx inputprocessor.cxx
-  simulation.hxx simulation.cxx
+  spdr/stelltisch.cxx
+  spdr/stelltisch.hxx
+  spdr/tile.hxx spdr/tile.cxx
+  spdr/aperturestate.hxx spdr/aperturestate.cxx
+  spdr/blinkmode.hxx
+  spdr/aperturecolor.hxx
+  spdr/aperture.hxx spdr/aperture.cxx
+  spdr/lampposition.hxx spdr/lampposition.cxx
+  spdr/featurelayer.hxx spdr/featurelayer.cxx
+  spdr/featuretype.hxx
+  spdr/featureorientation.hxx
+  spdr/featuretype.cxx
+  spdr/tilelocation.hxx spdr/tilelocation.cxx
+  spdr/features/trackhorizontalfeature.hxx spdr/features/trackhorizontalfeature.cxx
+  spdr/buttonstate.hxx
+  spdr/button.hxx spdr/button.cxx
+  spdr/buttonrole.hxx
+  spdr/inputprocessor.hxx spdr/inputprocessor.cxx
+  spdr/simulation.hxx spdr/simulation.cxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 
+# Allow the project itself to directly include headers,
+# while requiring other projects to prepend "spdr/" to their includes
+# to avoid header name collisions.
+target_include_directories(openstw-spdr PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/spdr)
 target_include_directories(openstw-spdr PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_definitions(openstw-spdr PRIVATE OPENSTW_SPDR_LIBRARY)

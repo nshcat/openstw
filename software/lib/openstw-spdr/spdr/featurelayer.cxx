@@ -1,6 +1,6 @@
 #include "featurelayer.hxx"
-#include "exception.hxx"
 #include <algorithm>
+#include <core/exception.hxx>
 #include <ranges>
 
 namespace Openstw::SpDr

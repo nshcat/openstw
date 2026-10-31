@@ -1,8 +1,8 @@
 #include "path.hxx"
-#include "exception.hxx"
 #include <QString>
 #include <QTextStream>
 #include <algorithm>
+#include <core/exception.hxx>
 
 namespace Openstw
 {

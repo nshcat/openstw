@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QTimer>
 #include <QVector>
-#include <interlocking.hxx>
+#include <interlocking/interlocking.hxx>
 #include <optional>
-#include <topology.hxx>
+#include <topo/topology.hxx>
 
 namespace Openstw::SpDr
 {

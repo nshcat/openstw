@@ -12,28 +12,28 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(openstw-topo STATIC
-  topology.cxx
-  topology.hxx
-  element.hxx element.cxx
-  port.hxx
-  node.hxx node.cxx
-  nodetype.hxx
-  nodes/connector.hxx nodes/connector.cxx
-  nodes/signal.hxx nodes/signal.cxx
-  nodes/axlecounter.hxx nodes/axlecounter.cxx
-  nodes/boundary.hxx nodes/boundary.cxx
-  nodes/bumper.hxx nodes/bumper.cxx
-  nodes/simpleswitch.hxx nodes/simpleswitch.cxx
-  nodes/frontbacknode.hxx nodes/frontbacknode.cxx
-  elementcategory.hxx
-  edge.hxx edge.cxx
-  edgetype.hxx
-  edges/track.hxx edges/track.cxx
-  nodes/routedestination.hxx nodes/routedestination.cxx
-  path.hxx path.cxx
-  port.cxx
-  utility.hxx
-  pathsegment.hxx pathsegment.cxx
+  topo/topology.cxx
+  topo/topology.hxx
+  topo/element.hxx topo/element.cxx
+  topo/port.hxx
+  topo/node.hxx topo/node.cxx
+  topo/nodetype.hxx
+  topo/nodes/connector.hxx topo/nodes/connector.cxx
+  topo/nodes/signal.hxx topo/nodes/signal.cxx
+  topo/nodes/axlecounter.hxx topo/nodes/axlecounter.cxx
+  topo/nodes/boundary.hxx topo/nodes/boundary.cxx
+  topo/nodes/bumper.hxx topo/nodes/bumper.cxx
+  topo/nodes/simpleswitch.hxx topo/nodes/simpleswitch.cxx
+  topo/nodes/frontbacknode.hxx topo/nodes/frontbacknode.cxx
+  topo/elementcategory.hxx
+  topo/edge.hxx topo/edge.cxx
+  topo/edgetype.hxx
+  topo/edges/track.hxx topo/edges/track.cxx
+  topo/nodes/routedestination.hxx topo/nodes/routedestination.cxx
+  topo/path.hxx topo/path.cxx
+  topo/port.cxx
+  topo/utility.hxx
+  topo/pathsegment.hxx topo/pathsegment.cxx
 )
 
 set(BOOST_MIN_VERSION 1.79.0)
@@ -45,6 +45,10 @@ target_link_libraries(openstw-topo PUBLIC
   Boost::boost
 )
 
+# Allow the project itself to directly include headers,
+# while requiring other projects to prepend "topo/" to their includes
+# to avoid header name collisions.
+target_include_directories(openstw-topo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/topo)
 target_include_directories(openstw-topo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(openstw-topo PUBLIC pugixml-static)

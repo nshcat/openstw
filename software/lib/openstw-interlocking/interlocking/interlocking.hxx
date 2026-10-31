@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <topology.hxx>
+#include <topo/topology.hxx>
 
 namespace Openstw::Interlocking
 {

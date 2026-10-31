@@ -3,7 +3,7 @@
 #include <boost/graph/graphviz.hpp>
 #include <iostream>
 #include <sstream>
-#include <topology.hxx>
+#include <topo/topology.hxx>
 
 using namespace Openstw::Topology;
 

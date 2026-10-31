@@ -1,6 +1,5 @@
 #include "topology.hxx"
 #include "edges/track.hxx"
-#include "exception.hxx"
 #include "nodes/axlecounter.hxx"
 #include "nodes/boundary.hxx"
 #include "nodes/bumper.hxx"
@@ -11,6 +10,7 @@
 #include "utility.hxx"
 #include <QFile>
 #include <boost/graph/graphviz.hpp>
+#include <core/exception.hxx>
 #include <expected>
 #include <format>
 #include <map>

@@ -1,5 +1,5 @@
 #include "pathsegment.hxx"
-#include "exception.hxx"
+#include <core/exception.hxx>
 
 namespace Openstw
 {

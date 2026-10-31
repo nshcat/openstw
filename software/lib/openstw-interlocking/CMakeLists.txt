@@ -12,10 +12,14 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(openstw-interlocking STATIC
-  interlocking.cxx
-  interlocking.hxx
+  interlocking/interlocking.cxx
+  interlocking/interlocking.hxx
 )
 
+# Allow the project itself to directly include headers,
+# while requiring other projects to prepend "interlocking/" to their includes
+# to avoid header name collisions.
+target_include_directories(openstw-interlocking PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/interlocking)
 target_include_directories(openstw-interlocking PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(openstw-interlocking PRIVATE Qt${QT_VERSION_MAJOR}::Core)

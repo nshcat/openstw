@@ -4,7 +4,7 @@
 #include "stelltisch.hxx"
 #include <QObject>
 #include <QXmlStreamReader>
-#include <interlocking.hxx>
+#include <interlocking/interlocking.hxx>
 
 namespace Openstw::SpDr
 {
