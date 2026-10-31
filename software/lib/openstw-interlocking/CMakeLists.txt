@@ -26,6 +26,10 @@ add_library(openstw-interlocking STATIC
   interlocking/lockingreason.hxx
   interlocking/lockingreason.cxx
   interlocking/elements/signal.hxx interlocking/elements/signal.cxx
+  interlocking/hauptsignalschirm.hxx interlocking/hauptsignalschirm.cxx
+  interlocking/hauptsignalbild.hxx
+  interlocking/vorsignalbild.hxx
+  interlocking/vorsignalschirm.hxx interlocking/vorsignalschirm.cxx
 
 
 )
