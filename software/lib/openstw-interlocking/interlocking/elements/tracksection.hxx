@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../element.hxx"
 #include "axlecounterlink.hxx"
-#include "element.hxx"
 #include <QObject>
 #include <QSpan>
 #include <QStringView>

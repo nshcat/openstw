@@ -8,6 +8,15 @@ namespace Openstw::Interlocking
         : Element{ElementType::TrackSection, identifier, parent},
           m_axleCounterLinks{axleCounters.begin(), axleCounters.end()}
     {
+        // Connect all triggered signals emitted from the axle counter
+        // links to our handler slot.
+        for (const auto* link : this->m_axleCounterLinks)
+        {
+            // clang-format off
+            connect(link, &AxleCounterLink::triggered,
+                    this, &TrackSection::onLinkTriggered);
+            // clang-format on
+        }
     }
 
     bool TrackSection::occupied() const
