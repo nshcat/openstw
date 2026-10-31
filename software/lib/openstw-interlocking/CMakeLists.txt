@@ -30,6 +30,8 @@ add_library(openstw-interlocking STATIC
   interlocking/hauptsignalbild.hxx
   interlocking/vorsignalbild.hxx
   interlocking/vorsignalschirm.hxx interlocking/vorsignalschirm.cxx
+  interlocking/route.hxx interlocking/route.cxx
+  interlocking/routestate.hxx
 
 
 )

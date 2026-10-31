@@ -11,12 +11,16 @@ namespace Openstw::Interlocking
     {
         // Connect all triggered signals emitted from the axle counter
         // links to our handler slot.
-        for (const auto* link : std::as_const(this->m_axleCounterLinks))
+        for (auto* link : this->m_axleCounterLinks)
         {
             // clang-format off
             connect(link, &AxleCounterLink::triggered,
                     this, &TrackSection::onLinkTriggered);
             // clang-format on
+
+            // Mark the link object as being our child, for lifetime
+            // management.
+            link->setParent(this);
         }
     }
 
