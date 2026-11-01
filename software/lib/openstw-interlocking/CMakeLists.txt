@@ -32,8 +32,16 @@ add_library(openstw-interlocking STATIC
   interlocking/vorsignalschirm.hxx interlocking/vorsignalschirm.cxx
   interlocking/route.hxx interlocking/route.cxx
   interlocking/routestate.hxx
-
-
+  interlocking/routesegment.hxx interlocking/routesegment.cxx
+  interlocking/switchposition.hxx
+  interlocking/elementtype.cxx
+  interlocking/elements/switch.hxx interlocking/elements/switch.cxx
+  interlocking/routesegmenttype.hxx
+  interlocking/requesttype.hxx
+  interlocking/request.hxx interlocking/request.cxx
+  interlocking/requeststate.hxx
+  interlocking/requestdenialreason.hxx
+  interlocking/requests/setzugstrasserequest.cxx interlocking/requests/setzugstrasserequest.hxx
 )
 
 # Allow the project itself to directly include headers,

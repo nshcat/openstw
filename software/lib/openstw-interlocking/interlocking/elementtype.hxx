@@ -30,10 +30,21 @@ namespace Openstw::Interlocking
             // A virtual signal that acts as a route destination for setting
             // Fahrstrassen into a Selbst- or Zentralblock.
             RouteDestination = 2,
+
+            // A simple, two-way switch.
+            // XXXTODO abstract this further, such that Gleissperren and DKW
+            // can be modelled.
+            Switch = 3,
         };
 
         Q_ENUM_NS(ElementType)
     }
 
     using namespace ElementTypeNS;
+
+    // Whether an element of given type is a signal.
+    bool isSignal(ElementType type);
+
+    // Whether an element of given type is a switch.
+    bool isSwitch(ElementType type);
 }

@@ -1,4 +1,5 @@
 #include "element.hxx"
+#include "elementtype.hxx"
 
 namespace Openstw::Interlocking
 {
@@ -15,5 +16,10 @@ namespace Openstw::Interlocking
     QStringView Element::identifier() const
     {
         return {this->m_identifier};
+    }
+
+    bool Element::isSignal() const
+    {
+        return Interlocking::isSignal(this->type());
     }
 }

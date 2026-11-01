@@ -27,6 +27,9 @@ namespace Openstw::Interlocking
         // Unique identifier of this element.
         QStringView identifier() const;
 
+        // Whether this element is a signal.
+        bool isSignal() const;
+
     protected:
         // Specific type of this element.
         ElementType m_type;

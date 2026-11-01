@@ -1,8 +1,11 @@
 #pragma once
 
 #include "elements/signal.hxx"
+#include "routesegment.hxx"
 #include "routestate.hxx"
 #include <QObject>
+#include <QSpan>
+#include <QVector>
 
 namespace Openstw::Interlocking
 {
@@ -18,7 +21,11 @@ namespace Openstw::Interlocking
         Q_OBJECT
 
     public:
-        explicit Route(Signal* begin, Signal* end, QObject* parent = nullptr);
+        // Construct route from given sequence of route segments.
+        // The sequence must start and end with a signal segment,
+        // and must contain no other signal segments in between.
+        // A route always starts in state `Defined`.
+        explicit Route(QSpan<const RouteSegment> segments, QObject* parent = nullptr);
 
     public:
         // Current state of the Fahrstrasse.
@@ -30,22 +37,34 @@ namespace Openstw::Interlocking
         // Whether the Fahrstrasse was already released.
         bool released() const;
 
+        // The sequence of route segments making up this route.
+        QSpan<const RouteSegment> segments() const;
+
+        // Reference to the signal this route begins at.
+        Signal* beginSignal() const;
+
+        // Reference to the signal this route ends at.
+        Signal* endSignal() const;
+
+    public:
+        // Update the routes state.
+        void setState(RouteState newState);
+
     signals:
         // Emitted whenever the state of the route changes.
         void stateChanged(Openstw::Interlocking::RouteState newState);
 
     protected:
-        // Update the routes state.
-        void setState(RouteState newState);
-
-    protected:
         // Current state of the Fahrstrasse.
         RouteState m_state{RouteState::Defined};
 
+        // Sequence of route segments making up the route.
+        QVector<RouteSegment> m_segments;
+
         // Signal that marks the beginning of the Fahrstrasse.
-        Signal* m_begin;
+        Signal* m_beginSignal;
 
         // Signal that marks the end of the Fahrstrasse.
-        Signal* m_end;
+        Signal* m_endSignal;
     };
 }
