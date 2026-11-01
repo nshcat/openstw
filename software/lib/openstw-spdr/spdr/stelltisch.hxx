@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QVector>
-#include <interlocking/interlocking.hxx>
+#include <interlocking/system.hxx>
 #include <optional>
 #include <topo/topology.hxx>
 

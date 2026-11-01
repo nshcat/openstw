@@ -8,8 +8,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+# find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Xml)
+# find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Xml)
+
+find_package(Qt6 REQUIRED COMPONENTS Core Xml)
 
 add_library(openstw-topo STATIC
   topo/topology.cxx
@@ -55,6 +57,6 @@ target_link_libraries(openstw-topo PUBLIC pugixml-static)
 
 target_link_libraries(openstw-topo PUBLIC openstw-core)
 
-target_link_libraries(openstw-topo PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(openstw-topo PUBLIC Qt6::Core Qt6::Xml)
 
 target_compile_definitions(openstw-topo PRIVATE OPENSTW_TOPO_LIBRARY)

@@ -20,7 +20,7 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg)
+    find_package(Qt6 REQUIRED COMPONENTS Core Widgets Svg Xml)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Core)
@@ -115,7 +115,7 @@ add_custom_command(
                 ${CMAKE_CURRENT_BINARY_DIR}/sim_template.xml)
 
 target_link_libraries(openstw-gui PRIVATE openstw-sim)
-target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg)
+target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg Qt6::Xml)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)

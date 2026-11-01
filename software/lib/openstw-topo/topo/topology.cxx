@@ -286,20 +286,11 @@ namespace Openstw::Topology
         }
     }
 
-    Topology* Topology::readFromFile(const QString& filePath, QObject* parent)
+    Topology* Topology::createFromXml(QDomElement xmlElement, QObject* parent)
     {
         auto* topology = new Topology(parent);
 
-        QFile xmlFile{filePath};
-
-        if (!xmlFile.open(QFile::ReadOnly | QFile::Text))
-        {
-            throw std::invalid_argument("Failed to open topology XML file");
-        }
-
-        QXmlStreamReader xmlReader{&xmlFile};
-
-        topology->populateFromXml(&xmlReader);
+        topology->populateFromXml(xmlElement);
 
         return topology;
     }
@@ -331,69 +322,76 @@ namespace Openstw::Topology
         return std::make_optional<Element*>(*it);
     }
 
-    void Topology::populateFromXml(QXmlStreamReader* xmlReader)
+    void Topology::populateFromXml(QDomElement xmlElement)
     {
-        if (xmlReader->readNextStartElement() && xmlReader->name() == "Topology")
+        // First, validate that the Topology element isnt empty.
+        if (!xmlElement.hasChildNodes())
         {
-            while (xmlReader->readNextStartElement())
-            {
-                // Determine which collection of elements this is.
-                const auto& elementName = xmlReader->name();
+            throw Core::RuntimeError("Topology XML: Encountered empty Topology element");
+        }
 
-                if (elementName == "Nodes")
-                {
-                    this->populateNodes(xmlReader);
-                }
-                else if (elementName == "Edges")
-                {
-                    this->populateEdges(xmlReader);
-                }
-                else
-                {
-                    throw Core::RuntimeError("Topology XML: Encountered unexpected top level element '{}'",
-                                             elementName);
-                }
-            }
-        }
-        else
+        // == Then, read and populate all nodes.
+        // We need them later to resolve edge links.
+        auto nodesElement = xmlElement.namedItem("Nodes");
+
+        if (nodesElement.isNull())
         {
-            throw Core::RuntimeError("Topology XML: Expected 'Topology' root element");
+            throw Core::RuntimeError("Topology XML: Expected <Nodes> element");
         }
+
+        if (!nodesElement.isElement())
+        {
+            throw Core::RuntimeError("Topology XML: Expected <Nodes> element");
+        }
+
+        // Actually read and construct nodes.
+        this->populateNodes(nodesElement.toElement());
+        // ==
+
+        // == Finally, read the edge definitions.
+        auto edgesElement = xmlElement.namedItem("Edges");
+
+        if (edgesElement.isNull())
+        {
+            throw Core::RuntimeError("Topology XML: Expected <Edges> element");
+        }
+
+        if (!edgesElement.isElement())
+        {
+            throw Core::RuntimeError("Topology XML: Expected <Edges> element");
+        }
+
+        // Actually read and construct edges.
+        this->populateEdges(edgesElement.toElement());
+        // ==
     }
 
-    void Topology::populateNodes(QXmlStreamReader* xmlReader)
+    void Topology::populateNodes(QDomElement xmlElement)
     {
-        while (xmlReader->readNextStartElement())
+        // Iterate over all available <Node> child elements.
+        auto nodeElement = xmlElement.firstChildElement("Node");
+        while (!nodeElement.isNull())
         {
-            // This always needs to be a node element.
-            if (xmlReader->name() != "Node")
-            {
-                throw Core::RuntimeError(
-                    "Topology XML: Line {}: Encountered unexpected element in node collection: '{}'",
-                    xmlReader->lineNumber(), xmlReader->name());
-            }
-
             // We got a node. Find out what type it is, and what its name is.
-            const auto nodeAttributes = xmlReader->attributes();
-            const auto nodeTypeName = nodeAttributes.value("Type");
-            if (nodeTypeName.isNull())
+            const auto nodeTypeName = nodeElement.attribute("Type");
+            if (nodeTypeName.isEmpty())
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Node element missing type attribute",
-                                         xmlReader->lineNumber());
+                                         nodeElement.lineNumber());
             }
 
-            const auto nodeName = nodeAttributes.value("Name");
-            if (nodeName.isNull())
+            const auto nodeName = nodeElement.attribute("Name");
+            if (nodeName.isEmpty())
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Node element missing name attribute",
-                                         xmlReader->lineNumber());
+                                         nodeElement.lineNumber());
             }
 
             // Check whether the identifier is unique.
             if (this->m_elements.contains(nodeName))
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Node element has non-unique identifier '{}'",
-                                         xmlReader->lineNumber(), nodeName);
+                                         nodeElement.lineNumber(), nodeName);
             }
 
             // Construct node object instance of the correct type,
@@ -402,36 +400,36 @@ namespace Openstw::Topology
 
             if (nodeTypeName == "Signal")
             {
-                newNode = new Signal(nodeName.toString(), this);
+                newNode = new Signal(nodeName, this);
             }
             else if (nodeTypeName == "Connector")
             {
-                newNode = new Connector(nodeName.toString(), this);
+                newNode = new Connector(nodeName, this);
             }
             else if (nodeTypeName == "Boundary")
             {
-                newNode = new Boundary(nodeName.toString(), this);
+                newNode = new Boundary(nodeName, this);
             }
             else if (nodeTypeName == "AxleCounter")
             {
-                newNode = new AxleCounter(nodeName.toString(), this);
+                newNode = new AxleCounter(nodeName, this);
             }
             else if (nodeTypeName == "Bumper")
             {
-                newNode = new Bumper(nodeName.toString(), this);
+                newNode = new Bumper(nodeName, this);
             }
             else if (nodeTypeName == "RouteDestination")
             {
-                newNode = new RouteDestination(nodeName.toString(), this);
+                newNode = new RouteDestination(nodeName, this);
             }
             else if (nodeTypeName == "SimpleSwitch")
             {
-                newNode = new SimpleSwitch(nodeName.toString(), this);
+                newNode = new SimpleSwitch(nodeName, this);
             }
             else
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Encountered unknown node type '{}'",
-                                         xmlReader->lineNumber(), nodeTypeName);
+                                         nodeElement.lineNumber(), nodeTypeName);
             }
 
             // Have we actually constructed a new node?
@@ -445,43 +443,39 @@ namespace Openstw::Topology
                 this->m_nodes.insert(newNode->identifier(), qMakePair(newNode, nodeDescriptor));
             }
 
-            xmlReader->skipCurrentElement();
+            // Continue with the next <Node> element, if it exists.
+            nodeElement = nodeElement.nextSiblingElement("Node");
         }
+
+        return;
     }
 
-    void Topology::populateEdges(QXmlStreamReader* xmlReader)
+    void Topology::populateEdges(QDomElement xmlElement)
     {
-        while (xmlReader->readNextStartElement())
+        // Iterate over all available <Edge> child elements.
+        auto edgeElement = xmlElement.firstChildElement("Edge");
+        while (!edgeElement.isNull())
         {
-            // This always needs to be a edge element.
-            if (xmlReader->name() != "Edge")
-            {
-                throw Core::RuntimeError(
-                    "Topology XML: Line {}: Encountered unexpected element in edge collection: '{}'",
-                    xmlReader->lineNumber(), xmlReader->name());
-            }
-
             // We got an edge. Find out what type it is, and what its name is.
-            const auto edgeAttributes = xmlReader->attributes();
-            const auto edgeTypeName = edgeAttributes.value("Type");
-            if (edgeTypeName.isNull())
+            const auto edgeTypeName = edgeElement.attribute("Type");
+            if (edgeTypeName.isEmpty())
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Edge element missing type attribute",
-                                         xmlReader->lineNumber());
+                                         edgeElement.lineNumber());
             }
 
-            const auto edgeName = edgeAttributes.value("Name");
-            if (edgeName.isNull())
+            const auto edgeName = edgeElement.attribute("Name");
+            if (edgeName.isEmpty())
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Edge element missing name attribute",
-                                         xmlReader->lineNumber());
+                                         edgeElement.lineNumber());
             }
 
             // Check whether the identifier is unique.
             if (this->m_elements.contains(edgeName))
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Edge element has non-unique identifier '{}'",
-                                         xmlReader->lineNumber(), edgeName);
+                                         edgeElement.lineNumber(), edgeName);
             }
 
             // Construct edge based on type given in attributes
@@ -492,11 +486,11 @@ namespace Openstw::Topology
                 bool conversionOkay{false};
 
                 // We need to read the length and maximum speed for tracks
-                const auto lengthAttribute = edgeAttributes.value("Length");
-                if (lengthAttribute.isNull())
+                const auto lengthAttribute = edgeElement.attribute("Length");
+                if (lengthAttribute.isEmpty())
                 {
                     throw Core::RuntimeError("Topology XML: Line {}: Track element {} missing length attribute",
-                                             xmlReader->lineNumber(), edgeName);
+                                             edgeElement.lineNumber(), edgeName);
                 }
 
                 const auto length = lengthAttribute.toDouble(&conversionOkay);
@@ -504,14 +498,14 @@ namespace Openstw::Topology
                 {
                     throw Core::RuntimeError(
                         "Topology XML: Line {}: Track element {} has invalid length attribute value {}",
-                        xmlReader->lineNumber(), edgeName, lengthAttribute);
+                        edgeElement.lineNumber(), edgeName, lengthAttribute);
                 }
 
-                const auto maxSpeedAttribute = edgeAttributes.value("MaximumSpeed");
-                if (maxSpeedAttribute.isNull())
+                const auto maxSpeedAttribute = edgeElement.attribute("MaximumSpeed");
+                if (maxSpeedAttribute.isEmpty())
                 {
                     throw Core::RuntimeError("Topology XML: Line {}: Track element {} missing maximum speed attribute",
-                                             xmlReader->lineNumber(), edgeName);
+                                             edgeElement.lineNumber(), edgeName);
                 }
 
                 const auto maxSpeed = maxSpeedAttribute.toDouble(&conversionOkay);
@@ -519,16 +513,16 @@ namespace Openstw::Topology
                 {
                     throw Core::RuntimeError(
                         "Topology XML: Line {}: Track element {} has invalid maximum speed attribute value {}",
-                        xmlReader->lineNumber(), edgeName, maxSpeedAttribute);
+                        edgeElement.lineNumber(), edgeName, maxSpeedAttribute);
                 }
 
                 // Finally, construct track object
-                newEdge = new Track(edgeName.toString(), length, maxSpeed, this);
+                newEdge = new Track(edgeName, length, maxSpeed, this);
             }
             else
             {
                 throw Core::RuntimeError("Topology XML: Line {}: Encountered unknown edge type '{}'",
-                                         xmlReader->lineNumber(), edgeTypeName);
+                                         edgeElement.lineNumber(), edgeTypeName);
             }
 
             // Have we actually created a new Edge?
@@ -537,69 +531,57 @@ namespace Openstw::Topology
                 // Every edge element contains sub elements describing
                 // which elements and ports it connects.
                 // Figure out which ports on which nodes the edge connects.
-                std::optional<EdgeLink> fromLink, toLink;
 
                 // Try to find the "From" and "To" elements
-                while (xmlReader->readNextStartElement())
+                const auto fromElement = edgeElement.namedItem("From");
+
+                if (fromElement.isNull() || !fromElement.isElement())
                 {
-                    const auto elementName = xmlReader->name();
-
-                    if (elementName == "From" || elementName == "To")
-                    {
-                        // Found link element, parse it
-                        const auto link = this->parseAndVerifyLink(xmlReader);
-
-                        if (elementName == "From")
-                        {
-                            fromLink = link;
-                        }
-                        else
-                        {
-                            toLink = link;
-                        }
-                    }
-                    else
-                    {
-                        throw Core::RuntimeError(
-                            "Topology XML: Line {}: Encountered invalid subelement '{}' within Edge element",
-                            xmlReader->lineNumber(), elementName);
-                    }
+                    throw Core::RuntimeError("Topology XML: Line {}: Encountered edge without <From> link element",
+                                             edgeElement.lineNumber());
                 }
 
-                // Assert that we have found both a from and to link
-                if (!fromLink.has_value() || !toLink.has_value())
+                auto fromLink = this->parseAndVerifyLink(fromElement.toElement());
+
+                const auto toElement = edgeElement.namedItem("To");
+
+                if (toElement.isNull() || !toElement.isElement())
                 {
-                    throw Core::RuntimeError(
-                        "Topology XML: Line {}: Edge '{}' requires both a From and To link element",
-                        xmlReader->lineNumber(), edgeName);
+                    throw Core::RuntimeError("Topology XML: Line {}: Encountered edge without <To> link element",
+                                             edgeElement.lineNumber());
                 }
+
+                auto toLink = this->parseAndVerifyLink(toElement.toElement());
 
                 // Actually insert edge into graph
                 const auto edgeDescriptor =
-                    boost::add_edge(fromLink->TargetNodeDescriptor, toLink->TargetNodeDescriptor,
-                                    EdgeProperties{newEdge, newEdge->identifier(), newEdge->weight(),
-                                                   fromLink->NodePort, toLink->NodePort},
+                    boost::add_edge(fromLink.TargetNodeDescriptor, toLink.TargetNodeDescriptor,
+                                    EdgeProperties{newEdge, newEdge->identifier(), newEdge->weight(), fromLink.NodePort,
+                                                   toLink.NodePort},
                                     this->m_topologyGraph)
                         .first;
 
                 this->m_edges.insert(newEdge->identifier(), qMakePair(newEdge, edgeDescriptor));
                 this->m_elements.insert(newEdge->identifier(), newEdge);
             }
-        }     
+
+            // Continue with the next <Edge> element, if it exists.
+            edgeElement = edgeElement.nextSiblingElement("Edge");
+        }
     }
 
-    Topology::EdgeLink Topology::parseAndVerifyLink(QXmlStreamReader* xmlReader)
+    Topology::EdgeLink Topology::parseAndVerifyLink(QDomElement xmlElement)
     {
         // Create edge link object
         EdgeLink link;
 
         // Read the port attribute.
-        const auto portName = xmlReader->attributes().value("Port");
+        const auto portName = xmlElement.attribute("Port");
 
-        if (portName.isNull())
+        if (portName.isEmpty())
         {
             throw Core::RuntimeError("Topology XML: Line {}: Edge link element has no port attribute",
-                                     xmlReader->lineNumber());
+                                     xmlElement.lineNumber());
         }
 
         const auto port = parsePort(portName);
@@ -607,13 +589,13 @@ namespace Openstw::Topology
         if (!port.has_value())
         {
             throw Core::RuntimeError("Topology XML: Line {}: Edge link element has invalid port attribute value '{}'",
-                                     xmlReader->lineNumber(), portName);
+                                     xmlElement.lineNumber(), portName);
         }
 
         link.NodePort = port.value();
 
         // The referenced node is specified by its identifier, given as the element text.
-        const auto nodeIdentifier = xmlReader->readElementText();
+        const auto nodeIdentifier = xmlElement.text();
 
         // Try to find the node object pointer
         const auto node = this->findNode(nodeIdentifier);
@@ -621,7 +603,7 @@ namespace Openstw::Topology
         if (!node.has_value())
         {
             throw Core::RuntimeError("Topology XML: Line {}: Link refers to nonexistant Node '{}'",
-                                     xmlReader->lineNumber(), nodeIdentifier);
+                                     xmlElement.lineNumber(), nodeIdentifier);
         }
 
         link.TargetNode = node.value();
@@ -633,7 +615,7 @@ namespace Openstw::Topology
         {
             throw Core::RuntimeError(
                 "Topology XML: Line {}: Link refers to Node '{}' which is not part of the topology graph",
-                xmlReader->lineNumber(), nodeIdentifier);
+                xmlElement.lineNumber(), nodeIdentifier);
         }
 
         link.TargetNodeDescriptor = nodeDescriptor.value();
@@ -643,7 +625,7 @@ namespace Openstw::Topology
         if (!link.TargetNode->hasPort(link.NodePort))
         {
             throw Core::RuntimeError("Topology XML: Line {}: Edge refers to nonexisting source port '{}' on node '{}'",
-                                     xmlReader->lineNumber(), portToString(link.NodePort),
+                                     xmlElement.lineNumber(), portToString(link.NodePort),
                                      link.TargetNode->identifier());
         }
 

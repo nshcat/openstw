@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../switchposition.hxx"
 #include "lockableelement.hxx"
-#include "switchposition.hxx"
 #include <QObject>
 
 namespace Openstw::Interlocking

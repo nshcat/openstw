@@ -6,6 +6,7 @@
 #include "path.hxx"
 #include "port.hxx"
 
+#include <QDomElement>
 #include <QHash>
 #include <QMap>
 #include <QObject>
@@ -123,9 +124,8 @@ namespace Openstw::Topology
         Topology(QObject* parent);
 
     public: // == Static methods
-        // Read topology data from given XML file and return topology network object
-        // instance.
-        static Topology* readFromFile(const QString& filePath, QObject* parent = nullptr);
+        // Create topology network based on data in given XML document node.
+        static Topology* createFromXml(QDomElement xmlElement, QObject* parent = nullptr);
 
     public: // == Interacting with the topology network
         // Retrieve topology network element by its identifier.
@@ -158,19 +158,19 @@ namespace Openstw::Topology
         std::optional<Port> lookupLinkPort(EdgeDescriptor edge, VertexDescriptor vertex) const;
 
     protected: // == Deserializing
-        // Populate topology network contents from given XML reader.
-        void populateFromXml(QXmlStreamReader* xmlReader);
+        // Populate topology network contents from given XML element.
+        void populateFromXml(QDomElement xmlElement);
 
         // Read node collection from XML document.
-        void populateNodes(QXmlStreamReader* xmlReader);
+        void populateNodes(QDomElement xmlElement);
 
         // Read edges between nodes from XML document.
-        void populateEdges(QXmlStreamReader* xmlReader);
+        void populateEdges(QDomElement xmlElement);
 
         // Parse a "From" or "To" connection element within an Edge element.
         // This requires that the tag was already entered - the method
         // does not care whether this is a "From" or "To" element!
-        EdgeLink parseAndVerifyLink(QXmlStreamReader* xmlReader);
+        EdgeLink parseAndVerifyLink(QDomElement xmlElement);
 
     protected: // == Attributes
         // Collection of all topology elements associated with the railway network.

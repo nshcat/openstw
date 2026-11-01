@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 {
     QCoreApplication a(argc, argv);
 
-    const auto xmlPath = QDir::current().filePath("topology.xml");
+    const auto xmlPath = QDir::current().filePath("teststadt.xml");
 
     if (!QFile::exists(xmlPath))
     {
@@ -27,7 +27,32 @@ int main(int argc, char* argv[])
 
     std::cout << "Loading topology data from XML file '" << xmlPath << "'" << std::endl;
 
-    Topology* topo = Topology::readFromFile(xmlPath, &a);
+    QFile file(xmlPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        std::cerr << "Could not open Topology XML file" << std::endl;
+        return -1;
+    }
+
+    QDomDocument doc;
+    const auto result = doc.setContent(&file);
+    if (!result)
+    {
+        std::cerr << "Failed to parse Topology XML file: " << result.errorMessage << "at line" << result.errorLine
+                  << "column" << result.errorColumn << std::endl;
+
+        return -1;
+    }
+
+    auto topologyElement = doc.documentElement().namedItem("Topology");
+
+    if (topologyElement.isNull() || !topologyElement.isElement())
+    {
+        std::cerr << "Topology XML file does not contain Topology data" << std::endl;
+        return -1;
+    }
+
+    Topology* topo = Topology::createFromXml(topologyElement.toElement(), &a);
 
     std::cout << topo->dumpGraph() << std::endl << std::endl;
 

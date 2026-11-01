@@ -12,8 +12,8 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_library(openstw-interlocking STATIC
-  interlocking/interlocking.cxx
-  interlocking/interlocking.hxx
+  interlocking/system.cxx
+  interlocking/system.hxx
   interlocking/element.hxx interlocking/element.cxx
   interlocking/elementtype.hxx
   interlocking/elements/tracksection.hxx interlocking/elements/tracksection.cxx
