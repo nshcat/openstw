@@ -32,10 +32,10 @@ namespace Openstw::Interlocking
         RouteState state() const;
 
         // Whether the Fahrstrasse is fully locked.
-        bool locked() const;
+        bool isLocked() const;
 
         // Whether the Fahrstrasse was already released.
-        bool released() const;
+        bool wasReleased() const;
 
         // The sequence of route segments making up this route.
         QSpan<const RouteSegment> segments() const;
@@ -53,6 +53,12 @@ namespace Openstw::Interlocking
     signals:
         // Emitted whenever the state of the route changes.
         void stateChanged(Openstw::Interlocking::RouteState newState);
+
+        // Emitted when the route gets locked.
+        void locked();
+
+        // Emitted when the route gets released.
+        void released();
 
     protected:
         // Current state of the Fahrstrasse.

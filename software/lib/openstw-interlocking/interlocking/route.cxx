@@ -72,12 +72,12 @@ namespace Openstw::Interlocking
         return this->m_state;
     }
 
-    bool Route::locked() const
+    bool Route::isLocked() const
     {
         return this->m_state == RouteState::Locked;
     }
 
-    bool Route::released() const
+    bool Route::wasReleased() const
     {
         return this->m_state == RouteState::Released;
     }
@@ -104,6 +104,15 @@ namespace Openstw::Interlocking
             this->m_state = newState;
 
             emit this->stateChanged(this->m_state);
+
+            if (this->m_state == RouteState::Locked)
+            {
+                emit this->locked();
+            }
+            else if (this->m_state == RouteState::Released)
+            {
+                emit this->released();
+            }
         }
     }
 }
