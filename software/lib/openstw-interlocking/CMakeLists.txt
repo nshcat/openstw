@@ -44,6 +44,7 @@ add_library(openstw-interlocking STATIC
   interlocking/requests/setzugstrasserequest.cxx interlocking/requests/setzugstrasserequest.hxx
   interlocking/movementauthority.hxx interlocking/movementauthority.cxx
   interlocking/movementauthoritytype.hxx
+  interlocking/signalschirm.hxx interlocking/signalschirm.cxx
 )
 
 # Allow the project itself to directly include headers,

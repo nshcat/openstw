@@ -15,7 +15,7 @@ namespace Openstw::SpDr
         Q_OBJECT
 
     public:
-        Stelltisch(Interlocking::Interlocking* interlocking, QObject* parent = nullptr);
+        Stelltisch(Interlocking::System* interlocking, QObject* parent = nullptr);
 
     public:
         // Dimensions of the stelltisch, in tiles.
@@ -64,7 +64,7 @@ namespace Openstw::SpDr
         qsizetype tileIndex(TileLocation location) const;
 
     protected:
-        Interlocking::Interlocking* m_interlocking;
+        Interlocking::System* m_interlocking;
         QVector<Tile*> m_tiles{};
         QTimer* m_blinkTimer;
     };

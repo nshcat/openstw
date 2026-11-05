@@ -14,14 +14,12 @@ namespace Openstw::SpDr
         Q_OBJECT
 
     public:
-        explicit Simulation(Interlocking::Interlocking* interlocking, Stelltisch* stelltisch,
-                            QObject* parent = nullptr);
+        explicit Simulation(Interlocking::System* interlocking, Stelltisch* stelltisch, QObject* parent = nullptr);
 
     public:
         // Create SpDr Stellwerk simulation from given XML data file.
         // XXXTODO we should pass a xmldocument node from pugixml here i think..
-        static Simulation* createFromFile(Interlocking::Interlocking* interlocking, const QString& filePath,
-                                          QObject* parent);
+        static Simulation* createFromFile(Interlocking::System* interlocking, const QString& filePath, QObject* parent);
 
     public:
         // Stelltisch associated with this stellwerk.
@@ -31,10 +29,10 @@ namespace Openstw::SpDr
         Stelltisch* stelltisch();
 
         // The interlocking system associated with this stelltisch
-        const Interlocking::Interlocking* interlocking() const;
+        const Interlocking::System* interlocking() const;
 
         // The interlocking system associated with this stelltisch
-        Interlocking::Interlocking* interlocking();
+        Interlocking::System* interlocking();
 
     signals:
 
@@ -42,7 +40,7 @@ namespace Openstw::SpDr
         // Reference to the interlocking system the SpDr simulation
         // is sitting on top of.
         // It implements all of the safety-critical interlocking logic.
-        Interlocking::Interlocking* m_interlocking;
+        Interlocking::System* m_interlocking;
 
         // Stelltisch of the SpDr stellwerk, containing a grid of
         // tiles that the Fdl can interact with.

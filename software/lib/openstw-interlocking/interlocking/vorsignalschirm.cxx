@@ -1,26 +1,44 @@
 #include "vorsignalschirm.hxx"
+#include <core/exception.hxx>
 
 namespace Openstw::Interlocking
 {
-
-    VorSignalSchirm::VorSignalSchirm(HauptSignalSchirm* hauptSignal, QObject* parent)
-        : QObject{parent}, m_hauptSignal{hauptSignal}
+    VorSignalSchirm::VorSignalSchirm(SignalMast* mast, SignalMast* mainSignal, QObject* parent)
+        : SignalSchirm{mast, parent}
 
     {
+        // Verify that the signal mast passed as the main signal
+        // associated with this distant signal actually has a main signal..
+        // Otherwise we can't derive our own Signalbild!
+        if (!mainSignal->hasHauptSignalSchirm())
+        {
+            throw Core::ArgumentError("Signal mast '{}' passed to VorSignalSchirm has no Hauptsignal to refer to",
+                                      mainSignal->identifier());
+        }
+
+        // Retrieve the Hauptsignalschirm from given main signal mast.
+        this->m_hauptSignal = mainSignal;
+        this->m_hauptSignalSchirm = mainSignal->hauptSignalSchirm();
+
         // Connect to the signal aspect changed signal of the Hauptsignal
         // we are dependant on, in order to derive our aspect from its.
         // clang-format off
-        connect(this->m_hauptSignal, &HauptSignalSchirm::signalBildChanged,
+        connect(this->m_hauptSignalSchirm, &HauptSignalSchirm::signalBildChanged,
                 this, &VorSignalSchirm::deriveSignalBild);
         // clang-format on
 
         // Perform initial synchronization
-        this->deriveSignalBild(this->m_hauptSignal->signalBild());
+        this->deriveSignalBild(this->m_hauptSignalSchirm->signalBild());
     }
 
     VorSignalBild VorSignalSchirm::signalBild() const
     {
         return this->m_signalBild;
+    }
+
+    SignalMast* VorSignalSchirm::hauptSignal() const
+    {
+        return this->m_hauptSignal;
     }
 
     void VorSignalSchirm::deriveSignalBild(HauptSignalBild hauptSignalState)

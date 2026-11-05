@@ -2,7 +2,7 @@
 
 namespace Openstw::SpDr
 {
-    Simulation::Simulation(Interlocking::Interlocking* interlocking, Stelltisch* stelltisch, QObject* parent)
+    Simulation::Simulation(Interlocking::System* interlocking, Stelltisch* stelltisch, QObject* parent)
         : QObject{parent}, m_interlocking{interlocking}, m_stelltisch{stelltisch}
     {
         // Parent the stelltisch to this object for
@@ -30,12 +30,12 @@ namespace Openstw::SpDr
         return this->m_stelltisch;
     }
 
-    const Interlocking::Interlocking* Simulation::interlocking() const
+    const Interlocking::System* Simulation::interlocking() const
     {
         return this->m_interlocking;
     }
 
-    Interlocking::Interlocking* Simulation::interlocking()
+    Interlocking::System* Simulation::interlocking()
     {
         return this->m_interlocking;
     }

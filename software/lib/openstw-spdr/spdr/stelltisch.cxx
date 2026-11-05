@@ -5,7 +5,7 @@ namespace Openstw::SpDr
 {
     using namespace std::chrono_literals;
 
-    Stelltisch::Stelltisch(Interlocking::Interlocking* interlocking, QObject* parent)
+    Stelltisch::Stelltisch(Interlocking::System* interlocking, QObject* parent)
         : QObject{parent}, m_interlocking{interlocking}
     {
         // == Setup the timer used to blink all tile apertures in a
