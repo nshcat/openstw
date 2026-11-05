@@ -78,7 +78,37 @@
     </Topology>
 
     <!-- Elements of the interlocking system, based on the topology graph. -->
-    <Interlocking>  
+    <Interlocking>
+        <TrackSections>
+            <!-- A section containing a track, so it has two axle counters -->
+            <TackSection Name="TS1">
+                <AxleCounterLink AxleCounter="AC1" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC2" Facing="Outward"/>
+            </TrackSection>
+
+            <!-- A section spanning a switch, so it has three axle counters -->
+            <TackSection Name="TS2">
+                <AxleCounterLink AxleCounter="AC2" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC3" Facing="Outward"/>
+                <AxleCounterLink AxleCounter="AC4" Facing="Outward"/>
+            </TrackSection>
+        </TrackSections>
+
+        <Switches>
+            <!-- A simple, two way switch that references switch node W1
+                 in the topology graph. Note that switches do not need
+                 to know their track section! That's a detail only
+                 the tile needs to know, since occupancy state is essentially
+                 an overlay over the route state the switch reports.
+            -->
+            <Switch Name="W1" Reference="W1"/>
+        </Switches>
+
+        <Elements>
+            <Element type="SignalMast">
+                <Hauptsignal></Hauptsignal>
+            </Element>
+        </Elements>
     </Interlocking>
 
     <!-- Description of the SpDrS60 Stelltisch controlling the Stellbereich. -->

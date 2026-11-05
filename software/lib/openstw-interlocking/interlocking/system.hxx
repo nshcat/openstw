@@ -3,6 +3,7 @@
 #include "elements/tracksection.hxx"
 #include "request.hxx"
 #include "route.hxx"
+#include <QDomElement>
 #include <QHash>
 #include <QList>
 #include <QObject>
@@ -22,6 +23,11 @@ namespace Openstw::Interlocking
         System(Topology::Topology* topology, QObject* parent = nullptr);
 
     public:
+        // Create interlocking system based on given topology graph and
+        // the data in given XML document node.
+        static System* createFromXml(Topology::Topology* topology, QDomElement xmlElement, QObject* parent = nullptr);
+
+    public:
         // Topology object associated with the interlocking system
         Topology::Topology* topology() const;
 
@@ -29,6 +35,10 @@ namespace Openstw::Interlocking
         // Handle given interlocking request.
         // The interlocking system will acquire ownership of it.
         void handleRequest(Request* request);
+
+    protected: // == Deserializing
+        // Populate interlocking network contents from given XML element.
+        void populateFromXml(QDomElement xmlElement);
 
     protected:
         // Topology graph representing the railway infrastructure
