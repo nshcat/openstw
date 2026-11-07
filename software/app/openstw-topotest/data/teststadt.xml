@@ -16,6 +16,14 @@
     <Topology>
         <Nodes>
             <Node Type="Boundary" Name="Bleft"/>
+            <Node Type="AxleCounter" Name="AC1"/>
+            <Node Type="AxleCounter" Name="AC2"/>
+            <Node Type="AxleCounter" Name="AC3"/>
+            <Node Type="AxleCounter" Name="AC4"/>
+            <Node Type="AxleCounter" Name="AC7"/>
+            <Node Type="AxleCounter" Name="AC8"/>
+            <Node Type="AxleCounter" Name="AC9"/>
+            <Node Type="AxleCounter" Name="AC10"/>
             <Node Type="Signal" Name="S1"/>
             <Node Type="Signal" Name="S2"/>
             <Node Type="Signal" Name="S3"/>
@@ -28,32 +36,58 @@
         </Nodes>
         <Edges>
             <!-- Left boundary -->
-            <Edge Type="Track" Name="T1" Length="150.0" MaximumSpeed="80">
+            <Edge Type="Track" Name="T1p" Length="0.5" MaximumSpeed="80">
                 <From Port="Center">Bleft</From>
+                <To Port="Back">AC1</To>
+            </Edge>
+            <Edge Type="Track" Name="T1" Length="150.0" MaximumSpeed="80">
+                <From Port="Front">AC1</From>
                 <To Port="Back">S1</To>
             </Edge>
+
             <Edge Type="Track" Name="T2" Length="50.0" MaximumSpeed="80">
                 <From Port="Front">S1</From>
+                <To Port="Back">AC2</To>
+            </Edge>
+
+            <Edge Type="Track" Name="T2n" Length="0.5" MaximumSpeed="80">
+                <From Port="Front">AC2</From>
                 <To Port="Wurzel">W1</To>
             </Edge>
 
             <!-- Top branch -->
-            <Edge Type="Track" Name="T3" Length="50.0" MaximumSpeed="80">
+            <Edge Type="Track" Name="T3p" Length="0.5" MaximumSpeed="80">
                 <From Port="Gerade">W1</From>
+                <To Port="Back">AC3</To>
+            </Edge>
+
+            <Edge Type="Track" Name="T3" Length="50.0" MaximumSpeed="80">
+                <From Port="Front">AC3</From>
                 <To Port="Front">S2</To>
             </Edge>
+
             <Edge Type="Track" Name="T4" Length="100.0" MaximumSpeed="80">
                 <From Port="Back">S2</From>
                 <To Port="Back">S4</To>
             </Edge>
             <Edge Type="Track" Name="T5" Length="50.0" MaximumSpeed="80">
                 <From Port="Front">S4</From>
+                <To Port="Back">AC8</To>
+            </Edge>
+
+            <Edge Type="Track" Name="T5n" Length="0.5" MaximumSpeed="80">
+                <From Port="Front">AC8</From>
                 <To Port="Gerade">W2</To>
             </Edge>
 
             <!-- Bottom branch -->
-            <Edge Type="Track" Name="T6" Length="50.0" MaximumSpeed="80">
+            <Edge Type="Track" Name="T6p" Length="0.5" MaximumSpeed="80">
                 <From Port="Abzweig">W1</From>
+                <To Port="Back">AC4</To>
+            </Edge>
+
+            <Edge Type="Track" Name="T6" Length="50.0" MaximumSpeed="80">
+                <From Port="Front">AC4</From>
                 <To Port="Front">S3</To>
             </Edge>
             <Edge Type="Track" Name="T7" Length="100.0" MaximumSpeed="80">
@@ -62,16 +96,29 @@
             </Edge>
             <Edge Type="Track" Name="T8" Length="50.0" MaximumSpeed="80">
                 <From Port="Front">S5</From>
+                <To Port="Back">AC7</To>
+            </Edge>
+
+            <Edge Type="Track" Name="T8n" Length="0.5" MaximumSpeed="80">
+                <From Port="Front">AC7</From>
                 <To Port="Abzweig">W2</To>
             </Edge>
 
             <!-- Right boundary -->
-            <Edge Type="Track" Name="T9" Length="150.0" MaximumSpeed="80">
+            <Edge Type="Track" Name="T9p" Length="0.5" MaximumSpeed="80">
                 <From Port="Wurzel">W2</From>
+                <To Port="Back">AC9</To>
+            </Edge>
+            <Edge Type="Track" Name="T9" Length="150.0" MaximumSpeed="80">
+                <From Port="Front">AC9</From>
                 <To Port="Front">S6</To>
             </Edge>
             <Edge Type="Track" Name="T10" Length="50.0" MaximumSpeed="80">
                 <From Port="Back">S6</From>
+                <To Port="Back">AC10</To>
+            </Edge>
+            <Edge Type="Track" Name="T10n" Length="0.5" MaximumSpeed="80">
+                <From Port="Front">AC10</From>
                 <To Port="Center">Bright</To>
             </Edge>
         </Edges>
@@ -81,13 +128,13 @@
     <Interlocking>
         <TrackSections>
             <!-- A section containing a track, so it has two axle counters -->
-            <TackSection Name="TS1">
+            <TrackSection Name="TS1">
                 <AxleCounterLink AxleCounter="AC1" Facing="Inward"/>
                 <AxleCounterLink AxleCounter="AC2" Facing="Outward"/>
             </TrackSection>
 
             <!-- A section spanning a switch, so it has three axle counters -->
-            <TackSection Name="TS2">
+            <TrackSection Name="TS2">
                 <AxleCounterLink AxleCounter="AC2" Facing="Inward"/>
                 <AxleCounterLink AxleCounter="AC3" Facing="Outward"/>
                 <AxleCounterLink AxleCounter="AC4" Facing="Outward"/>
