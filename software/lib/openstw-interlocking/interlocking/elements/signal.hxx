@@ -49,7 +49,22 @@ namespace Openstw::Interlocking
         // If this signal is a distant signal, retrieves the main signal
         // it references. The movement authority of the associated main signal
         // can be retrieved from the returned object.
-        virtual std::optional<Signal*> referencedSignal() const = 0;
+        virtual std::optional<Signal*> associatedSignal() const = 0;
+
+        // If this signal is a distant signal, whether it currently has a main
+        // signal associated with it.
+        virtual bool hasAssociatedSignal() const = 0;
+
+    public:
+        // If this signal is a distant signal, associate it with given main
+        // signal. The distant signal will start deriving its aspect from that
+        // main signal.
+        virtual void associateWithSignal(Signal* mainSignal) = 0;
+
+        // Revoke an association to a main signal established with `associateWithSignal`.
+        // The signal will start showing a default halt aspect (or be set to off, depending
+        // on the specific signal)
+        virtual void revokeSignalAssociation() = 0;
 
     protected:
         // Revoke the signals current movement authority.

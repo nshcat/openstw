@@ -64,9 +64,9 @@ namespace Openstw::Interlocking
         return this->hasVorSignalSchirm();
     }
 
-    std::optional<Signal*> SignalMast::referencedSignal() const
+    std::optional<Signal*> SignalMast::associatedSignal() const
     {
-        // If we do not have a Vorsignalschirm, we dont have a referenced
+        // If we do not have a Vorsignalschirm, we cant have an associated
         // signal.
         if (!this->hasVorSignalSchirm())
         {
@@ -77,6 +77,77 @@ namespace Openstw::Interlocking
         // It will always be a SignalMast, but those are also Signals.
         // The caller doesnt care about that implementation detail..
         return this->vorSignalSchirm()->hauptSignal();
+    }
+
+    bool SignalMast::hasAssociatedSignal() const
+    {
+        return this->associatedSignal().has_value();
+    }
+
+    void SignalMast::associateWithSignal(Signal* mainSignal)
+    {
+        // If we do not have a Vorsignalschirm, we cant have an associated
+        // signal.
+        if (!this->hasVorSignalSchirm())
+        {
+            // clang-format off
+            qCCritical(catInterlocking)
+                << "Can't set signal association for signal '"
+                << this->identifier()
+                << "': Signal has no Vorsignalschirm"
+                << Qt::endl;
+            // clang-format on
+
+            return;
+        }
+
+        // We need the other signal to be a SignalMast as well.
+        // XXXTODO figure out how to handle interacting with
+        // virtual signals! Probably, in those cases, the routing engine
+        // will actually pass the first block signal into this method..
+        if (mainSignal->type() != ElementType::SignalMast)
+        {
+            // clang-format off
+            qCCritical(catInterlocking)
+                << "Can't set signal association for signal '"
+                << this->identifier()
+                << "': Passed signal '"
+                << mainSignal->identifier()
+                << "' is not a SignalMast"
+                << Qt::endl;
+            // clang-format on
+
+            return;
+        }
+
+        auto* mainSignalMast = dynamic_cast<SignalMast*>(mainSignal);
+
+        if (!mainSignalMast)
+        {
+            throw Core::ArgumentError("Main signal '{}' was unexpectedly not a SignalMast", mainSignal->identifier());
+        }
+
+        this->vorSignalSchirm()->associateWith(mainSignalMast);
+    }
+
+    void SignalMast::revokeSignalAssociation()
+    {
+        // If we do not have a Vorsignalschirm, we cant have an associated
+        // signal.
+        if (!this->hasVorSignalSchirm())
+        {
+            // clang-format off
+            qCWarning(catInterlocking)
+                << "Can't revoke signal association for signal '"
+                << this->identifier()
+                << "': Signal has no Vorsignalschirm"
+                << Qt::endl;
+            // clang-format on
+
+            return;
+        }
+
+        this->vorSignalSchirm()->revokeAssociation();
     }
 
     void SignalMast::setHauptSignalSchirm(HauptSignalSchirm* hauptSignal)
@@ -109,6 +180,10 @@ namespace Openstw::Interlocking
         this->m_vorSignal = vorSignal;
 
         this->m_vorSignal.value()->setParent(this);
+
+        // Perform initial blanking state update. Any further updates
+        // are triggered by the main signal aspect changing.
+        this->updateBlankingState();
     }
 
     void SignalMast::handleHauptSignalBildChanged(HauptSignalBild newSignalBild)
@@ -160,5 +235,33 @@ namespace Openstw::Interlocking
 
         // If so, apply it.
         this->setMovementAuthority(authority.value());
+
+        // Make sure to update Vorsignal blanking state.
+        this->updateBlankingState();
+    }
+
+    void SignalMast::updateBlankingState()
+    {
+        // If we do not have a distant signal, nothing to be done here.
+        if (!this->isDistantSignal())
+        {
+            return;
+        }
+
+        // If we have a distant signal but no main signal, theres also
+        // nothing to be done - such separate distant signals are always
+        // active.
+        if (!this->isMainSignal())
+        {
+            return;
+        }
+
+        // Determine the Hauptsignalbild, and if it is set to Halt,
+        // disable the distant signal that shares this mast.
+        const auto hauptSignalBild = this->hauptSignalSchirm()->signalBild();
+        const auto vorSignalBlanked = (hauptSignalBild == HauptSignalBild::Halt);
+
+        // Set blanking state in the Vorsignalschirm.
+        this->vorSignalSchirm()->setIsBlanked(vorSignalBlanked);
     }
 }

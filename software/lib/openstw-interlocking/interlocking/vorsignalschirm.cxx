@@ -3,9 +3,23 @@
 
 namespace Openstw::Interlocking
 {
-    VorSignalSchirm::VorSignalSchirm(SignalMast* mast, SignalMast* mainSignal, QObject* parent)
+    VorSignalSchirm::VorSignalSchirm(SignalMast* mast, QObject* parent)
         : SignalSchirm{mast, parent}
 
+    {
+    }
+
+    VorSignalBild VorSignalSchirm::signalBild() const
+    {
+        return this->m_signalBild;
+    }
+
+    std::optional<SignalMast*> VorSignalSchirm::hauptSignal() const
+    {
+        return this->m_hauptSignal;
+    }
+
+    void VorSignalSchirm::associateWith(SignalMast* mainSignal)
     {
         // Verify that the signal mast passed as the main signal
         // associated with this distant signal actually has a main signal..
@@ -16,6 +30,14 @@ namespace Openstw::Interlocking
                                       mainSignal->identifier());
         }
 
+        // If there already is an active association,
+        // make sure to revoke it such that no dangling
+        // signal connections remain.
+        if (this->m_hauptSignal.has_value())
+        {
+            this->revokeAssociation();
+        }
+
         // Retrieve the Hauptsignalschirm from given main signal mast.
         this->m_hauptSignal = mainSignal;
         this->m_hauptSignalSchirm = mainSignal->hauptSignalSchirm();
@@ -23,45 +45,76 @@ namespace Openstw::Interlocking
         // Connect to the signal aspect changed signal of the Hauptsignal
         // we are dependant on, in order to derive our aspect from its.
         // clang-format off
-        connect(this->m_hauptSignalSchirm, &HauptSignalSchirm::signalBildChanged,
-                this, &VorSignalSchirm::deriveSignalBild);
+        connect(this->m_hauptSignalSchirm.value(), &HauptSignalSchirm::signalBildChanged,
+                this, &VorSignalSchirm::hauptSignalBildChanged);
         // clang-format on
 
         // Perform initial synchronization
-        this->deriveSignalBild(this->m_hauptSignalSchirm->signalBild());
+        this->deriveSignalBild();
     }
 
-    VorSignalBild VorSignalSchirm::signalBild() const
+    void VorSignalSchirm::revokeAssociation()
     {
-        return this->m_signalBild;
+        if (this->m_hauptSignalSchirm.has_value())
+        {
+            // Clear up event connection.
+            // clang-format off
+            disconnect( this->m_hauptSignalSchirm.value(), &HauptSignalSchirm::signalBildChanged,
+                        this, &VorSignalSchirm::hauptSignalBildChanged);
+            // clang-format on
+
+            // Then remove association.
+            this->m_hauptSignal = std::nullopt;
+            this->m_hauptSignalSchirm = std::nullopt;
+
+            // Update the signal bild.
+            this->deriveSignalBild();
+        }
     }
 
-    SignalMast* VorSignalSchirm::hauptSignal() const
+    void VorSignalSchirm::hauptSignalBildChanged(HauptSignalBild signalBild)
     {
-        return this->m_hauptSignal;
+        this->deriveSignalBild();
     }
 
-    void VorSignalSchirm::deriveSignalBild(HauptSignalBild hauptSignalState)
+    void VorSignalSchirm::deriveSignalBild()
     {
-        // Determine new signal aspect based on the main signal aspect.
         VorSignalBild newAspect{VorSignalBild::HaltErwarten};
 
-        switch (hauptSignalState)
+        // First, check whether the signal is currently blanked.
+        // If it is, we turn off all the signal lamps.
+        if (this->isBlanked())
         {
-        case HauptSignalBild::Halt:
+            newAspect = VorSignalBild::Off;
+        }
+        else if (this->m_hauptSignalSchirm.has_value())
+        {
+            // Otherwise, if we have a main signal associated with this
+            // Vorsignal, derive the aspect from its aspect.
+            const auto hauptSignalState = this->m_hauptSignalSchirm.value()->signalBild();
+
+            switch (hauptSignalState)
+            {
+            case HauptSignalBild::Halt:
+                newAspect = VorSignalBild::HaltErwarten;
+                break;
+
+            case HauptSignalBild::Fahrt:
+                newAspect = VorSignalBild::FahrtErwarten;
+                break;
+
+            case HauptSignalBild::LangsamFahrt:
+                newAspect = VorSignalBild::LangsamFahrtErwarten;
+                break;
+
+            default:
+                break;
+            }
+        }
+        else
+        {
+            // Otherwise, we just show Halt.
             newAspect = VorSignalBild::HaltErwarten;
-            break;
-
-        case HauptSignalBild::Fahrt:
-            newAspect = VorSignalBild::FahrtErwarten;
-            break;
-
-        case HauptSignalBild::LangsamFahrt:
-            newAspect = VorSignalBild::LangsamFahrtErwarten;
-            break;
-
-        default:
-            break;
         }
 
         // Apply it if its different, and emit signal.

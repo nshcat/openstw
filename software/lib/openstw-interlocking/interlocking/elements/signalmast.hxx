@@ -45,7 +45,14 @@ namespace Openstw::Interlocking
 
         virtual bool isDistantSignal() const override;
 
-        virtual std::optional<Signal*> referencedSignal() const override;
+        virtual std::optional<Signal*> associatedSignal() const override;
+
+    public:
+        virtual bool hasAssociatedSignal() const override;
+
+        virtual void associateWithSignal(Signal* mainSignal) override;
+
+        virtual void revokeSignalAssociation() override;
 
     public:
         // Set the haupt signal for this mast.
@@ -57,6 +64,11 @@ namespace Openstw::Interlocking
     protected slots:
         // React to the aspect displayed by our Hauptsignalschirm changing
         void handleHauptSignalBildChanged(HauptSignalBild newSignalBild);
+
+    protected:
+        // Make sure that any attached Vorsignal is correctly blanked or unblanked
+        // depending on the current main signal state.
+        void updateBlankingState();
 
     protected:
         std::optional<HauptSignalSchirm*> m_hauptSignal{};

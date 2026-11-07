@@ -47,6 +47,9 @@ namespace Openstw::Interlocking
         // Populate switches from given XML element
         void populateSwitches(QDomElement xmlElement);
 
+        // Populate signal masts from given XML element
+        void populateSignalMasts(QDomElement xmlElement);
+
     protected:
         // Topology graph representing the railway infrastructure
         Topology::Topology* m_topology;
