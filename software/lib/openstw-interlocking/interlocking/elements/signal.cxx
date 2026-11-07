@@ -53,7 +53,7 @@ namespace Openstw::Interlocking
         this->m_movementAuthority = std::nullopt;
 
         // Notify our clients of the change
-        emit this->movementAuthorityChanged(this->m_movementAuthority);
+        this->signalMovementAuthorityChanged();
     }
 
     void Signal::setMovementAuthority(const MovementAuthority& authority)
@@ -61,6 +61,15 @@ namespace Openstw::Interlocking
         this->m_movementAuthority = {authority};
 
         // Notify our clients of the change
+        this->signalMovementAuthorityChanged();
+    }
+
+    void Signal::signalMovementAuthorityChanged()
+    {
+        // First, notify the sub class
+        this->onMovementAuthorityChanged();
+
+        // Then, emit the signal.
         emit this->movementAuthorityChanged(this->m_movementAuthority);
     }
 

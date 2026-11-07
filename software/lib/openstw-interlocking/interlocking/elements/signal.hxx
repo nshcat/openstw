@@ -32,6 +32,17 @@ namespace Openstw::Interlocking
         // The signal node within the topology graph this signal corresponds to.
         Topology::Signal* topologyNode() const;
 
+    public: // The processes dealing with routes interact with signals
+            // via these methods - they dont care about specific Signalbilder,
+            // its the job of the specific signal sub class to figure out
+            // how to display an abstract movement authority.
+        // Revoke the signals current movement authority.
+        void revokeMovementAuthority();
+
+        // Set given movement authority as the one currently given out
+        // by this signal.
+        void setMovementAuthority(const MovementAuthority& authority);
+
     public:
         // Whether this signal is a main signal, meaning it can give
         // out movement authorities for Zugfahrten.
@@ -67,12 +78,15 @@ namespace Openstw::Interlocking
         virtual void revokeSignalAssociation() = 0;
 
     protected:
-        // Revoke the signals current movement authority.
-        void revokeMovementAuthority();
+        // Signal to both the sub class as well as to any connected clients
+        // that the current movement authority given out by this signal has changed.
+        void signalMovementAuthorityChanged();
 
-        // Set given movement authority as the one currently given out
-        // by this signal.
-        void setMovementAuthority(const MovementAuthority& authority);
+    protected:
+        // This method is called by the signal base class itself, and gives
+        // any derived, specific signal class a chance to derive its aspect
+        // from the new movement authority (or lack thereof)
+        virtual void onMovementAuthorityChanged() = 0;
 
     signals:
         // Emitted when the current movement authority given out by this

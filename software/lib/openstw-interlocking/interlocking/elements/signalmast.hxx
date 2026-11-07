@@ -61,14 +61,21 @@ namespace Openstw::Interlocking
         // Set the vor signal for this mast.
         void setVorSignalSchirm(VorSignalSchirm* vorSignal);
 
-    protected slots:
-        // React to the aspect displayed by our Hauptsignalschirm changing
-        void handleHauptSignalBildChanged(HauptSignalBild newSignalBild);
-
     protected:
         // Make sure that any attached Vorsignal is correctly blanked or unblanked
         // depending on the current main signal state.
         void updateBlankingState();
+
+    protected:
+        // Handle a change of movement authority, as reported
+        // by the base class.
+        virtual void onMovementAuthorityChanged() override;
+
+    protected slots:
+        // Called whenever the Signalbild of our Hauptsignalschirm changes.
+        // We use this to implemented automatic blanking of distant signals
+        // that might be mounted on this very same mast.
+        void onHauptSignalBildChanged(HauptSignalBild signalBild);
 
     protected:
         std::optional<HauptSignalSchirm*> m_hauptSignal{};

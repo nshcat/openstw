@@ -150,6 +150,69 @@ namespace Openstw::Interlocking
         this->vorSignalSchirm()->revokeAssociation();
     }
 
+    void SignalMast::onMovementAuthorityChanged()
+    {
+        // First, we need to validate that we have a Hauptsignalschirm.
+        // If not, we can't do anything with the movement authority!
+        if (!this->hasHauptSignalSchirm())
+        {
+            // Log this, because it really shouldnt occur.
+            // clang-format off
+            qCCritical(catInterlocking)
+                << "Signal '"
+                << this->identifier()
+                << "' can't handle new movement authority: Signal has no Hauptsignalschirm"
+                << Qt::endl;
+            // clang-format on
+
+            return;
+        }
+
+        // Retrieve our Hauptsignalschirm.
+        auto* hauptsignal = this->hauptSignalSchirm();
+
+        // Now, check if theres a movement authority at all.
+        // If not, we need to fall back to halt.
+        if (!this->hasMovementAuthority())
+        {
+            hauptsignal->setSignalBild(HauptSignalBild::Halt);
+            return;
+        }
+        else
+        {
+            // Retrieve movement authority.
+            const auto& authority = this->movementAuthority();
+
+            // Translate movement authority to Signalbild.
+            // XXX This needs to handle Zs etc
+            HauptSignalBild newSignalBild{HauptSignalBild::Halt};
+
+            switch (authority.type())
+            {
+            case MovementAuthorityType::FullSpeed:
+                newSignalBild = HauptSignalBild::Fahrt;
+                break;
+            case MovementAuthorityType::ReducedSpeed:
+                newSignalBild = HauptSignalBild::LangsamFahrt;
+                break;
+            default:
+                // Not implemented
+                // clang-format off
+                qCCritical(catInterlocking)
+                    << "Signal '"
+                    << this->identifier()
+                    << "' can't handle new movement authority: Type not implemented yet"
+                    << Qt::endl;
+                // clang-format on
+
+                return;
+            }
+
+            // Apply the new aspect to the Hauptsignalschirm
+            hauptsignal->setSignalBild(newSignalBild);
+        }
+    }
+
     void SignalMast::setHauptSignalSchirm(HauptSignalSchirm* hauptSignal)
     {
         if (this->m_hauptSignal.has_value())
@@ -162,12 +225,18 @@ namespace Openstw::Interlocking
 
         this->m_hauptSignal = hauptSignal;
 
-        // Listen to signal notifying us that the Hauptsignalschirms displayed
-        // aspect has changed, in order to derive the current movement authority from it.
+        // Listen to its aspect changing, in order to implement distant
+        // signal blanking.
         // clang-format off
         connect(this->m_hauptSignal.value(), &HauptSignalSchirm::signalBildChanged,
-                this, &SignalMast::handleHauptSignalBildChanged);
+                this, &SignalMast::onHauptSignalBildChanged);
         // clang-format on
+    }
+
+    void SignalMast::onHauptSignalBildChanged(HauptSignalBild signalBild)
+    {
+        // Update blanking state of any attached distant signal
+        this->updateBlankingState();
     }
 
     void SignalMast::setVorSignalSchirm(VorSignalSchirm* vorSignal)
@@ -183,60 +252,6 @@ namespace Openstw::Interlocking
 
         // Perform initial blanking state update. Any further updates
         // are triggered by the main signal aspect changing.
-        this->updateBlankingState();
-    }
-
-    void SignalMast::handleHauptSignalBildChanged(HauptSignalBild newSignalBild)
-    {
-        // First, check if the Signalbild allows passage. If it doesnt,
-        // revoke any existing movement authority.
-        if (newSignalBild == HauptSignalBild::Halt)
-        {
-            // Check if we need to revoke a movement authority.
-            if (this->hasMovementAuthority())
-            {
-                // If so, do so.
-                this->revokeMovementAuthority();
-            }
-
-            return;
-        }
-
-        // Translate the Signalbild into a movement authority.
-        // XXX Deal with possible Zs and such on this mast.
-        std::optional<MovementAuthority> authority{};
-
-        if (newSignalBild == HauptSignalBild::Fahrt)
-        {
-            authority = MovementAuthority::FullSpeed();
-        }
-        else if (newSignalBild == HauptSignalBild::LangsamFahrt)
-        {
-            // XXX This depends on Zs and such..
-            authority = MovementAuthority::ReducedSpeed(40.0);
-        }
-
-        // Validate that we sucessfully derived a movement authority.
-        if (!authority.has_value())
-        {
-            // Something went wrong..
-            // clang-format off
-            qCCritical(catInterlocking())
-                << "SignalMast '"
-                << this->identifier()
-                << "' failed to derive movement authority from HauptSignalBild '"
-                << newSignalBild
-                << "'"
-                << Qt::endl;
-            // clang-format on
-
-            return;
-        }
-
-        // If so, apply it.
-        this->setMovementAuthority(authority.value());
-
-        // Make sure to update Vorsignal blanking state.
         this->updateBlankingState();
     }
 
