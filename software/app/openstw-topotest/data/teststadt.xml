@@ -139,6 +139,27 @@
                 <AxleCounterLink AxleCounter="AC3" Facing="Outward"/>
                 <AxleCounterLink AxleCounter="AC4" Facing="Outward"/>
             </TrackSection>
+
+            <TrackSection Name="TS3">
+                <AxleCounterLink AxleCounter="AC3" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC8" Facing="Outward"/>
+            </TrackSection>
+
+            <TrackSection Name="TS4">
+                <AxleCounterLink AxleCounter="AC4" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC7" Facing="Outward"/>
+            </TrackSection>
+
+            <TrackSection Name="TS5">
+                <AxleCounterLink AxleCounter="AC8" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC7" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC9" Facing="Outward"/>
+            </TrackSection>
+
+            <TrackSection Name="TS6">
+                <AxleCounterLink AxleCounter="AC9" Facing="Inward"/>
+                <AxleCounterLink AxleCounter="AC10" Facing="Outward"/>
+            </TrackSection>
         </TrackSections>
 
         <Switches>
@@ -149,6 +170,8 @@
                  an overlay over the route state the switch reports.
             -->
             <Switch Name="W1" Reference="W1"/>
+
+            <Switch Name="W2" Reference="W2"/>
         </Switches>
 
         <Elements>

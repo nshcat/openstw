@@ -8,6 +8,7 @@
 #include <QList>
 #include <QObject>
 #include <QQueue>
+#include <QVector>
 #include <topo/topology.hxx>
 
 namespace Openstw::Interlocking
@@ -39,6 +40,12 @@ namespace Openstw::Interlocking
     protected: // == Deserializing
         // Populate interlocking network contents from given XML element.
         void populateFromXml(QDomElement xmlElement);
+
+        // Populate track sections from given XML element
+        void populateSections(QDomElement xmlElement);
+
+        // Populate switches from given XML element
+        void populateSwitches(QDomElement xmlElement);
 
     protected:
         // Topology graph representing the railway infrastructure

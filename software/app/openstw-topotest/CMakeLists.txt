@@ -20,6 +20,7 @@ add_executable(openstw-topotest
 target_link_libraries(openstw-topotest PRIVATE Qt${QT_VERSION_MAJOR}::Core)
 
 target_link_libraries(openstw-topotest PRIVATE openstw-topo)
+target_link_libraries(openstw-topotest PRIVATE openstw-interlocking)
 
 include(GNUInstallDirs)
 install(TARGETS openstw-topotest

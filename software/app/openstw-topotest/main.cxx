@@ -1,11 +1,12 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <boost/graph/graphviz.hpp>
+#include <interlocking/system.hxx>
 #include <iostream>
 #include <sstream>
 #include <topo/topology.hxx>
 
-using namespace Openstw::Topology;
+using namespace Openstw;
 
 std::ostream& operator<<(std::ostream& stream, const QString& str)
 {
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    Topology* topo = Topology::createFromXml(topologyElement.toElement(), &a);
+    Topology::Topology* topo = Topology::Topology::createFromXml(topologyElement.toElement(), &a);
 
     std::cout << topo->dumpGraph() << std::endl << std::endl;
 
@@ -60,7 +61,7 @@ int main(int argc, char* argv[])
     const auto* nodeS1 = *topo->findNode("S1");
     const auto* nodeS5 = *topo->findNode("S5");
 
-    const auto path = topo->findPath(nodeS1, nodeS5, Port::Front, Port::Back);
+    const auto path = topo->findPath(nodeS1, nodeS5, Topology::Port::Front, Topology::Port::Back);
     if (!path)
     {
         std::cout << "No path found from S1 -> S5" << std::endl;
@@ -77,7 +78,7 @@ int main(int argc, char* argv[])
     // Try to find a path from S5 to S4. This should not be possible,
     // since it would require traversing W2 or W1 in an illegal way.
     const auto* nodeS4 = *topo->findNode("S4");
-    const auto path2 = topo->findPath(nodeS5, nodeS4, Port::Front, Port::Front);
+    const auto path2 = topo->findPath(nodeS5, nodeS4, Topology::Port::Front, Topology::Port::Front);
 
     if (!path2)
     {
@@ -95,7 +96,7 @@ int main(int argc, char* argv[])
     // Try to find a path from S5 to S6. This should be successful.
     const auto* nodeS6 = *topo->findNode("S6");
 
-    const auto path3 = topo->findPath(nodeS5, nodeS6, Port::Front, Port::Front);
+    const auto path3 = topo->findPath(nodeS5, nodeS6, Topology::Port::Front, Topology::Port::Front);
     if (!path3)
     {
         std::cout << "No path found from S5 -> S6" << std::endl;
@@ -108,6 +109,17 @@ int main(int argc, char* argv[])
 
         std::cout << pathDump << std::endl;
     }
+
+    // == Try creating the interlocking system from XML.
+    auto interlockingElement = doc.documentElement().namedItem("Interlocking");
+
+    if (interlockingElement.isNull() || !interlockingElement.isElement())
+    {
+        std::cerr << "Interlocking XML file does not contain Interlocking data" << std::endl;
+        return -1;
+    }
+
+    Interlocking::System* interlocking = Interlocking::System::createFromXml(topo, interlockingElement.toElement(), &a);
 
     return 0;
 }

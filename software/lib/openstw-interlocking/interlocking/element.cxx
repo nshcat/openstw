@@ -8,6 +8,10 @@ namespace Openstw::Interlocking
     {
     }
 
+    Element::~Element()
+    {
+    }
+
     ElementType Element::type() const
     {
         return this->m_type;
