@@ -8,9 +8,10 @@
 
 namespace Openstw::Interlocking
 {
-    SignalMast::SignalMast(QStringView identifier, QObject* parent)
+    SignalMast::SignalMast(QStringView identifier, Topology::Signal* topoNode, QObject* parent)
         : Signal{ElementType::SignalMast,
                  identifier,
+                 topoNode,
                  {LockingReason::RouteDestination, LockingReason::FlankProtection, LockingReason::RouteStart},
                  true,
                  parent}

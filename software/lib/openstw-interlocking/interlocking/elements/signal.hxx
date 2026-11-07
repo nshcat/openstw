@@ -4,6 +4,7 @@
 #include "lockableelement.hxx"
 #include <QObject>
 #include <optional>
+#include <topo/nodes/signal.hxx>
 
 namespace Openstw::Interlocking
 {
@@ -12,12 +13,10 @@ namespace Openstw::Interlocking
     {
         Q_OBJECT
 
-        // XXX Signal needs reference to associated track section,
-        // and needs to revoke its movement authority if track section is occupied.
-
     public:
-        explicit Signal(ElementType type, QStringView identifier, QSpan<const LockingReason> supportedLockingReasons,
-                        bool supportsRouteStart, QObject* parent = nullptr);
+        explicit Signal(ElementType type, QStringView identifier, Topology::Signal* topoNode,
+                        QSpan<const LockingReason> supportedLockingReasons, bool supportsRouteStart,
+                        QObject* parent = nullptr);
 
     public:
         // Whether a route can originate from this signal.
@@ -29,6 +28,9 @@ namespace Openstw::Interlocking
 
         // The current movement authority.
         const MovementAuthority& movementAuthority() const;
+
+        // The signal node within the topology graph this signal corresponds to.
+        Topology::Signal* topologyNode() const;
 
     public:
         // Whether this signal is a main signal, meaning it can give
@@ -64,6 +66,10 @@ namespace Openstw::Interlocking
         void movementAuthorityChanged(std::optional<MovementAuthority> movementAuthority);
 
     protected:
+        // The signal node inside the topology graph this signal
+        // corresponds to.
+        Topology::Signal* m_topoNode;
+
         // Whether a route can begin at this signal.
         const bool m_supportsRouteStart;
 

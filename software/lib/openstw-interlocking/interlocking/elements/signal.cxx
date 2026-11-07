@@ -5,9 +5,11 @@
 
 namespace Openstw::Interlocking
 {
-    Signal::Signal(ElementType type, QStringView identifier, QSpan<const LockingReason> supportedLockingReasons,
-                   bool supportsRouteStart, QObject* parent)
-        : LockableElement{type, identifier, supportedLockingReasons, parent}, m_supportsRouteStart{supportsRouteStart}
+    Signal::Signal(ElementType type, QStringView identifier, Topology::Signal* topoNode,
+                   QSpan<const LockingReason> supportedLockingReasons, bool supportsRouteStart, QObject* parent)
+        : LockableElement{type, identifier, supportedLockingReasons, parent},
+          m_supportsRouteStart{supportsRouteStart},
+          m_topoNode{topoNode}
     {
     }
 
@@ -60,5 +62,10 @@ namespace Openstw::Interlocking
 
         // Notify our clients of the change
         emit this->movementAuthorityChanged(this->m_movementAuthority);
+    }
+
+    Topology::Signal* Signal::topologyNode() const
+    {
+        return this->m_topoNode;
     }
 }

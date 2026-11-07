@@ -17,7 +17,7 @@ namespace Openstw::Interlocking
         Q_OBJECT
 
     public:
-        explicit SignalMast(QStringView identifier, QObject* parent = nullptr);
+        explicit SignalMast(QStringView identifier, Topology::Signal* topoNode, QObject* parent = nullptr);
 
     public:
         // Whether this mast has a main signal.
