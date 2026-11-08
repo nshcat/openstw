@@ -1,5 +1,8 @@
 #include "stelltisch.hxx"
+#include "features/trackindicatorfeature.hxx"
 #include <chrono>
+#include <core/exception.hxx>
+#include <core/xmlutility.hxx>
 
 namespace Openstw::SpDr
 {
@@ -42,6 +45,33 @@ namespace Openstw::SpDr
 
     Stelltisch* Stelltisch::createFromXml(QDomElement xmlElement, Interlocking::System* interlocking, QObject* parent)
     {
+        // We need to read the dimensions of the Stelltisch first,
+        // otherwise we can't construct the object.
+
+        // First, try to retrieve width.
+        const auto width = Core::Xml::intAttribute(xmlElement, u"Width");
+        if (!width.has_value())
+        {
+            throw Core::RuntimeError("SpDr XML: Line {}: Stelltisch element missing valid width attribute",
+                                     xmlElement.lineNumber());
+        }
+
+        // Then, try to retrieve the height.
+        const auto height = Core::Xml::intAttribute(xmlElement, u"Height");
+        if (!height.has_value())
+        {
+            throw Core::RuntimeError("SpDr XML: Line {}: Stelltisch element missing valid height attribute",
+                                     xmlElement.lineNumber());
+        }
+
+        // Construct Stelltisch object.
+        auto* stelltisch = new Stelltisch{{width.value(), height.value()}, interlocking, parent};
+
+        // Delegate further parsing to it.
+        stelltisch->populateFromXml(xmlElement);
+
+        // Return it.
+        return stelltisch;
     }
 
     QSize Stelltisch::dimensions() const
@@ -108,5 +138,104 @@ namespace Openstw::SpDr
     qsizetype Stelltisch::tileIndex(TileLocation location) const
     {
         return (location.y() * this->width()) + location.x();
+    }
+
+    void Stelltisch::populateFromXml(QDomElement xmlElement)
+    {
+        // == Parse tile descriptors
+        auto tilesElement = xmlElement.namedItem("Tiles");
+
+        if (tilesElement.isNull() || !tilesElement.isElement())
+        {
+            throw Core::RuntimeError("SpDr XML: Expected <Tiles> element");
+        }
+
+        this->populateTiles(tilesElement.toElement());
+        // ==
+    }
+
+    void Stelltisch::populateTiles(QDomElement xmlElement)
+    {
+        // Parse <Tile> elements, and their contained feature layer
+        // elements.
+        auto tileElement = xmlElement.firstChildElement("Tile");
+        while (!tileElement.isNull())
+        {
+            // Figure out the location of the referenced tile.
+            const auto positionX = Core::Xml::intAttribute(tileElement, u"X");
+            if (!positionX.has_value())
+            {
+                throw Core::RuntimeError("SpDr XML: Line {}: Tile element is missing X position",
+                                         xmlElement.lineNumber());
+            }
+
+            const auto positionY = Core::Xml::intAttribute(tileElement, u"Y");
+            if (!positionY.has_value())
+            {
+                throw Core::RuntimeError("SpDr XML: Line {}: Tile element is missing Y position",
+                                         xmlElement.lineNumber());
+            }
+
+            // Retrieve the tile from the Stelltisch.
+            auto tile = this->tile(positionX.value(), positionY.value());
+            if (!tile.has_value())
+            {
+                throw Core::RuntimeError(
+                    "SpDr XML: Line {}: Tile element references nonexistant tile at location ({}, {})",
+                    xmlElement.lineNumber(), *positionX, *positionY);
+            }
+
+            // Now, read all feature layers, if given.
+            auto layersElement = tileElement.namedItem("Layers");
+            if (!layersElement.isNull() && layersElement.isElement())
+            {
+                this->populateLayers(layersElement.toElement(), tile.value());
+            }
+
+            // Continue with the next <Tile> element, if it exists.
+            tileElement = tileElement.nextSiblingElement("Tile");
+        }
+    }
+
+    void Stelltisch::populateLayers(QDomElement xmlElement, Tile* tile)
+    {
+        // Parse <Layer> elements and associated corresponding feature layer
+        // object with the tile.
+        auto layerElement = xmlElement.firstChildElement("Layer");
+        while (!layerElement.isNull())
+        {
+            // Read the layer type.
+            const auto layerType = Core::Xml::enumAttribute<FeatureType>(layerElement, u"Type");
+            if (!layerType.has_value())
+            {
+                throw Core::RuntimeError("SpDr XML: Line {}: Tile layer element is missing type attribute",
+                                         xmlElement.lineNumber());
+            }
+
+            // Construct the correct feature layer object.
+            std::optional<FeatureLayer*> layer{};
+            switch (layerType.value())
+            {
+            case FeatureType::TrackIndicator:
+                layer = TrackIndicatorFeature::createFromXml(layerElement, this->m_interlocking, tile);
+                break;
+
+            default:
+                break;
+            }
+
+            // Ensure that we did create a layer object.
+            if (!layer.has_value())
+            {
+                throw Core::RuntimeError("SpDr XML: Line {}: Tile layer element specifies invalid feature type '{}'",
+                                         xmlElement.lineNumber(), Core::toString(*layerType));
+            }
+
+            // If we did, associate it with the tile.
+            tile->addLayer(layer.value());
+
+            // Continue with the next <Layer> element, if it exists.
+            layerElement = layerElement.nextSiblingElement("Layer");
+        }
     }
 }

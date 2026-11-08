@@ -215,7 +215,7 @@
             <Tiles>
                 <Tile X="0" Y="0">
                     <Layers>
-                        <Layer Type="TrackIndicator" Geometry="Horizontal"/>
+                        <Layer Type="TrackIndicator" Geometry="Horizontal" TrackSection="TS1"/>
                     </Layers>
                 </Tile>
             </Tiles>

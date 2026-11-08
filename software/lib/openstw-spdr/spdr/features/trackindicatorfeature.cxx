@@ -6,7 +6,7 @@ namespace Openstw::SpDr
 {
     TrackIndicatorFeature::TrackIndicatorFeature(TrackIndicatorGeometry geometry, Interlocking::TrackSection* section,
                                                  QObject* parent)
-        : FeatureLayer(FeatureType::Track, parent), m_geometry{geometry}, m_trackSection{section}
+        : FeatureLayer(FeatureType::TrackIndicator, parent), m_geometry{geometry}, m_trackSection{section}
     {
         // Create aperture for the occupancy indicator.
         auto* occupancyElement = new Aperture("center-occupancy", this);

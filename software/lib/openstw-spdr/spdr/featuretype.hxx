@@ -12,8 +12,8 @@ namespace Openstw::SpDr
         // a SpDr can have.
         enum class FeatureType
         {
-            // Track, possibly with occupancy indicator, supports all track geometries.
-            Track = 0
+            // Track with occupancy indicator.
+            TrackIndicator = 0
         };
 
         Q_ENUM_NS(FeatureType)

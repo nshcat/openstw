@@ -1,4 +1,5 @@
 #include "stellwerk.hxx"
+#include <core/exception.hxx>
 
 namespace Openstw::SpDr
 {
@@ -18,6 +19,23 @@ namespace Openstw::SpDr
                 this->m_input, &InputProcessor::onButtonStateChanged);
         // clang-format on
         // ==
+    }
+
+    Stellwerk* Stellwerk::createFromXml(QDomElement xmlElement, Interlocking::System* interlocking, QObject* parent)
+    {
+        // First, create the Stelltisch based on the XML data.
+        auto stellTischElement = xmlElement.namedItem("Stelltisch");
+
+        if (stellTischElement.isNull() || !stellTischElement.isElement())
+        {
+            throw Core::RuntimeError("SpDr XML: Expected <Stelltisch> element");
+        }
+
+        auto* stelltisch = Stelltisch::createFromXml(stellTischElement.toElement(), interlocking);
+
+        // Then create the Stellwerk object and return it.
+        auto* stellwerk = new Stellwerk(interlocking, stelltisch, parent);
+        return stellwerk;
     }
 
     const Stelltisch* Stellwerk::stelltisch() const

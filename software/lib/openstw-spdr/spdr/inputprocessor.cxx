@@ -6,4 +6,8 @@ namespace Openstw::SpDr
         : QObject{parent}
     {
     }
+
+    void InputProcessor::onButtonStateChanged(const Tile* tile, const Button* button, ButtonState newState)
+    {
+    }
 }

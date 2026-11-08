@@ -72,7 +72,14 @@ namespace Openstw::SpDr
 
     protected:
         // Populate Stelltisch data from given XML element.
-        void populateFromXml(QDomElement xmlNode);
+        void populateFromXml(QDomElement xmlElement);
+
+        // Populate tile info and features from given XML element.
+        void populateTiles(QDomElement xmlElement);
+
+        // Read feature layers form given XML element, and add them to
+        // given tile.
+        void populateLayers(QDomElement xmlElement, Tile* tile);
 
     protected:
         // Dimensions of the Stelltisch, in tiles.

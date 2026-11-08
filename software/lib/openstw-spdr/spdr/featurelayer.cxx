@@ -11,6 +11,10 @@ namespace Openstw::SpDr
     {
     }
 
+    FeatureLayer::~FeatureLayer()
+    {
+    }
+
     FeatureType FeatureLayer::type() const
     {
         return this->m_type;

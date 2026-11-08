@@ -19,6 +19,11 @@ namespace Openstw::Interlocking
         return this->m_hauptSignal;
     }
 
+    bool VorSignalSchirm::isBlanked() const
+    {
+        return this->m_isBlanked;
+    }
+
     void VorSignalSchirm::associateWith(SignalMast* mainSignal)
     {
         // Verify that the signal mast passed as the main signal
@@ -68,6 +73,17 @@ namespace Openstw::Interlocking
             this->m_hauptSignalSchirm = std::nullopt;
 
             // Update the signal bild.
+            this->deriveSignalBild();
+        }
+    }
+
+    void VorSignalSchirm::setIsBlanked(bool isBlanked)
+    {
+        if (this->m_isBlanked != isBlanked)
+        {
+            this->m_isBlanked = true;
+
+            // Recompute Signalbild.
             this->deriveSignalBild();
         }
     }

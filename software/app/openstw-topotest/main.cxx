@@ -3,6 +3,7 @@
 #include <boost/graph/graphviz.hpp>
 #include <interlocking/system.hxx>
 #include <iostream>
+#include <spdr/stellwerk.hxx>
 #include <sstream>
 #include <topo/topology.hxx>
 
@@ -119,7 +120,22 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    Interlocking::System* interlocking = Interlocking::System::createFromXml(topo, interlockingElement.toElement(), &a);
+    auto* interlocking = Interlocking::System::createFromXml(topo, interlockingElement.toElement(), &a);
+    (void)interlocking;
+    // ==
+
+    // == Try creating the SpDr Stellwerk from XML.
+    auto spdrElement = doc.documentElement().namedItem("SpDr");
+
+    if (spdrElement.isNull() || !spdrElement.isElement())
+    {
+        std::cerr << "SpDr XML file does not contain Stellwerk data" << std::endl;
+        return -1;
+    }
+
+    auto* stellwerk = SpDr::Stellwerk::createFromXml(spdrElement.toElement(), interlocking, &a);
+    (void)stellwerk;
+    // ==
 
     return 0;
 }
