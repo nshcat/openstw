@@ -2,24 +2,24 @@
 
 #include "inputprocessor.hxx"
 #include "stelltisch.hxx"
+#include <QDomElement>
 #include <QObject>
-#include <QXmlStreamReader>
 #include <interlocking/system.hxx>
 
 namespace Openstw::SpDr
 {
     // Simulation of a SpDr Stellwerk.
-    class Simulation : public QObject
+    class Stellwerk : public QObject
     {
         Q_OBJECT
 
     public:
-        explicit Simulation(Interlocking::System* interlocking, Stelltisch* stelltisch, QObject* parent = nullptr);
+        explicit Stellwerk(Interlocking::System* interlocking, Stelltisch* stelltisch, QObject* parent = nullptr);
 
     public:
-        // Create SpDr Stellwerk simulation from given XML data file.
-        // XXXTODO we should pass a xmldocument node from pugixml here i think..
-        static Simulation* createFromFile(Interlocking::System* interlocking, const QString& filePath, QObject* parent);
+        // Load Stellwerk from given XML element.
+        static Stellwerk* createFromXml(QDomElement xmlElement, Interlocking::System* interlocking,
+                                        QObject* parent = nullptr);
 
     public:
         // Stelltisch associated with this stellwerk.

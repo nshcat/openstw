@@ -19,5 +19,14 @@ namespace Openstw
         {
             return {this->m_featureLayers};
         }
+
+        void Tile::addLayer(FeatureLayer* layer)
+        {
+            this->m_featureLayers.append(layer);
+
+            layer->setParent(this);
+
+            // XXX Add its apertures and such to our registry?
+        }
     }
 }

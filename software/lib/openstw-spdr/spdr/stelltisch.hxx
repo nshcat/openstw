@@ -1,7 +1,9 @@
 #pragma once
 
 #include "tile.hxx"
+#include <QDomElement>
 #include <QObject>
+#include <QSize>
 #include <QTimer>
 #include <QVector>
 #include <interlocking/system.hxx>
@@ -15,29 +17,34 @@ namespace Openstw::SpDr
         Q_OBJECT
 
     public:
-        Stelltisch(Interlocking::System* interlocking, QObject* parent = nullptr);
+        Stelltisch(QSize dimensions, Interlocking::System* interlocking, QObject* parent = nullptr);
+
+    public:
+        // Create stelltisch based on data from given XML element.
+        static Stelltisch* createFromXml(QDomElement xmlElement, Interlocking::System* interlocking,
+                                         QObject* parent = nullptr);
 
     public:
         // Dimensions of the stelltisch, in tiles.
         QSize dimensions() const;
 
         // Width of the stelltisch, in tiles
-        int width() const;
+        unsigned width() const;
 
         // Height of the stelltisch, in tiles
-        int height() const;
+        unsigned height() const;
 
         // Retrieve tile at given location on the stelltisch.
-        std::optional<Tile*> operator[](int x, int y);
+        std::optional<Tile*> operator[](unsigned x, unsigned y);
 
         // Retrieve tile at given location on the stelltisch.
-        std::optional<const Tile*> operator[](int x, int y) const;
+        std::optional<const Tile*> operator[](unsigned x, unsigned y) const;
 
         // Retrieve tile at given location on the stelltisch.
-        std::optional<Tile*> tile(int x, int y);
+        std::optional<Tile*> tile(unsigned x, unsigned y);
 
         // Retrieve tile at given location on the stelltisch.
-        std::optional<const Tile*> tile(int x, int y) const;
+        std::optional<const Tile*> tile(unsigned x, unsigned y) const;
 
     signals:
         // Emitted whenever blinking apertures should toggle their state.
@@ -64,8 +71,20 @@ namespace Openstw::SpDr
         qsizetype tileIndex(TileLocation location) const;
 
     protected:
+        // Populate Stelltisch data from given XML element.
+        void populateFromXml(QDomElement xmlNode);
+
+    protected:
+        // Dimensions of the Stelltisch, in tiles.
+        QSize m_dimensions;
+
+        // Reference to the interlocking system
         Interlocking::System* m_interlocking;
+
+        // Container holding the actual tiles. This is a flat matrix
+        // of tiles, stored in row-major order.
         QVector<Tile*> m_tiles{};
+
         QTimer* m_blinkTimer;
     };
 }

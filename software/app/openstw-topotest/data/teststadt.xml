@@ -211,10 +211,14 @@
 
     <!-- Description of the SpDrS60 Stelltisch controlling the Stellbereich. -->
     <SpDr>
-        <Configuration>
-        </Configuration>
-
-        <Stelltisch>
+        <Stelltisch Width="10" Height="4">
+            <Tiles>
+                <Tile X="0" Y="0">
+                    <Layers>
+                        <Layer Type="TrackIndicator" Geometry="Horizontal"/>
+                    </Layers>
+                </Tile>
+            </Tiles>
         </Stelltisch>
     </SpDr>
 

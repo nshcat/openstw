@@ -30,7 +30,7 @@ add_library(openstw-spdr STATIC
   spdr/button.hxx spdr/button.cxx
   spdr/buttonrole.hxx
   spdr/inputprocessor.hxx spdr/inputprocessor.cxx
-  spdr/simulation.hxx spdr/simulation.cxx
+  spdr/stellwerk.hxx spdr/stellwerk.cxx
   spdr/logging.hxx spdr/logging.cxx
   spdr/features/trackindicatorgeometry.hxx
 )

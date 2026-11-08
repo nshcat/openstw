@@ -1,8 +1,8 @@
-#include "simulation.hxx"
+#include "stellwerk.hxx"
 
 namespace Openstw::SpDr
 {
-    Simulation::Simulation(Interlocking::System* interlocking, Stelltisch* stelltisch, QObject* parent)
+    Stellwerk::Stellwerk(Interlocking::System* interlocking, Stelltisch* stelltisch, QObject* parent)
         : QObject{parent}, m_interlocking{interlocking}, m_stelltisch{stelltisch}
     {
         // Parent the stelltisch to this object for
@@ -20,22 +20,22 @@ namespace Openstw::SpDr
         // ==
     }
 
-    const Stelltisch* Simulation::stelltisch() const
+    const Stelltisch* Stellwerk::stelltisch() const
     {
         return this->m_stelltisch;
     }
 
-    Stelltisch* Simulation::stelltisch()
+    Stelltisch* Stellwerk::stelltisch()
     {
         return this->m_stelltisch;
     }
 
-    const Interlocking::System* Simulation::interlocking() const
+    const Interlocking::System* Stellwerk::interlocking() const
     {
         return this->m_interlocking;
     }
 
-    Interlocking::System* Simulation::interlocking()
+    Interlocking::System* Stellwerk::interlocking()
     {
         return this->m_interlocking;
     }

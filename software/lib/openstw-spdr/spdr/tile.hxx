@@ -45,6 +45,10 @@ namespace Openstw::SpDr
         // the Stelltisch and its tiles.
         void setButtonState(QStringView identifier, ButtonState newState);
 
+    public:
+        // Add given feature layer to this tile.
+        void addLayer(FeatureLayer* layer);
+
     signals:
         // Emitted whenever the state of a button on this tile changes.
         void buttonStateChanged(const Openstw::SpDr::Button* button, Openstw::SpDr::ButtonState newState);
