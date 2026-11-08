@@ -175,28 +175,28 @@
         </Switches>
 
         <SignalMasts>
-            <SignalMast Name="S1">
+            <SignalMast Name="S1" Reference="S1">
                 <HauptsignalSchirm/>
                 <VorsignalSchirm/>
             </SignalMast>
 
-            <SignalMast Name="S2">
+            <SignalMast Name="S2" Reference="S2">
                 <HauptsignalSchirm/>
             </SignalMast>
 
-            <SignalMast Name="S3">
+            <SignalMast Name="S3" Reference="S3">
                 <HauptsignalSchirm/>
             </SignalMast>
 
-            <SignalMast Name="S4">
+            <SignalMast Name="S4" Reference="S4">
                 <HauptsignalSchirm/>
             </SignalMast>
 
-            <SignalMast Name="S5">
+            <SignalMast Name="S5" Reference="S5">
                 <HauptsignalSchirm/>
             </SignalMast>
 
-            <SignalMast Name="S6">
+            <SignalMast Name="S6" Reference="S6">
                 <HauptsignalSchirm/>
                 <VorsignalSchirm/>
             </SignalMast>

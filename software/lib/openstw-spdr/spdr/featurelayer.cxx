@@ -1,5 +1,6 @@
 #include "featurelayer.hxx"
 #include <algorithm>
+#include <core/enums.hxx>
 #include <core/exception.hxx>
 #include <ranges>
 
@@ -137,7 +138,7 @@ namespace Openstw::SpDr
         if (this->m_apertures.contains(element))
         {
             throw Core::ArgumentError("Feature layer '{}' already contains display element '{}'",
-                                      featureTypeToString(this->type()), element->identifier());
+                                      Core::toString(this->type()), element->identifier());
         }
 
         // Parent it under ourselves, such that its lifetime is
@@ -164,8 +165,8 @@ namespace Openstw::SpDr
         // Make sure we dont already have this button.
         if (this->m_buttons.contains(button))
         {
-            throw Core::ArgumentError("Feature layer '{}' already contains button '{}'",
-                                      featureTypeToString(this->type()), button->identifier());
+            throw Core::ArgumentError("Feature layer '{}' already contains button '{}'", Core::toString(this->type()),
+                                      button->identifier());
         }
 
         // Parent it under ourselves, such that its lifetime is

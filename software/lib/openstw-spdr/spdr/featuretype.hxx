@@ -4,20 +4,20 @@
 
 namespace Openstw::SpDr
 {
-    // Enumeration describing the different types of feature layers
-    // a SpDr can have.
-    enum class FeatureType
+    namespace FeatureTypeNS
     {
-        Unknown = 0,
+        Q_NAMESPACE
 
-        // Simple, horizontal track. Might possibly contain a
-        // occupancy indicator.
-        TrackHorizontal = 1
-    };
+        // Enumeration describing the different types of feature layers
+        // a SpDr can have.
+        enum class FeatureType
+        {
+            // Track, possibly with occupancy indicator, supports all track geometries.
+            Track = 0
+        };
 
-    // Parse feature type enum value from string representation.
-    std::optional<FeatureType> parseFeatureType(QStringView featureTypeName);
+        Q_ENUM_NS(FeatureType)
+    }
 
-    // Convert feature type enum value to string representation.
-    QString featureTypeToString(FeatureType featureType);
+    using namespace FeatureTypeNS;
 }

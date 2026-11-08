@@ -1,6 +1,10 @@
 #include "system.hxx"
 #include "element.hxx"
+#include "elements/signalmast.hxx"
+#include "elements/switch.hxx"
 #include "elements/tracksection.hxx"
+#include "hauptsignalschirm.hxx"
+#include "vorsignalschirm.hxx"
 #include <core/exception.hxx>
 
 namespace Openstw::Interlocking
@@ -63,6 +67,23 @@ namespace Openstw::Interlocking
 
         // Actually read and construct switches.
         this->populateSwitches(switchesElement.toElement());
+        //==
+
+        // == Then, parse signal masts..
+        auto mastsElement = xmlElement.namedItem("SignalMasts");
+
+        if (mastsElement.isNull())
+        {
+            throw Core::RuntimeError("Interlocking XML: Expected <SignalMasts> element");
+        }
+
+        if (!mastsElement.isElement())
+        {
+            throw Core::RuntimeError("Interlocking XML: Expected <SignalMasts> element");
+        }
+
+        // Actually read and construct switches.
+        this->populateSignalMasts(mastsElement.toElement());
         //==
     }
 
@@ -233,6 +254,117 @@ namespace Openstw::Interlocking
 
             // Continue with the next <Switch> element, if it exists.
             switchElement = switchElement.nextSiblingElement("Switch");
+        }
+
+        return;
+    }
+
+    void System::populateSignalMasts(QDomElement xmlElement)
+    {
+        // Iterate over all available <SignalMast> child elements.
+        auto mastElement = xmlElement.firstChildElement("SignalMast");
+        while (!mastElement.isNull())
+        {
+            // Validate that the SignalMast element has child elements. If not, it would be an
+            // empty Signalmast, which makes no sense!
+            if (!mastElement.hasChildNodes())
+            {
+                throw Core::RuntimeError(
+                    "Interlocking XML: Line {}: Signal mast element must contain at least one Signalschirm",
+                    xmlElement.lineNumber());
+            }
+
+            // Read mast name
+            const auto mastName = mastElement.attribute("Name");
+            if (mastName.isEmpty())
+            {
+                throw Core::RuntimeError("Interlocking XML: Line {}: Signal mast element missing name attribute",
+                                         xmlElement.lineNumber());
+            }
+
+            // Check whether the identifier is unique.
+            if (this->m_elements.contains(mastName))
+            {
+                throw Core::RuntimeError(
+                    "Interlocking XML: Line {}: Signal mast element has non-unique identifier '{}'",
+                    xmlElement.lineNumber(), mastName);
+            }
+
+            // == Parse and retrieve the singal  topology node for the switch
+            // Read reference attribute
+            const auto refName = mastElement.attribute("Reference");
+            if (refName.isEmpty())
+            {
+                throw Core::RuntimeError("Interlocking XML: Line {}: Signal element missing reference attribute",
+                                         xmlElement.lineNumber());
+            }
+
+            // Try to find the corresponding node within the topology graph
+            auto signalNodeBase = this->topology()->findNode(refName);
+            if (!signalNodeBase.has_value())
+            {
+                throw Core::RuntimeError("Interlocking XML: Line {}: Signal element refers to "
+                                         "non-existing signal node '{}'",
+                                         xmlElement.lineNumber(), refName);
+            }
+
+            // Check that is, in fact, a signal.
+            const auto nodeType = signalNodeBase.value()->type();
+            if (nodeType != Topology::NodeType::Signal)
+            {
+                throw Core::RuntimeError("Interlocking XML: Line {}: Signal element refers to "
+                                         "topology node '{}' with wrong node type",
+                                         xmlElement.lineNumber(), refName);
+            }
+
+            // Cast it.
+            auto* signalNode = dynamic_cast<Topology::Signal*>(signalNodeBase.value());
+            // ==
+
+            // Create the SignalMast object. We will be adding Signalschirme to it later.
+            auto* signalMast = new SignalMast{mastName, signalNode, this};
+
+            // Now, parse the Signalschirme.
+            bool hasAnySignalSchirm{false};
+
+            // We start with a possible Hauptsignalschirm.
+            auto hauptSignalSchirmElement = mastElement.namedItem("HauptsignalSchirm");
+
+            // Does it exist?
+            if (!hauptSignalSchirmElement.isNull() && hauptSignalSchirmElement.isElement())
+            {
+                // Its just an empty element - but we can construct the Signalschirm.
+                auto* schirm = new HauptSignalSchirm{signalMast, signalMast};
+                signalMast->setHauptSignalSchirm(schirm);
+
+                hasAnySignalSchirm = true;
+            }
+
+            // Then, we check for a Vorsignalschirm.
+            auto vorSignalSchirmElement = mastElement.namedItem("VorsignalSchirm");
+
+            // Does it exist?
+            if (!vorSignalSchirmElement.isNull() && vorSignalSchirmElement.isElement())
+            {
+                auto* schirm = new VorSignalSchirm{signalMast, signalMast};
+                signalMast->setVorSignalSchirm(schirm);
+
+                hasAnySignalSchirm = true;
+            }
+
+            // Validate that there was at least one Signalschirm.
+            if (!hasAnySignalSchirm)
+            {
+                throw Core::RuntimeError(
+                    "Interlocking XML: Line {}: Signal mast element must contain at least one Signalschirm",
+                    xmlElement.lineNumber());
+            }
+
+            // Finally, add the Signalmast to the interlocking system.
+            this->m_elements.insert(mastName, signalMast);
+
+            // Continue with the next <SignalMast> element, if it exists.
+            mastElement = mastElement.nextSiblingElement("SignalMast");
         }
 
         return;

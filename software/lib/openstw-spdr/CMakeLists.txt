@@ -23,15 +23,16 @@ add_library(openstw-spdr STATIC
   spdr/featurelayer.hxx spdr/featurelayer.cxx
   spdr/featuretype.hxx
   spdr/featureorientation.hxx
-  spdr/featuretype.cxx
+
   spdr/tilelocation.hxx spdr/tilelocation.cxx
-  spdr/features/trackhorizontalfeature.hxx spdr/features/trackhorizontalfeature.cxx
+  spdr/features/trackindicatorfeature.hxx spdr/features/trackindicatorfeature.cxx
   spdr/buttonstate.hxx
   spdr/button.hxx spdr/button.cxx
   spdr/buttonrole.hxx
   spdr/inputprocessor.hxx spdr/inputprocessor.cxx
   spdr/simulation.hxx spdr/simulation.cxx
   spdr/logging.hxx spdr/logging.cxx
+  spdr/features/trackindicatorgeometry.hxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)
