@@ -19,6 +19,19 @@ namespace Openstw::Interlocking
         return this->m_topology;
     }
 
+    std::optional<Element*> System::element(QStringView identifier)
+    {
+        const auto iter = this->m_elements.find(identifier);
+        if (iter == this->m_elements.end())
+        {
+            return std::nullopt;
+        }
+        else
+        {
+            return {*iter};
+        }
+    }
+
     void System::handleRequest(Request* request)
     {
         // XXXTODO

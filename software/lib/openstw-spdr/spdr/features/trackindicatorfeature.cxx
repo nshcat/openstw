@@ -1,4 +1,6 @@
 #include "trackindicatorfeature.hxx"
+#include <core/enums.hxx>
+#include <core/exception.hxx>
 
 namespace Openstw::SpDr
 {
@@ -23,6 +25,68 @@ namespace Openstw::SpDr
 
         // Perform initial synchronization
         this->updateOccupancyAperture();
+    }
+
+    TrackIndicatorFeature* TrackIndicatorFeature::createFromXml(QDomElement xmlElement,
+                                                                Interlocking::System* interlocking, QObject* parent)
+    {
+        // First, we need to figure out the track geometry.
+        const auto geometryStr = xmlElement.attribute("Geometry");
+        if (geometryStr.isEmpty())
+        {
+            throw Core::RuntimeError("SpDr XML: Line {}: Track indicator feature element missing geometry attribute",
+                                     xmlElement.lineNumber());
+        }
+
+        // Try to retrieve enum value for it.
+        const auto geometry = Core::fromString<TrackIndicatorGeometry>(geometryStr);
+        if (!geometry.has_value())
+        {
+            throw Core::RuntimeError(
+                "SpDr XML: Line {}: Track indicator feature element specifies invalid geometry '{}'",
+                xmlElement.lineNumber(), geometryStr);
+        }
+
+        // Now, retrieve the track section that fills this feature with data.
+        const auto sectionStr = xmlElement.attribute("TrackSection");
+        if (sectionStr.isEmpty())
+        {
+            throw Core::RuntimeError(
+                "SpDr XML: Line {}: Track indicator feature element missing track section attribute",
+                xmlElement.lineNumber());
+        }
+
+        // Try to find the element within the interlocking system
+        // that represents the referenced track section
+        auto sectionElement = interlocking->element(sectionStr);
+        if (!sectionElement.has_value())
+        {
+            throw Core::RuntimeError(
+                "SpDr XML: Line {}: Track indicator feature element references non-existent track section '{}'",
+                xmlElement.lineNumber(), sectionStr);
+        }
+
+        // Validate that the element is, in fact, a track section
+        if (sectionElement.value()->type() != Interlocking::ElementType::TrackSection)
+        {
+            throw Core::RuntimeError("SpDr XML: Line {}: Track indicator feature element references interlocking "
+                                     "element '{}', which is not a track section",
+                                     xmlElement.lineNumber(), sectionStr);
+        }
+
+        // Cast it.
+        auto* section = dynamic_cast<Interlocking::TrackSection*>(sectionElement.value());
+
+        // Validate the cast.
+        if (!section)
+        {
+            throw Core::RuntimeError("SpDr XML: Line {}: Track indicator feature element references interlocking "
+                                     "element '{}', which unexpectedly is not a TrackSection object",
+                                     xmlElement.lineNumber(), sectionStr);
+        }
+
+        // Create feature layer and return it.
+        return new TrackIndicatorFeature{geometry.value(), section, parent};
     }
 
     TrackIndicatorGeometry TrackIndicatorFeature::geometry() const

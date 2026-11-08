@@ -4,7 +4,9 @@
 #include "featurelayer.hxx"
 #include "featuretype.hxx"
 #include "trackindicatorgeometry.hxx"
+#include <QDomElement>
 #include <interlocking/elements/tracksection.hxx>
+#include <interlocking/system.hxx>
 #include <optional>
 
 namespace Openstw::SpDr
@@ -21,6 +23,11 @@ namespace Openstw::SpDr
                               QObject* parent = nullptr);
 
         virtual ~TrackIndicatorFeature() override = default;
+
+    public:
+        // Parse track indicator feature from given XML element.
+        static TrackIndicatorFeature* createFromXml(QDomElement xmlElement, Interlocking::System* interlocking,
+                                                    QObject* parent = nullptr);
 
     public:
         // The specific track geometry this feature describes.

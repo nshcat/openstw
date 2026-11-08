@@ -32,6 +32,9 @@ namespace Openstw::Interlocking
         // Topology object associated with the interlocking system
         Topology::Topology* topology() const;
 
+        // Retrieve interlocking element with given identifier.
+        std::optional<Element*> element(QStringView identifier);
+
     public slots:
         // Handle given interlocking request.
         // The interlocking system will acquire ownership of it.
