@@ -1,41 +1,51 @@
 #pragma once
 
+#include <QDomElement>
 #include <QObject>
+#include <interlocking/system.hxx>
+#include <spdr/stellwerk.hxx>
 #include <string>
-
-#include "base.hxx"
-#include "tilepanel.hxx"
+#include <topo/topology.hxx>
 
 namespace Openstw::Simulation
 {
-    class Simulation : public QObject, public ISimulationObject
+    // The simulation class orchestrates the whole simulation
+    // of a railroad network including its Stellwerke, and train
+    // traffic within it.
+    // It owns instances of a topology graph, an interlocking system
+    // and a SpDr Stellwerk simulation.
+    class Simulation : public QObject
     {
         Q_OBJECT
 
-    protected:
-        Simulation(QObject* parent);
+    public:
+        Simulation(Topology::Topology* topology, Interlocking::System* interlocking, SpDr::Stellwerk* stellwerk,
+                   QObject* parent = nullptr);
 
     public:
-        ~Simulation() = default;
-
-        Simulation(const Simulation&) = delete;
-        Simulation& operator=(const Simulation&) = delete;
-
-        Simulation(Simulation&&) = delete;
-        Simulation& operator=(Simulation&&) = delete;
+        // Create simulation instance based on given Xml element.
+        // Topology, interlocking system and the Stellwerk simulation
+        // will be created based on the appropiate sub elements.
+        static Simulation* createFromXml(QDomElement xmlElement, QObject* parent = nullptr);
 
     public:
-        static Simulation* FromTemplateFile(QObject* parent, const std::string& filePath);
+        Topology::Topology* topology() const;
+        Interlocking::System* interlocking() const;
+        SpDr::Stellwerk* stellwerk() const;
 
     public:
-        TilePanel* tilePanel();
-
-    public: // == ISimulationObject interface implementation
-        virtual void update(const float deltaTime);
+        void update(const float deltaTime);
 
     protected:
-        TilePanel* m_tilePanel;
+        // Load simulation data from given Xml element.
+        void populateSimulation(QDomElement xmlElement);
+
+    protected:
+        // References to simulation subsystems
+        Topology::Topology* m_topology;
+        Interlocking::System* m_interlocking;
+        SpDr::Stellwerk* m_stellwerk;
+
         float m_simTime{0.0f};
-        int m_state{0};
     };
 }

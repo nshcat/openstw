@@ -1,76 +1,85 @@
 #include "simulation.hxx"
-#include <QtLogging>
-#include <cstdio>
-#include <pugixml.hpp>
-#include <stdexcept>
-
-#include "simpleswitch.hxx"
+#include <core/exception.hxx>
+#include <core/xmlutility.hxx>
 
 namespace Openstw::Simulation
 {
-    Simulation::Simulation(QObject* parent) : QObject{parent}
+
+    Simulation::Simulation(Topology::Topology* topology, Interlocking::System* interlocking, SpDr::Stellwerk* stellwerk,
+                           QObject* parent)
+        : QObject{parent}, m_topology{topology}, m_interlocking{interlocking}, m_stellwerk{stellwerk}
     {
+        // Reparent all subsystem objects to the simulation object,
+        // for lifetime management.
+        this->m_topology->setParent(this);
+        this->m_interlocking->setParent(this);
+        this->m_stellwerk->setParent(this);
     }
 
-    Simulation* Simulation::FromTemplateFile(QObject* parent, const std::string& filePath)
+    Simulation* Simulation::createFromXml(QDomElement xmlElement, QObject* parent)
     {
-        pugi::xml_document templateDoc{};
-        const auto parseResult = templateDoc.load_file(filePath.c_str());
+        // First, create simulation subsystem instances, since we need those to
+        // construct the simulation object itself.
 
-        Simulation* sim = new Simulation(parent);
+        // We begin with the topology object.
+        auto topoElement = xmlElement.namedItem("Topology");
 
-        if (!parseResult)
-            throw std::runtime_error(parseResult.description());
+        if (topoElement.isNull() || !topoElement.isElement())
+        {
+            throw Core::RuntimeError("Simulation XML: Expected <Topology> element");
+        }
 
-        const auto simulationNode = templateDoc.root().child("Simulation");
-        if (!simulationNode)
-            throw std::runtime_error("Simulation template has no Simulation entry");
+        auto* topology = Topology::Topology::createFromXml(topoElement.toElement());
 
-        // == Tile panel
-        const auto tilePanelNode = simulationNode.child("TilePanel");
-        if (!tilePanelNode)
-            throw std::runtime_error("Simulation template has no TilePanel entry");
+        // Then, create the interlocking system on top of it.
+        auto interlockingElement = xmlElement.namedItem("Interlocking");
 
-        sim->m_tilePanel = TilePanel::CreateFrom(sim, tilePanelNode);
-        // ==
+        if (interlockingElement.isNull() || !interlockingElement.isElement())
+        {
+            throw Core::RuntimeError("Simulation XML: Expected <Interlocking> element");
+        }
 
-        return sim;
+        auto* interlocking = Interlocking::System::createFromXml(topology, interlockingElement.toElement());
+
+        // Afterwards, create the SpDr Stellwerk object.
+        auto spdrElement = xmlElement.namedItem("SpDr");
+
+        if (spdrElement.isNull() || !spdrElement.isElement())
+        {
+            throw Core::RuntimeError("Simulation XML: Expected <SpDr> element");
+        }
+
+        auto* stellwerk = SpDr::Stellwerk::createFromXml(spdrElement.toElement(), interlocking);
+
+        // Finally, create the simulation object, and populate its data as well.
+        auto* simulation = new Simulation{topology, interlocking, stellwerk, parent};
+
+        simulation->populateSimulation(xmlElement);
+
+        return simulation;
     }
 
-    TilePanel* Simulation::tilePanel()
+    Topology::Topology* Simulation::topology() const
     {
-        return this->m_tilePanel;
+        return this->m_topology;
+    }
+
+    Interlocking::System* Simulation::interlocking() const
+    {
+        return this->m_interlocking;
+    }
+
+    SpDr::Stellwerk* Simulation::stellwerk() const
+    {
+        return this->m_stellwerk;
     }
 
     void Simulation::update(const float deltaTime)
     {
-        this->m_simTime += deltaTime;
+        return;
+    }
 
-        {
-            Tile* tile = this->tilePanel()->tileAt(6, 1);
-            tile->track().setState(TrackState::FahrstrasseSet);
-            tile->setDirty();
-
-            tile = this->tilePanel()->tileAt(7, 1);
-            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Stem, TrackState::FahrstrasseSet);
-            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Branch, TrackState::FahrstrasseSet);
-            tile->setDirty();
-
-            tile = this->tilePanel()->tileAt(7, 0);
-            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Stem, TrackState::FahrstrasseSet);
-            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Branch, TrackState::FahrstrasseSet);
-            tile->setDirty();
-
-            tile = this->tilePanel()->tileAt(8, 0);
-            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Stem, TrackState::FahrstrasseSet);
-            tile->getSwitch()->as<SimpleSwitch>()->setPartState(SimpleSwitchPart::Straight, TrackState::FahrstrasseSet);
-            tile->setDirty();
-
-            tile = this->tilePanel()->tileAt(9, 0);
-            tile->track().setState(TrackState::FahrstrasseSet);
-            tile->setDirty();
-        }
-
-        this->m_tilePanel->invalidateIfDirty();
+    void Simulation::populateSimulation(QDomElement xmlElement)
+    {
     }
 }
