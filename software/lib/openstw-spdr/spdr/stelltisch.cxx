@@ -1,8 +1,10 @@
-#include "stelltisch.hxx"
-#include "features/trackindicatorfeature.hxx"
 #include <chrono>
 #include <core/exception.hxx>
 #include <core/xmlutility.hxx>
+
+#include "features/hpsignalfeature.hxx"
+#include "features/trackindicatorfeature.hxx"
+#include "stelltisch.hxx"
 
 namespace Openstw::SpDr
 {
@@ -218,6 +220,10 @@ namespace Openstw::SpDr
             {
             case FeatureType::TrackIndicator:
                 layer = TrackIndicatorFeature::createFromXml(layerElement, this->m_interlocking, tile);
+                break;
+
+            case FeatureType::HpSignal:
+                layer = HpSignalFeature::createFromXml(layerElement, this->m_interlocking, tile);
                 break;
 
             default:
