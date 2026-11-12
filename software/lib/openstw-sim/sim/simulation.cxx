@@ -1,7 +1,9 @@
-#include "simulation.hxx"
 #include <QFile>
 #include <core/exception.hxx>
 #include <core/xmlutility.hxx>
+
+#include "logging.hxx"
+#include "simulation.hxx"
 
 namespace Openstw::Simulation
 {
@@ -121,11 +123,15 @@ namespace Openstw::Simulation
             {
                 auto* ac1 = dynamic_cast<Openstw::Topology::AxleCounter*>(*this->topology()->findNode("AC1"));
                 ac1->traverse(Openstw::Topology::Port::Back, Openstw::Topology::Port::Front);
+
+                qCDebug(catSim, "Traversing axle counter AC1");
             }
             else
             {
                 auto* ac2 = dynamic_cast<Openstw::Topology::AxleCounter*>(*this->topology()->findNode("AC2"));
                 ac2->traverse(Openstw::Topology::Port::Back, Openstw::Topology::Port::Front);
+
+                qCDebug(catSim, "Traversing axle counter AC2");
             }
 
             flag = !flag;

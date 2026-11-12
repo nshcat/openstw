@@ -33,6 +33,13 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <widget class="QMenu" name="menu_Views">
+     <property name="title">
+      <string>&amp;Views</string>
+     </property>
+     <addaction name="actionLog_Messages"/>
+    </widget>
+    <addaction name="menu_Views"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_View"/>
@@ -41,6 +48,17 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionLog_Messages">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Log Messages</string>
    </property>
   </action>
  </widget>
