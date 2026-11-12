@@ -10,7 +10,7 @@ namespace Rendering
 
     TrackIndicatorFeatureObject::TrackIndicatorFeatureObject(const Openstw::SpDr::TrackIndicatorFeature* feature,
                                                              TileGraphicsObject* parent)
-        : TileFeatureGraphicsObject{Openstw::SpDr::FeatureType::TrackIndicator, parent, true}, m_feature{feature}
+        : TileFeatureGraphicsObject{Openstw::SpDr::FeatureType::TrackIndicator, parent, false}, m_feature{feature}
     {
         // Retrieve the aperture representing the occupancy indicator, and listen for
         // state changes
