@@ -1,4 +1,5 @@
 #include <QHeaderView>
+#include <QScrollBar>
 #include <QVBoxLayout>
 
 #include "logmanager.hxx"
@@ -39,4 +40,41 @@ LogSubWindow::LogSubWindow(QWidget* parent)
     auto* layoutContent = new QWidget();
     layoutContent->setLayout(layout);
     this->setWidget(layoutContent);
+
+    // Implement auto scroll behaviour, that respects the users manual
+    // scrolling - it will only scroll to the bottom on log message arrival
+    // if the current scroll position was already at the bottom.
+
+    // React to a new item being about to be inserted, and check if the log view
+    // is currently scrolled to the very bottom.
+    // clang-format off
+    connect(g_LogManager, &QAbstractTableModel::rowsAboutToBeInserted,
+            this,
+            [this]()
+            {
+                // Retrieve scroll bar
+                auto* scrollbar = this->m_messageView->verticalScrollBar();
+
+                // Check if its very near of the bottom, just to be sure.
+                this->m_viewAtBottom = (scrollbar->value() >= scrollbar->maximum() - 1);
+            }
+    );
+    // clang-format on
+
+    // Also react to the signal emitted after a new item has been inserted,
+    // and scroll the view to the new bottom position if we previously
+    // determined that the view was already scrolled to the very bottom.
+    // clang-format off
+    connect(g_LogManager, &QAbstractTableModel::rowsInserted,
+            this,
+            [this]()
+            {
+                if(this->m_viewAtBottom)
+                {
+                    this->m_messageView->scrollToBottom();
+                }
+            },
+            Qt::QueuedConnection // Make sure that the item has been fully displayed before scrolling.
+    );
+    // clang-format on
 }

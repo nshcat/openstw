@@ -18,4 +18,8 @@ protected:
     // we are not actually displaying a tree of items, just a flat
     // list of log messages.
     QTreeView* m_messageView;
+
+    // Whether the tree view was at the bottom before another
+    // log message was inserted into the model.
+    bool m_viewAtBottom{false};
 };
