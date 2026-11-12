@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QToolBar>
 
+#include "blinkgenerator.hxx"
 #include "magnettype.hxx"
 #include "simulationrunner.hxx"
 #include "tilepanelview.hxx"
@@ -12,7 +13,7 @@ class StelltischSubWindow : public QMdiSubWindow
 {
     Q_OBJECT
 public:
-    StelltischSubWindow(QWidget* parent, SimulationRunner* sim);
+    StelltischSubWindow(QWidget* parent, SimulationRunner* sim, BlinkGenerator* blink);
 
 protected:
     void setupToolbar();
@@ -27,4 +28,5 @@ protected:
     TilePanelView* m_tilePanelView{};
     SimulationRunner* m_simulation{}; //< Owned by main window
     QToolBar* m_toolBar{};
+    BlinkGenerator* m_blink;
 };

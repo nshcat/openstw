@@ -9,7 +9,8 @@
 #include "tilegraphicsobject.hxx"
 #include "tilepanelview.hxx"
 
-TilePanelView::TilePanelView()
+TilePanelView::TilePanelView(BlinkGenerator* blink)
+    : m_blink{blink}
 {
     this->setBackgroundBrush(Qt::white);
     this->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -37,7 +38,7 @@ void TilePanelView::setTilePanel(Openstw::SpDr::Stelltisch* tilePanel)
         for (std::size_t iy = 0; iy < tilePanel->height(); ++iy)
         {
             auto* tile = *tilePanel->tile(ix, iy);
-            auto* tileItem = new TileGraphicsObject(tile);
+            auto* tileItem = new TileGraphicsObject{tile, this->m_blink};
             tileItem->setPos(ix * TileGraphicsObject::tileWidth, iy * TileGraphicsObject::tileHeight);
             tileGraphicsObject.append(tileItem);
             this->m_scene->addItem(tileItem);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "blinkgenerator.hxx"
 #include "simulationrunner.hxx"
 #include "stelltischsubwindow.hxx"
 #include <QMainWindow>
@@ -32,4 +33,5 @@ private:
     QMdiArea* m_mdiArea{};
     SimulationRunner* m_simRunner{};
     StelltischSubWindow* m_stelltischWindow{};
+    BlinkGenerator* m_blink;
 };

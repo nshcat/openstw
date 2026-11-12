@@ -1,9 +1,9 @@
 #pragma once
 
+#include "blinkgenerator.hxx"
 #include <QGraphicsItemGroup>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-
 #include <spdr/stelltisch.hxx>
 
 /**
@@ -16,7 +16,7 @@ class TilePanelView : public QGraphicsView
     Q_OBJECT
 
 public:
-    TilePanelView();
+    TilePanelView(BlinkGenerator* blink);
 
 public:
     void setTilePanel(Openstw::SpDr::Stelltisch* tilepanel);
@@ -40,4 +40,5 @@ protected:
     Openstw::SpDr::Stelltisch* m_tilePanel{};
     QGraphicsScene* m_scene{};
     QGraphicsItemGroup* m_tileItemGroup{}; //< Holds all graphics items that render the stellwerk tiles
+    BlinkGenerator* m_blink;
 };

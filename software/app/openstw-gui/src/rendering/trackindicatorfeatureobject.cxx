@@ -10,7 +10,7 @@ namespace Rendering
 
     TrackIndicatorFeatureObject::TrackIndicatorFeatureObject(const Openstw::SpDr::TrackIndicatorFeature* feature,
                                                              TileGraphicsObject* parent)
-        : TileFeatureGraphicsObject{Openstw::SpDr::FeatureType::TrackIndicator, parent}, m_feature{feature}
+        : TileFeatureGraphicsObject{Openstw::SpDr::FeatureType::TrackIndicator, parent, true}, m_feature{feature}
     {
         // Retrieve the aperture representing the occupancy indicator, and listen for
         // state changes
@@ -34,7 +34,7 @@ namespace Rendering
     }
 
     void TrackIndicatorFeatureObject::drawBesetztMelder(QPainter* painter, const QRectF& trackRect,
-                                                        const Openstw::SpDr::ApertureState& state) const
+                                                        const Openstw::SpDr::Aperture* aperture) const
     {
         painter->save();
 
@@ -43,7 +43,7 @@ namespace Rendering
                    centerWithin(TrackIndicatorFeatureObject::trackIndicatorHeight, trackRect.height(), trackRect.top()),
                    TrackIndicatorFeatureObject::trackIndicatorWidth, TrackIndicatorFeatureObject::trackIndicatorHeight};
 
-        const auto trackIndicatorColor = convertApertureColor(state.color());
+        const auto trackIndicatorColor = this->apertureRenderColor(aperture);
         painter->setBrush(trackIndicatorColor);
         painter->setPen(rectanglePen(trackIndicatorColor, 1.0f));
         painter->drawRect(adjustRectForBorder(trackIndicatorRect, 1.0f));
@@ -69,7 +69,7 @@ namespace Rendering
         painter->setPen(rectanglePen(Qt::black, 1.0f));
         painter->drawRect(adjustRectForBorder(trackRect, 1.0f));
 
-        this->drawBesetztMelder(painter, trackRect, this->m_indicatorAperture->state());
+        this->drawBesetztMelder(painter, trackRect, this->m_indicatorAperture);
 
         painter->restore();
     }

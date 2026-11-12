@@ -108,7 +108,28 @@ namespace Openstw::Simulation
 
     void Simulation::update(const float deltaTime)
     {
-        return;
+        static float testTimer{0.0f};
+        static bool flag{false};
+
+        testTimer += deltaTime;
+
+        if (testTimer >= 3.0f)
+        {
+            testTimer -= 3.0f;
+
+            if (!flag)
+            {
+                auto* ac1 = dynamic_cast<Openstw::Topology::AxleCounter*>(*this->topology()->findNode("AC1"));
+                ac1->traverse(Openstw::Topology::Port::Back, Openstw::Topology::Port::Front);
+            }
+            else
+            {
+                auto* ac2 = dynamic_cast<Openstw::Topology::AxleCounter*>(*this->topology()->findNode("AC2"));
+                ac2->traverse(Openstw::Topology::Port::Back, Openstw::Topology::Port::Front);
+            }
+
+            flag = !flag;
+        }
     }
 
     void Simulation::populateSimulation(QDomElement xmlElement)

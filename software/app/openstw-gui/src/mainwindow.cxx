@@ -10,12 +10,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->m_mdiArea = new QMdiArea();
     this->setCentralWidget(this->m_mdiArea);
 
+    this->m_blink = new BlinkGenerator{this};
+
     this->m_simRunner = new SimulationRunner();
     connect(this->m_simRunner, &SimulationRunner::simulationStarted, this, &MainWindow::simulationStarted);
 
     this->resize(1920, 1080);
 
-    this->m_stelltischWindow = new StelltischSubWindow(nullptr, this->m_simRunner);
+    this->m_stelltischWindow = new StelltischSubWindow(nullptr, this->m_simRunner, this->m_blink);
     this->m_mdiArea->addSubWindow(this->m_stelltischWindow);
 
     this->m_simRunner->startSimulation();
@@ -28,6 +30,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::simulationStarted()
 {
+    // Start the blink timer.
+    this->m_blink->start();
 }
 
 void MainWindow::on_actionExit_triggered()

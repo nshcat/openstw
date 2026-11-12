@@ -6,14 +6,19 @@
 #include <QPainter>
 #include <optional>
 
-TileGraphicsObject::TileGraphicsObject(Openstw::SpDr::Tile* tile)
-    : m_tile(tile)
+TileGraphicsObject::TileGraphicsObject(Openstw::SpDr::Tile* tile, BlinkGenerator* blink)
+    : m_tile(tile), m_blink{blink}
 {
 }
 
 Openstw::SpDr::Tile* TileGraphicsObject::tile() const
 {
     return this->m_tile;
+}
+
+BlinkGenerator* TileGraphicsObject::blinkGenerator() const
+{
+    return this->m_blink;
 }
 
 QRectF TileGraphicsObject::innerBoundingRect() const

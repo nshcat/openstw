@@ -36,7 +36,7 @@ namespace Rendering
 
     protected:
         void drawBesetztMelder(QPainter* painter, const QRectF& trackRect,
-                               const Openstw::SpDr::ApertureState& state) const;
+                               const Openstw::SpDr::Aperture* aperture) const;
 
     protected:
         // The feature we are rendering.

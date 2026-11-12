@@ -46,6 +46,11 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/magnettype.hxx
         src/rendering/icontextmenuprovider.hxx
         src/logging.hxx src/logging.cxx
+        src/logsubwindow.hxx src/logsubwindow.cxx
+        src/logmanager.hxx src/logmanager.cxx
+        src/logmessage.hxx src/logmessage.cxx
+        src/blinkgenerator.hxx src/blinkgenerator.cxx
+        src/blinkstate.hxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

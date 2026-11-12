@@ -6,8 +6,10 @@
 #include <QVBoxLayout>
 #include <functional>
 
-StelltischSubWindow::StelltischSubWindow(QWidget* parent, SimulationRunner* sim)
-    : QMdiSubWindow{parent, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint}, m_simulation{sim}
+StelltischSubWindow::StelltischSubWindow(QWidget* parent, SimulationRunner* sim, BlinkGenerator* blink)
+    : QMdiSubWindow{parent, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint},
+      m_simulation{sim},
+      m_blink{blink}
 {
     this->setWindowTitle("Stelltisch");
     this->resize(1768, 770);
@@ -15,7 +17,7 @@ StelltischSubWindow::StelltischSubWindow(QWidget* parent, SimulationRunner* sim)
     this->m_toolBar = new QToolBar();
     this->setupToolbar();
 
-    this->m_tilePanelView = new TilePanelView();
+    this->m_tilePanelView = new TilePanelView{this->m_blink};
 
     auto* layout = new QVBoxLayout();
     layout->setMenuBar(this->m_toolBar);
