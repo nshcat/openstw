@@ -1,4 +1,5 @@
 #include "simulation.hxx"
+#include <QFile>
 #include <core/exception.hxx>
 #include <core/xmlutility.hxx>
 
@@ -14,6 +15,37 @@ namespace Openstw::Simulation
         this->m_topology->setParent(this);
         this->m_interlocking->setParent(this);
         this->m_stellwerk->setParent(this);
+    }
+
+    Simulation* Simulation::createFromXmlFile(const QString& xmlFilePath, QObject* parent)
+    {
+        // Check that the file exists.
+        if (!QFile::exists(xmlFilePath))
+        {
+            throw Core::ArgumentError("Simulation Xml filer '{}' not found", xmlFilePath);
+        }
+
+        // Try to open it for reading.
+        QFile file(xmlFilePath);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            throw Core::ArgumentError("Could not open simulation Xml filer '{}'", xmlFilePath);
+        }
+
+        // Try to parse the file contents as an Xml document.
+        QDomDocument doc;
+        const auto result = doc.setContent(&file);
+        if (!result)
+        {
+            throw Core::ArgumentError("Failed to parse simulation Xml file: {} at position {}:{}", result.errorMessage,
+                                      result.errorLine, result.errorColumn);
+        }
+
+        // Retrieve the root element from the DOM
+        const auto rootElement = doc.documentElement();
+
+        // Delegate further parsing to the other factory method.
+        return Simulation::createFromXml(rootElement, parent);
     }
 
     Simulation* Simulation::createFromXml(QDomElement xmlElement, QObject* parent)

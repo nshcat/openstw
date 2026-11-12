@@ -4,8 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QTimer>
-
-#include <simulation.hxx>
+#include <sim/simulation.hxx>
 
 /**
  * @brief Object that lives inside a worker thread and runs the simulation code.

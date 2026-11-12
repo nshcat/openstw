@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
-#include <tilepanel.hxx>
+#include <spdr/stelltisch.hxx>
 
 /**
  * @brief The TilePanelView class displays a TilePanel using a QGraphicsView,
@@ -19,9 +19,9 @@ public:
     TilePanelView();
 
 public:
-    void setTilePanel(Openstw::Simulation::TilePanel* tilePanel);
+    void setTilePanel(Openstw::SpDr::Stelltisch* tilepanel);
     bool hasTilePanel() const;
-    Openstw::Simulation::TilePanel* tilePanel() const;
+    Openstw::SpDr::Stelltisch* tilePanel() const;
     void saveToSvg(const QString& path) const;
 
 protected: // == Internal helper methods
@@ -37,7 +37,7 @@ protected slots:
     void onSaveToImageFile();
 
 protected:
-    Openstw::Simulation::TilePanel* m_tilePanel{};
+    Openstw::SpDr::Stelltisch* m_tilePanel{};
     QGraphicsScene* m_scene{};
     QGraphicsItemGroup* m_tileItemGroup{}; //< Holds all graphics items that render the stellwerk tiles
 };

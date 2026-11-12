@@ -1,15 +1,17 @@
 #include "tilegraphicsobject.hxx"
+#include "logging.hxx"
 #include "rendering/renderinghelpers.hxx"
 #include "rendering/tilerenderingconstants.hxx"
 #include <QGraphicsScene>
 #include <QPainter>
+#include <optional>
 
-TileGraphicsObject::TileGraphicsObject(Openstw::Simulation::Tile* tile) : m_tile(tile)
+TileGraphicsObject::TileGraphicsObject(Openstw::SpDr::Tile* tile)
+    : m_tile(tile)
 {
-    connect(tile, &Openstw::Simulation::Tile::invalidated, this, &TileGraphicsObject::tileInvalidated);
 }
 
-Openstw::Simulation::Tile* TileGraphicsObject::tile() const
+Openstw::SpDr::Tile* TileGraphicsObject::tile() const
 {
     return this->m_tile;
 }
@@ -50,15 +52,66 @@ void TileGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void TileGraphicsObject::setup()
 {
-    this->createComponentRenderers();
+    // Setup all all feature layer renderers.
+    for (auto* featureLayer : this->m_tile->layers())
+    {
+        std::optional<Rendering::TileFeatureGraphicsObject*> layerRenderer{};
+
+        // Figure out which type of feature layer this is, and construct
+        // the appropiate graphics object for it.
+        switch (featureLayer->type())
+        {
+        case Openstw::SpDr::FeatureType::TrackIndicator:
+            {
+                auto* feature = dynamic_cast<const Openstw::SpDr::TrackIndicatorFeature*>(featureLayer);
+
+                if (!feature)
+                {
+                    // clang-format off
+                    qCWarning(catGui)
+                        << "Encountered unexpected dynamic type mismatch for feature of type '"
+                        << featureLayer->type()
+                        << "', ignoring"
+                        << Qt::endl;
+                    // clang-format on
+
+                    continue;
+                }
+
+                layerRenderer = new Rendering::TrackIndicatorFeatureObject{feature, this};
+                break;
+            }
+
+        default:
+            // clang-format off
+            qCWarning(catGui)
+                << "Encountered unknown feature layer type '"
+                << featureLayer->type()
+                << "', ignoring"
+                << Qt::endl;
+            // clang-format on
+
+            break;
+        }
+
+        // Have we actually constructed a new graphics object?
+        // If so, set it up and remember it for later.
+        if (layerRenderer.has_value())
+        {
+            (*layerRenderer)->setup();
+            this->m_featureRenderers.append(*layerRenderer);
+        }
+    }
 }
 
 QRectF TileGraphicsObject::horizontalDrawingAreaRect(Rendering::VerticalDirection position) const
 {
     const auto tileBoundingRect = this->innerBoundingRect();
 
-    constexpr auto signalBoundingRectHeight =
-        Rendering::TileRenderingConstants::halfTileHeight - (Rendering::TrackGraphicsObject::trackThickness / 2.0f);
+    // XXX The track constant should NOT be part of the feature renderer class..
+    // It should be moved to a general constants file.
+    constexpr auto signalBoundingRectHeight = Rendering::TileRenderingConstants::halfTileHeight -
+                                              (Rendering::TrackIndicatorFeatureObject::trackThickness / 2.0f);
 
     QPointF topLeft;
 
@@ -72,47 +125,4 @@ QRectF TileGraphicsObject::horizontalDrawingAreaRect(Rendering::VerticalDirectio
     }
 
     return QRectF{topLeft.x(), topLeft.y(), tileBoundingRect.width(), signalBoundingRectHeight};
-}
-
-void TileGraphicsObject::createComponentRenderers()
-{
-    this->m_platformRenderer = new Rendering::PlatformGraphicsObject{this};
-    this->m_platformRenderer->setup();
-
-    this->m_arrowRenderer = new Rendering::ArrowGraphicsObject{this};
-    this->m_arrowRenderer->setup();
-
-    this->m_erlaubnisFeldRenderer = new Rendering::ErlaubsnisFeldGraphicsObject{this};
-    this->m_erlaubnisFeldRenderer->setup();
-
-    this->m_trackRenderer = new Rendering::TrackGraphicsObject{this};
-    this->m_trackRenderer->setup();
-
-    this->m_bkwdSignalRenderer =
-        new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Backward};
-    this->m_bkwdSignalRenderer->setup();
-
-    this->m_fwdSignalRenderer =
-        new Rendering::SignalGraphicsObject{this, Openstw::Simulation::TileElementDirection::Forward};
-    this->m_fwdSignalRenderer->setup();
-
-    this->m_znaRenderer = new Rendering::ZNAGraphicsObject{this};
-    this->m_znaRenderer->setup();
-
-    this->m_labelRenderer = new Rendering::LabelGraphicsObject{this};
-    this->m_labelRenderer->setup();
-
-    this->m_switchRenderer = new Rendering::SwitchGraphicsObject{this};
-    this->m_switchRenderer->setup();
-
-    this->m_zstRenderer = new Rendering::ZSTGraphicsObject{this};
-    this->m_zstRenderer->setup();
-
-    this->m_fsmRenderer = new Rendering::FSMGraphicsObject{this};
-    this->m_fsmRenderer->setup();
-}
-
-void TileGraphicsObject::tileInvalidated()
-{
-    this->update();
 }

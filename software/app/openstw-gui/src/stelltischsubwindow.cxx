@@ -85,7 +85,7 @@ void StelltischSubWindow::setupToolbar()
 
 void StelltischSubWindow::simulationStarted()
 {
-    this->m_tilePanelView->setTilePanel(this->m_simulation->simulation()->tilePanel());
+    this->m_tilePanelView->setTilePanel(this->m_simulation->simulation()->stellwerk()->stelltisch());
 }
 
 void StelltischSubWindow::onAddMagnetTriggered(const MagnetType type)

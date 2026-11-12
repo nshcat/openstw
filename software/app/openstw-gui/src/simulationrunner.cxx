@@ -20,7 +20,7 @@ void SimulationRunner::startSimulation()
 
 void SimulationRunner::threadStarted()
 {
-    this->m_simulation = Openstw::Simulation::Simulation::FromTemplateFile(this, "sim_template.xml");
+    this->m_simulation = Openstw::Simulation::Simulation::createFromXmlFile("teststadt.xml", this);
 
     this->m_elapsedTimer.start();
 

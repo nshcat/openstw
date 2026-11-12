@@ -35,37 +35,17 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 
         src/rendering/tilerenderingconstants.hxx
 
-        src/rendering/tilecomponentgraphicsobject.hxx src/rendering/tilecomponentgraphicsobject.cxx
-        src/rendering/trackgraphicsobject.hxx src/rendering/trackgraphicsobject.cxx
-        data/sim_template.xml
+        src/rendering/tilefeaturegraphicsobject.hxx src/rendering/tilefeaturegraphicsobject.cxx
+        src/rendering/trackindicatorfeatureobject.hxx src/rendering/trackindicatorfeatureobject.cxx
         src/rendering/renderinghelpers.hxx src/rendering/renderinghelpers.cxx
-        src/rendering/signalgraphicsobject.hxx src/rendering/signalgraphicsobject.cxx
-        src/rendering/arrowgraphicsobject.hxx
-        src/rendering/arrowgraphicsobject.cxx
-        src/rendering/arrowgraphicsobject.cxx
-        src/rendering/erlaubnisfeldgraphicsobject.hxx
-        src/rendering/erlaubnisfeldgraphicsobject.cxx
-        src/rendering/znagraphicsobject.hxx
-        src/rendering/znagraphicsobject.cxx
-        src/rendering/sevensegmentrenderer.hxx src/rendering/sevensegmentrenderer.cxx
         src/application.hxx src/application.cxx
-        src/rendering/labelgraphicsobject.hxx
-        src/rendering/labelgraphicsobject.cxx
-        data/sim_template_2.xml
+        data/teststadt.xml
         src/simulationrunner.hxx src/simulationrunner.cxx
-        src/rendering/zstgraphicsobject.hxx
-        src/rendering/zstgraphicsobject.cxx
         src/stelltischsubwindow.hxx src/stelltischsubwindow.cxx
         src/rendering/magnetgraphicsobject.hxx src/rendering/magnetgraphicsobject.cxx
         src/magnettype.hxx
         src/rendering/icontextmenuprovider.hxx
-        src/rendering/fsmgraphicsobject.hxx
-        src/rendering/fsmgraphicsobject.cxx
-        src/rendering/platformgraphicsobject.hxx
-        src/rendering/platformgraphicsobject.cxx
-        src/rendering/switchgraphicsobject.hxx
-        src/rendering/switchgraphicsobject.cxx
-
+        src/logging.hxx src/logging.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -119,6 +99,18 @@ target_link_libraries(openstw-gui PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg Qt6::X
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
 target_link_libraries(openstw-gui PRIVATE Qt6::Core)
+
+add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/teststadt.xml
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_CURRENT_SOURCE_DIR}/data/teststadt.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/teststadt.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/data/teststadt.xml
+)
+
+add_custom_target(copy_gui_teststadt_xml DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/teststadt.xml)
+
+add_dependencies(openstw-gui copy_gui_teststadt_xml)
 
 
 if(QT_VERSION_MAJOR EQUAL 6)

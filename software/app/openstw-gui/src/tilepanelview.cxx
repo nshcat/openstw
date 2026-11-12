@@ -16,7 +16,7 @@ TilePanelView::TilePanelView()
     this->setDragMode(DragMode::ScrollHandDrag);
 }
 
-void TilePanelView::setTilePanel(Openstw::Simulation::TilePanel *tilePanel)
+void TilePanelView::setTilePanel(Openstw::SpDr::Stelltisch* tilePanel)
 {
     if (this->m_tilePanel != nullptr)
         throw std::runtime_error("Tile panel was already set");
@@ -36,7 +36,7 @@ void TilePanelView::setTilePanel(Openstw::Simulation::TilePanel *tilePanel)
     {
         for (std::size_t iy = 0; iy < tilePanel->height(); ++iy)
         {
-            auto* tile = tilePanel->operator[](ix, iy);
+            auto* tile = *tilePanel->tile(ix, iy);
             auto* tileItem = new TileGraphicsObject(tile);
             tileItem->setPos(ix * TileGraphicsObject::tileWidth, iy * TileGraphicsObject::tileHeight);
             tileGraphicsObject.append(tileItem);
@@ -53,7 +53,7 @@ bool TilePanelView::hasTilePanel() const
     return this->m_tilePanel != nullptr;
 }
 
-Openstw::Simulation::TilePanel *TilePanelView::tilePanel() const
+Openstw::SpDr::Stelltisch* TilePanelView::tilePanel() const
 {
     return this->m_tilePanel;
 }

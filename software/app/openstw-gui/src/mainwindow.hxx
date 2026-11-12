@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QMdiArea>
 #include <QVBoxLayout>
-#include <simulation.hxx>
 
 QT_BEGIN_NAMESPACE
 namespace Ui

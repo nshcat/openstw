@@ -5,6 +5,8 @@
 #include <QPainter>
 #include <QtCore>
 
+#include <spdr/aperturecolor.hxx>
+
 namespace Rendering
 {
     enum class HorizontalDirection
@@ -58,4 +60,7 @@ namespace Rendering
      * @brief Adjusts the currently active font to be bold
      */
     void makeCurrentFontBold(QPainter* painter);
+
+    // Retrieve actual Ui color for given SpDr aperture color state.
+    QColor convertApertureColor(Openstw::SpDr::ApertureColor apertureColor);
 }

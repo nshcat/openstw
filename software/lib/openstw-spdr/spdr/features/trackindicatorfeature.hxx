@@ -1,8 +1,8 @@
 #pragma once
 
-#include "aperture.hxx"
-#include "featurelayer.hxx"
-#include "featuretype.hxx"
+#include "../aperture.hxx"
+#include "../featurelayer.hxx"
+#include "../featuretype.hxx"
 #include "trackindicatorgeometry.hxx"
 #include <QDomElement>
 #include <interlocking/elements/tracksection.hxx>

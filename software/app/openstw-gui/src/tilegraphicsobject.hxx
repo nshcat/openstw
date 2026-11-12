@@ -1,20 +1,13 @@
 #pragma once
 
 #include <QGraphicsObject>
-#include <tile.hxx>
+#include <QVector>
+#include <spdr/featurelayer.hxx>
+#include <spdr/tile.hxx>
 
-#include "rendering/arrowgraphicsobject.hxx"
-#include "rendering/erlaubnisfeldgraphicsobject.hxx"
-#include "rendering/fsmgraphicsobject.hxx"
-#include "rendering/labelgraphicsobject.hxx"
-#include "rendering/platformgraphicsobject.hxx"
 #include "rendering/renderinghelpers.hxx"
-#include "rendering/signalgraphicsobject.hxx"
-#include "rendering/switchgraphicsobject.hxx"
 #include "rendering/tilerenderingconstants.hxx"
-#include "rendering/trackgraphicsobject.hxx"
-#include "rendering/znagraphicsobject.hxx"
-#include "rendering/zstgraphicsobject.hxx"
+#include "rendering/trackindicatorfeatureobject.hxx"
 
 class TileGraphicsObject : public QGraphicsObject
 {
@@ -25,10 +18,10 @@ public:
     constexpr static qreal tileHeight = Rendering::TileRenderingConstants::tileHeight;
 
 public:
-    TileGraphicsObject(Openstw::Simulation::Tile* tile);
+    TileGraphicsObject(Openstw::SpDr::Tile* tile);
 
 public:
-    Openstw::Simulation::Tile* tile() const;
+    Openstw::SpDr::Tile* tile() const;
 
     /**
      * @brief The bounding rect of the inner tile, without the border.
@@ -51,24 +44,11 @@ public:
     QRectF horizontalDrawingAreaRect(Rendering::VerticalDirection position) const;
 
 protected:
-    void createComponentRenderers();
+    // The SpDr tile we are representing. That object is essentially the view model,
+    // and this class is the view.
+    Openstw::SpDr::Tile* m_tile{};
 
-protected slots:
-    void tileInvalidated();
-
-protected:
-    Openstw::Simulation::Tile* m_tile{};
-
-protected: // == Component renderers
-    Rendering::ArrowGraphicsObject* m_arrowRenderer;
-    Rendering::TrackGraphicsObject* m_trackRenderer;
-    Rendering::SignalGraphicsObject* m_fwdSignalRenderer;
-    Rendering::SignalGraphicsObject* m_bkwdSignalRenderer;
-    Rendering::ErlaubsnisFeldGraphicsObject* m_erlaubnisFeldRenderer;
-    Rendering::ZNAGraphicsObject* m_znaRenderer;
-    Rendering::ZSTGraphicsObject* m_zstRenderer;
-    Rendering::LabelGraphicsObject* m_labelRenderer;
-    Rendering::FSMGraphicsObject* m_fsmRenderer;
-    Rendering::PlatformGraphicsObject* m_platformRenderer;
-    Rendering::SwitchGraphicsObject* m_switchRenderer;
+    // All feature layers we need to render the tile associated with this
+    // graphics object.
+    QVector<Rendering::TileFeatureGraphicsObject*> m_featureRenderers{};
 };

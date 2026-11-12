@@ -3,7 +3,8 @@
 #include <QGraphicsObject>
 #include <QObject>
 #include <optional>
-#include <tile.hxx>
+#include <spdr/featurelayer.hxx>
+#include <spdr/featuretype.hxx>
 
 #include "icontextmenuprovider.hxx"
 
@@ -11,19 +12,29 @@ class TileGraphicsObject;
 
 namespace Rendering
 {
-    class TileComponentGraphicsObject : public QGraphicsObject, public IContextMenuProvider
+    // A Qt graphics object that takes care of rendering a single feature layer
+    // within a SpDr tile.
+    class TileFeatureGraphicsObject : public QGraphicsObject, public IContextMenuProvider
     {
         Q_OBJECT
+
     public:
-        TileComponentGraphicsObject(TileGraphicsObject* parent, bool providesContextMenu = false);
+        TileFeatureGraphicsObject(Openstw::SpDr::FeatureType featureType, TileGraphicsObject* parent,
+                                  bool providesContextMenu = false);
+
+    public:
+        // The specific type of feature layer this graphics object renders.
+        Openstw::SpDr::FeatureType featureType() const;
+
+        // Retrieve the tile graphics object this feature object belongs to.
+        TileGraphicsObject* tileGraphicsObject() const;
 
     public:
         /**
          * @brief Finishes setting up the graphics object to be ready for rendering.
          * Is called from the main tile graphics object.
          */
-        void setup();
-        TileGraphicsObject* tileGraphicsObject() const;
+        void setup();     
 
     public:
         virtual bool providesContextMenu() const override;
@@ -56,8 +67,8 @@ namespace Rendering
         virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
     protected:
-        Openstw::Simulation::Tile* m_tile{};
         TileGraphicsObject* m_tileGraphicsObj{};
         bool m_providesContextMenu{false};
+        Openstw::SpDr::FeatureType m_featureType;
     };
 }

@@ -1,5 +1,7 @@
 #include "renderinghelpers.hxx"
+#include "../logging.hxx"
 #include <QPen>
+#include <core/enums.hxx>
 
 namespace Rendering
 {
@@ -75,5 +77,34 @@ namespace Rendering
         QFont currentFont = painter->font();
         currentFont.setBold(true);
         painter->setFont(currentFont);
+    }
+
+    QColor convertApertureColor(Openstw::SpDr::ApertureColor apertureColor)
+    {
+        switch (apertureColor)
+        {
+        case Openstw::SpDr::ApertureColor::Off:
+            return QColor{0x4b, 0x4b, 0x4b};
+        case Openstw::SpDr::ApertureColor::White:
+            return QColor{0xed, 0xff, 0x9f};
+        case Openstw::SpDr::ApertureColor::Red:
+            return QColor{0xff, 0x00, 0x00};
+        case Openstw::SpDr::ApertureColor::Yellow:
+            return QColor{Qt::yellow};
+        case Openstw::SpDr::ApertureColor::Green:
+            return QColor{Qt::green};
+        case Openstw::SpDr::ApertureColor::Blue:
+            return QColor{Qt::blue};
+        default:
+            // clang-format off
+            qCWarning(catGui)
+                << "Encountered unknown SpDr color '"
+                << apertureColor
+                << "', returning color for 'Off'"
+                << Qt::endl;
+            // clang-format on
+
+            return convertApertureColor(Openstw::SpDr::ApertureColor::Off);
+        }
     }
 }

@@ -12,9 +12,9 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Xml)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Xml)
 
 add_library(openstw-sim STATIC
-  src/simulation.cxx
-  src/simulation.hxx
-  src/logging.hxx src/logging.cxx
+  sim/simulation.cxx
+  sim/simulation.hxx
+  sim/logging.hxx sim/logging.cxx
 )
 
 target_link_libraries(openstw-sim PUBLIC pugixml-static)
@@ -30,7 +30,13 @@ target_link_libraries(openstw-sim PUBLIC
 )
 
 target_link_libraries(openstw-sim PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt6::Xml)
-target_include_directories(openstw-sim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Allow the project itself to directly include headers,
+# while requiring other projects to prepend "sim/" to their includes
+# to avoid header name collisions.
+target_include_directories(openstw-sim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/sim)
+target_include_directories(openstw-sim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 
 target_compile_definitions(openstw-sim PRIVATE OPENSTW_SIM_LIBRARY)
 

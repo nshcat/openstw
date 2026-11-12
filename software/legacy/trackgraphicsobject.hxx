@@ -1,13 +1,15 @@
 #pragma once
 
-#include "tilecomponentgraphicsobject.hxx"
+#include "tilefeaturegraphicsobject.hxx"
 #include <QObject>
+#include <spdr/features/trackindicatorfeature.hxx>
 
 class TileGraphicsObject;
 
 namespace Rendering
 {
-    class TrackGraphicsObject : public Rendering::TileComponentGraphicsObject
+    // Graphics object that represents a track indicator feature on a SpDr tile.
+    class TrackIndicatorFeatureObject : public TileFeatureGraphicsObject
     {
         Q_OBJECT
 
@@ -19,7 +21,7 @@ namespace Rendering
         constexpr static qreal labelBoxHorzPadding = 22.0f;
 
     public:
-        TrackGraphicsObject(TileGraphicsObject* parent);
+        TrackIndicatorFeatureObject(Openstw::SpDr::TrackIndicatorFeature* feature, TileGraphicsObject* parent);
 
     public:
         virtual QRectF boundingRect() const override;

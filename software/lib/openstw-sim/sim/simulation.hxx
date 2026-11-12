@@ -28,6 +28,9 @@ namespace Openstw::Simulation
         // will be created based on the appropiate sub elements.
         static Simulation* createFromXml(QDomElement xmlElement, QObject* parent = nullptr);
 
+        // Create simulation instance based on given Xml file.
+        static Simulation* createFromXmlFile(const QString& xmlFilePath, QObject* parent = nullptr);
+
     public:
         Topology::Topology* topology() const;
         Interlocking::System* interlocking() const;
