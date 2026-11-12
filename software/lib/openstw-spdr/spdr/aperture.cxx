@@ -44,4 +44,19 @@ namespace Openstw::SpDr
             emit this->stateChanged(this->m_currentState);
         }
     }
+
+    void Aperture::updateOff()
+    {
+        this->updateState(ApertureState::off());
+    }
+
+    void Aperture::updateSolid(ApertureColor color)
+    {
+        this->updateState(ApertureState::solid(color));
+    }
+
+    void Aperture::updateBlinking(ApertureColor color)
+    {
+        this->updateState(ApertureState::blinking(color));
+    }
 }

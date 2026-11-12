@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hauptsignalbild.hxx"
+#include "../hauptsignalbild.hxx"
 #include "signal.hxx"
 #include <QObject>
 #include <optional>

@@ -33,6 +33,8 @@ add_library(openstw-spdr STATIC
   spdr/stellwerk.hxx spdr/stellwerk.cxx
   spdr/logging.hxx spdr/logging.cxx
   spdr/features/trackindicatorgeometry.hxx
+  spdr/features/hpsignalfeature.hxx spdr/features/hpsignalfeature.cxx
+  spdr/orientedfeaturelayer.hxx spdr/orientedfeaturelayer.cxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)

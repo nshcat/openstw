@@ -49,15 +49,15 @@ LogSubWindow::LogSubWindow(QWidget* parent)
     // is currently scrolled to the very bottom.
     // clang-format off
     connect(g_LogManager, &QAbstractTableModel::rowsAboutToBeInserted,
-            this,
-            [this]()
-            {
-                // Retrieve scroll bar
-                auto* scrollbar = this->m_messageView->verticalScrollBar();
+        this,
+        [this]()
+        {
+            // Retrieve scroll bar
+            auto* scrollbar = this->m_messageView->verticalScrollBar();
 
-                // Check if its very near of the bottom, just to be sure.
-                this->m_viewAtBottom = (scrollbar->value() >= scrollbar->maximum() - 1);
-            }
+            // Check if its very near of the bottom, just to be sure.
+            this->m_viewAtBottom = (scrollbar->value() >= scrollbar->maximum() - 1);
+        }
     );
     // clang-format on
 
@@ -66,15 +66,15 @@ LogSubWindow::LogSubWindow(QWidget* parent)
     // determined that the view was already scrolled to the very bottom.
     // clang-format off
     connect(g_LogManager, &QAbstractTableModel::rowsInserted,
-            this,
-            [this]()
+        this,
+        [this]()
+        {
+            if(this->m_viewAtBottom)
             {
-                if(this->m_viewAtBottom)
-                {
-                    this->m_messageView->scrollToBottom();
-                }
-            },
-            Qt::QueuedConnection // Make sure that the item has been fully displayed before scrolling.
+                this->m_messageView->scrollToBottom();
+            }
+        },
+        Qt::QueuedConnection // Make sure that the item has been fully displayed before scrolling.
     );
     // clang-format on
 }

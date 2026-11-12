@@ -44,6 +44,17 @@ namespace Openstw::SpDr
         // if the state is indeed different.
         void updateState(const ApertureState& newState);
 
+        // Update the display state of this aperture to be off.
+        void updateOff();
+
+        // Update the display state of this aperture to be of
+        // given solid color.
+        void updateSolid(ApertureColor color);
+
+        // Update the display state of this aperture to be of given
+        // blinking color.
+        void updateBlinking(ApertureColor color);
+
     signals:
         // Emitted whenever the state of this aperture changes.
         void stateChanged(Openstw::SpDr::ApertureState newState);

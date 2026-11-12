@@ -13,7 +13,10 @@ namespace Openstw::SpDr
         enum class FeatureType
         {
             // Track with occupancy indicator.
-            TrackIndicator = 0
+            TrackIndicator = 0,
+
+            // A basic Hauptsignal.
+            HpSignal = 1
         };
 
         Q_ENUM_NS(FeatureType)
