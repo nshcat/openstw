@@ -11,7 +11,16 @@ namespace Openstw::SpDr
                                      QObject* parent)
         : OrientedFeatureLayer{FeatureType::HpSignal, orientation, parent}
     {
-        // First, retrieve the Hauptsignalschirm attached to given Signalmast.
+        // First, create apertures used to display the signal state.
+        auto* redLamp = new Aperture("signal-red-lamp", this);
+        this->addAperture(redLamp);
+        this->m_redLamp = redLamp;
+
+        auto* greenLamp = new Aperture("signal-green-lamp", this);
+        this->addAperture(greenLamp);
+        this->m_greenLamp = greenLamp;
+
+        // Then, retrieve the Hauptsignalschirm attached to given Signalmast.
         if (!signalMast->hasHauptSignalSchirm())
         {
             throw Core::ArgumentError("Signal mast '{}' has no Hauptsignalschirm", signalMast->identifier());

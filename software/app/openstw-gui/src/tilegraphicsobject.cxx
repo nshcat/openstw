@@ -1,10 +1,12 @@
-#include "tilegraphicsobject.hxx"
-#include "logging.hxx"
-#include "rendering/renderinghelpers.hxx"
-#include "rendering/tilerenderingconstants.hxx"
 #include <QGraphicsScene>
 #include <QPainter>
 #include <optional>
+
+#include "logging.hxx"
+#include "rendering/hpsignalfeatureobject.hxx"
+#include "rendering/renderinghelpers.hxx"
+#include "rendering/tilerenderingconstants.hxx"
+#include "tilegraphicsobject.hxx"
 
 TileGraphicsObject::TileGraphicsObject(Openstw::SpDr::Tile* tile, BlinkGenerator* blink)
     : m_tile(tile), m_blink{blink}
@@ -84,6 +86,27 @@ void TileGraphicsObject::setup()
                 }
 
                 layerRenderer = new Rendering::TrackIndicatorFeatureObject{feature, this};
+                break;
+            }
+
+        case Openstw::SpDr::FeatureType::HpSignal:
+            {
+                auto* feature = dynamic_cast<const Openstw::SpDr::HpSignalFeature*>(featureLayer);
+
+                if (!feature)
+                {
+                    // clang-format off
+                    qCWarning(catGui)
+                        << "Encountered unexpected dynamic type mismatch for feature of type '"
+                        << featureLayer->type()
+                        << "', ignoring"
+                        << Qt::endl;
+                    // clang-format on
+
+                    continue;
+                }
+
+                layerRenderer = new Rendering::HpSignalFeatureObject{feature, this};
                 break;
             }
 

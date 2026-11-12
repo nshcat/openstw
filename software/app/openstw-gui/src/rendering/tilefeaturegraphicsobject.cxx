@@ -113,4 +113,19 @@ namespace Rendering
             return convertApertureColor(currentState.color());
         }
     }
+
+    bool TileFeatureGraphicsObject::apertureIsOn(const Openstw::SpDr::Aperture* aperture) const
+    {
+        // Retrieve the apertures current state.
+        const auto& currentState = aperture->state();
+
+        // We need to do special handling if the aperture is blinking.
+        if (currentState.blinkMode() == Openstw::SpDr::BlinkMode::Blinking)
+        {
+            return this->blinkGenerator()->lampsOn();
+        }
+
+        // Otherwise, check whether the aperture is off.
+        return !currentState.isOff();
+    }
 }

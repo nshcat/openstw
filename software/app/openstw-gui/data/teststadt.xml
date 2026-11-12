@@ -223,6 +223,7 @@
                         <Layer Type="TrackIndicator" Geometry="Horizontal" TrackSection="TS1"/>
                         <Layer Type="HpSignal" Orientation="Forward" SignalMast="S1"/>
                     </Layers>
+                </Tile>
             </Tiles>
         </Stelltisch>
     </SpDr>

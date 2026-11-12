@@ -55,6 +55,10 @@ namespace Rendering
         // This also incorporates the global blink generator state.
         QColor apertureRenderColor(const Openstw::SpDr::Aperture* aperture) const;
 
+        // Determine whether the given aperture is currently on. This correctly
+        // incorporates the global blink timer when it comes to blinking apertures.
+        bool apertureIsOn(const Openstw::SpDr::Aperture* aperture) const;
+
     protected:
         // Called when the tile component renderer needs this component
         // to position itself relative to the parent tile component graphics object.

@@ -52,6 +52,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/blinkgenerator.hxx src/blinkgenerator.cxx
         src/blinkstate.hxx
         src/subwindow.hxx src/subwindow.cxx
+        src/rendering/hpsignalfeatureobject.hxx src/rendering/hpsignalfeatureobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
