@@ -18,6 +18,27 @@ namespace Openstw::SpDr
     {
         Q_OBJECT
 
+    protected:
+        // Unique aperture identifiers that depend on the orientation
+        // of this feature. This is required since there might be two
+        // signal features on a single tile, and not including the orientation
+        // would result in name clashes, which would make signals ambiguous
+        // on any level higher than individual feature layer objects!
+
+        // Aperture identifiers for forward orientation
+        struct ForwardIdentifiers
+        {
+            constexpr static QStringView greenAperture{u"hpsignal-fwd-green"};
+            constexpr static QStringView redAperture{u"hpsignal-fwd-red"};
+        };
+
+        // Aperture identifiers for backward orientation
+        struct BackwardIdentifiers
+        {
+            constexpr static QStringView greenAperture{u"hpsignal-bck-green"};
+            constexpr static QStringView redAperture{u"hpsignal-bck-red"};
+        };
+
     public:
         HpSignalFeature(Interlocking::SignalMast* signalMast, FeatureOrientation orientation,
                         QObject* parent = nullptr);

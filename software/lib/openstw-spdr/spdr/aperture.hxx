@@ -20,6 +20,8 @@ namespace Openstw::SpDr
         Q_OBJECT
 
     public:
+        explicit Aperture(QStringView identifier, QObject* parent = nullptr);
+
         explicit Aperture(const QString& identifier, QObject* parent = nullptr);
 
     public:

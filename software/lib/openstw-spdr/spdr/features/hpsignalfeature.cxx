@@ -12,13 +12,26 @@ namespace Openstw::SpDr
         : OrientedFeatureLayer{FeatureType::HpSignal, orientation, parent}
     {
         // First, create apertures used to display the signal state.
-        auto* redLamp = new Aperture("signal-red-lamp", this);
-        this->addAperture(redLamp);
-        this->m_redLamp = redLamp;
+        if (this->orientation() == FeatureOrientation::Forward)
+        {
+            auto* redLamp = new Aperture(ForwardIdentifiers::redAperture, this);
+            this->addAperture(redLamp);
+            this->m_redLamp = redLamp;
 
-        auto* greenLamp = new Aperture("signal-green-lamp", this);
-        this->addAperture(greenLamp);
-        this->m_greenLamp = greenLamp;
+            auto* greenLamp = new Aperture(ForwardIdentifiers::greenAperture, this);
+            this->addAperture(greenLamp);
+            this->m_greenLamp = greenLamp;
+        }
+        else
+        {
+            auto* redLamp = new Aperture(BackwardIdentifiers::redAperture, this);
+            this->addAperture(redLamp);
+            this->m_redLamp = redLamp;
+
+            auto* greenLamp = new Aperture(BackwardIdentifiers::greenAperture, this);
+            this->addAperture(greenLamp);
+            this->m_greenLamp = greenLamp;
+        }
 
         // Then, retrieve the Hauptsignalschirm attached to given Signalmast.
         if (!signalMast->hasHauptSignalSchirm())

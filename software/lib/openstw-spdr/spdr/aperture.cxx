@@ -2,6 +2,11 @@
 
 namespace Openstw::SpDr
 {
+    Aperture::Aperture(QStringView identifier, QObject* parent)
+        : Aperture{identifier.toString(), parent}
+    {
+    }
+
     Aperture::Aperture(const QString& identifier, QObject* parent)
         : QObject{parent}, m_identifier{identifier}
     {
