@@ -22,6 +22,11 @@ namespace Openstw::SpDr
         return this->state().isOff();
     }
 
+    bool Aperture::isBlinking() const
+    {
+        return (!this->m_currentState.isOff()) && (this->m_currentState.blinkMode() == BlinkMode::Blinking);
+    }
+
     ApertureColor Aperture::color() const
     {
         return this->state().color();

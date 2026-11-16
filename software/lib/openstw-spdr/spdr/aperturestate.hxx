@@ -31,6 +31,9 @@ namespace Openstw::SpDr
         // Whether the aperture is currently off
         bool isOff() const;
 
+        // Whether the aperture is currently blinking.
+        bool isBlinking() const;
+
     public:
         bool operator==(const ApertureState& rhs) const = default;
         bool operator!=(const ApertureState& rhs) const = default;

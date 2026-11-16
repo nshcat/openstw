@@ -36,4 +36,9 @@ namespace Openstw::SpDr
     {
         return this->color() == ApertureColor::Off;
     }
+
+    bool ApertureState::isBlinking() const
+    {
+        return !this->isOff() && (this->blinkMode() == BlinkMode::Blinking);
+    }
 }

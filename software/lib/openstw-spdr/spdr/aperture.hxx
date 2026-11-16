@@ -31,6 +31,9 @@ namespace Openstw::SpDr
         // Whether this aperture is currently not lighting up.
         bool isOff() const;
 
+        // Whether the aperture is in blinking mode.
+        bool isBlinking() const;
+
         // Current colour of this aperture.
         ApertureColor color() const;
 

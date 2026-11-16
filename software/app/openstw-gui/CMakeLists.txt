@@ -50,6 +50,11 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/blinkstate.hxx
         src/subwindow.hxx src/subwindow.cxx
         src/rendering/features/hpsignalfeatureobject.hxx src/rendering/features/hpsignalfeatureobject.cxx
+        src/rendering/painters/hauptsignalschirmpainter.hxx src/rendering/painters/hauptsignalschirmpainter.cxx
+        src/rendering/painters/featurepainter.hxx src/rendering/painters/featurepainter.cxx
+        src/rendering/painters/kennlichtstyle.hxx
+        src/rendering/painters/signalpainter.hxx src/rendering/painters/signalpainter.cxx
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -119,6 +124,7 @@ add_dependencies(openstw-gui copy_gui_teststadt_xml)
 target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/rendering)
 target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/rendering/features)
+target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/rendering/painters)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(openstw-gui)

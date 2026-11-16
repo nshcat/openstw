@@ -6,6 +6,7 @@
 #include <spdr/aperturestate.hxx>
 #include <spdr/features/hpsignalfeature.hxx>
 
+#include "hauptsignalschirmpainter.hxx"
 #include "renderinghelpers.hxx"
 #include "tilefeaturegraphicsobject.hxx"
 
@@ -62,16 +63,6 @@ namespace Rendering
         // Draw mast segment.
         void drawMastSegment(QPainter* painter, const QRectF& location) const;
 
-        // Draw a single signal lamp.
-        void drawSignalLamp(QPainter* painter, const QRectF& location, const Openstw::SpDr::Aperture* aperture,
-                            const qreal onDiameter, const qreal offDiameter) const;
-
-        // Determine the dimensions of the Hauptsignalschirm.
-        QSizeF measureHauptSignal() const;
-
-        // Actually draw the Hauptsignalschirm.
-        void drawHauptSignal(QPainter* painter, const QRectF& location) const;
-
     protected slots:
         // Called whenever the state of any of the features apertures changes.
         // Will trigger a redraw of the whole feature.
@@ -86,5 +77,8 @@ namespace Rendering
 
         // Aperture representing the green signal lamp.
         Openstw::SpDr::Aperture* m_greenLamp;
+
+        // Painter for the Hauptsignalschirm.
+        HauptSignalSchirmPainter* m_signalPainter;
     };
 }

@@ -15,6 +15,10 @@ namespace Rendering
         this->m_redLamp = this->m_feature->redLamp();
         this->m_greenLamp = this->m_feature->greenLamp();
 
+        // Construct helper painter objects.
+        this->m_signalPainter =
+            new HauptSignalSchirmPainter{this->m_redLamp, this->m_greenLamp, this->blinkGenerator(), this};
+
         // Listen to their state changing.
         // clang-format off
         connect(this->m_redLamp, &Openstw::SpDr::Aperture::stateChanged,
@@ -89,7 +93,7 @@ namespace Rendering
 
         // Measure out how big the Signalschirm would be if rendered.
         // The returned rect always has position 0,0.
-        const auto hauptSchirmSize = this->measureHauptSignal();
+        const auto hauptSchirmSize = this->m_signalPainter->measure();
 
         // Lay it out. The top end of the topmost Signalschirm is always fixed to be the same distance
         // to the tile border.
@@ -99,7 +103,7 @@ namespace Rendering
                                hauptSchirmSize.width(), hauptSchirmSize.height()};
 
         // Render it
-        this->drawHauptSignal(painter, hauptSchirmRect);
+        this->m_signalPainter->paint(painter, hauptSchirmRect);
 
         // Render mast
         const auto mastBaseRect =
@@ -139,72 +143,6 @@ namespace Rendering
         painter->setBrush(Qt::black);
         painter->setPen(rectanglePen(Qt::black, 1.0f));
         painter->drawRect(adjustRectForBorder(mastRect, 1.0f));
-    }
-
-    void HpSignalFeatureObject::drawSignalLamp(QPainter* painter, const QRectF& location,
-                                               const Openstw::SpDr::Aperture* aperture, const qreal onDiameter,
-                                               const qreal offDiameter) const
-    {
-        painter->save();
-
-        // First, determine the colour to use.
-        const auto lampColor = this->apertureRenderColor(aperture);
-
-        // Also determine which diameter to use, based on whether the aperture is on
-        // or not.
-        const auto diameter = this->apertureIsOn(aperture) ? onDiameter : offDiameter;
-
-        // Finally, draw the signal lamp.
-        QRectF lampRect{centerWithin(diameter, location.width(), location.left()),
-                        centerWithin(diameter, location.height(), location.top()), diameter, diameter};
-
-        painter->setBrush(lampColor);
-        painter->setPen(Qt::NoPen);
-        painter->drawEllipse(lampRect);
-        painter->restore();
-    }
-
-    QSizeF HpSignalFeatureObject::measureHauptSignal() const
-    {
-        constexpr qreal signalHeight = 18.0f;
-
-        // Base case - only two lamps. No rangiersignal, no kennlicht.
-        qreal signalWidth = (HpSignalFeatureObject::signalLampPadding * 2) +
-                            (2 * HpSignalFeatureObject::hpSpaceForLamp) +
-                            (HpSignalFeatureObject::hpPaddingBetweenLamps);
-
-        return QSizeF{signalWidth, signalHeight};
-    }
-
-    void HpSignalFeatureObject::drawHauptSignal(QPainter* painter, const QRectF& location) const
-    {
-        painter->save();
-
-        painter->setBrush(Qt::black);
-        painter->setPen(rectanglePen(Qt::black, 1.0f));
-        painter->drawRoundedRect(location, 10, 10);
-
-        // Draw signal lamps
-        const qreal lampYPos = centerWithin(HpSignalFeatureObject::hpSpaceForLamp, location.height(), location.top());
-
-        qreal currentXPos =
-            location.right() - HpSignalFeatureObject::signalLampPadding - HpSignalFeatureObject::hpSpaceForLamp;
-
-        // Green lamp
-        this->drawSignalLamp(
-            painter,
-            QRectF{currentXPos, lampYPos, HpSignalFeatureObject::hpSpaceForLamp, HpSignalFeatureObject::hpSpaceForLamp},
-            this->m_greenLamp, HpSignalFeatureObject::activeLampDiameter, HpSignalFeatureObject::inactiveLampDiameter);
-
-        // Red lamp
-        currentXPos -= HpSignalFeatureObject::hpPaddingBetweenLamps + HpSignalFeatureObject::hpSpaceForLamp;
-
-        this->drawSignalLamp(
-            painter,
-            QRectF{currentXPos, lampYPos, HpSignalFeatureObject::hpSpaceForLamp, HpSignalFeatureObject::hpSpaceForLamp},
-            this->m_redLamp, HpSignalFeatureObject::activeLampDiameter, HpSignalFeatureObject::inactiveLampDiameter);
-
-        painter->restore();
     }
 
     void HpSignalFeatureObject::onApertureStateChanged(Openstw::SpDr::ApertureState newState)
