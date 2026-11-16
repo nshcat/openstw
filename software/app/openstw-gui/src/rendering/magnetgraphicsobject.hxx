@@ -3,8 +3,8 @@
 #include <QGraphicsItem>
 #include <QObject>
 
-#include "../magnettype.hxx"
 #include "icontextmenuprovider.hxx"
+#include "magnettype.hxx"
 
 namespace Rendering
 {

@@ -2,11 +2,12 @@
 #include <QPainter>
 #include <optional>
 
+#include "hpsignalfeatureobject.hxx"
 #include "logging.hxx"
-#include "rendering/hpsignalfeatureobject.hxx"
-#include "rendering/renderinghelpers.hxx"
-#include "rendering/tilerenderingconstants.hxx"
+#include "renderinghelpers.hxx"
 #include "tilegraphicsobject.hxx"
+#include "tilerenderingconstants.hxx"
+#include "trackindicatorfeatureobject.hxx"
 
 TileGraphicsObject::TileGraphicsObject(Openstw::SpDr::Tile* tile, BlinkGenerator* blink)
     : m_tile(tile), m_blink{blink}

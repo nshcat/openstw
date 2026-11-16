@@ -1,10 +1,12 @@
 #pragma once
 
-#include "blinkgenerator.hxx"
 #include <QGraphicsItemGroup>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+
 #include <spdr/stelltisch.hxx>
+
+#include "blinkgenerator.hxx"
 
 /**
  * @brief The TilePanelView class displays a TilePanel using a QGraphicsView,

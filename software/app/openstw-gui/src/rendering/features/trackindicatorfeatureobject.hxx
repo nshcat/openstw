@@ -1,10 +1,12 @@
 #pragma once
 
-#include "tilefeaturegraphicsobject.hxx"
 #include <QObject>
+
 #include <spdr/aperture.hxx>
 #include <spdr/aperturestate.hxx>
 #include <spdr/features/trackindicatorfeature.hxx>
+
+#include "tilefeaturegraphicsobject.hxx"
 
 class TileGraphicsObject;
 

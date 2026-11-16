@@ -2,13 +2,14 @@
 
 #include <QGraphicsObject>
 #include <QVector>
+
 #include <spdr/featurelayer.hxx>
 #include <spdr/tile.hxx>
 
 #include "blinkgenerator.hxx"
-#include "rendering/renderinghelpers.hxx"
-#include "rendering/tilerenderingconstants.hxx"
-#include "rendering/trackindicatorfeatureobject.hxx"
+#include "renderinghelpers.hxx"
+#include "tilefeaturegraphicsobject.hxx"
+#include "tilerenderingconstants.hxx"
 
 class TileGraphicsObject : public QGraphicsObject
 {

@@ -30,13 +30,10 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         src/tilepanelview.hxx src/tilepanelview.cxx
-        src/tilegraphicsobject.hxx src/tilegraphicsobject.cxx
-
-
+        src/rendering/tilegraphicsobject.hxx src/rendering/tilegraphicsobject.cxx
         src/rendering/tilerenderingconstants.hxx
-
-        src/rendering/tilefeaturegraphicsobject.hxx src/rendering/tilefeaturegraphicsobject.cxx
-        src/rendering/trackindicatorfeatureobject.hxx src/rendering/trackindicatorfeatureobject.cxx
+        src/rendering/features/tilefeaturegraphicsobject.hxx src/rendering/features/tilefeaturegraphicsobject.cxx
+        src/rendering/features/trackindicatorfeatureobject.hxx src/rendering/features/trackindicatorfeatureobject.cxx
         src/rendering/renderinghelpers.hxx src/rendering/renderinghelpers.cxx
         src/application.hxx src/application.cxx
         data/teststadt.xml
@@ -52,7 +49,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
         src/blinkgenerator.hxx src/blinkgenerator.cxx
         src/blinkstate.hxx
         src/subwindow.hxx src/subwindow.cxx
-        src/rendering/hpsignalfeatureobject.hxx src/rendering/hpsignalfeatureobject.cxx
+        src/rendering/features/hpsignalfeatureobject.hxx src/rendering/features/hpsignalfeatureobject.cxx
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET openstw-gui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -119,6 +116,9 @@ add_custom_target(copy_gui_teststadt_xml DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/tes
 
 add_dependencies(openstw-gui copy_gui_teststadt_xml)
 
+target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/rendering)
+target_include_directories(openstw-gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/rendering/features)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(openstw-gui)

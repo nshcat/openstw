@@ -3,10 +3,11 @@
 #include <QGraphicsObject>
 #include <QObject>
 #include <optional>
+
 #include <spdr/featurelayer.hxx>
 #include <spdr/featuretype.hxx>
 
-#include "../blinkgenerator.hxx"
+#include "blinkgenerator.hxx"
 #include "icontextmenuprovider.hxx"
 
 class TileGraphicsObject;

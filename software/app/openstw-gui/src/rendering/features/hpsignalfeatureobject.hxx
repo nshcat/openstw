@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+
 #include <spdr/aperture.hxx>
 #include <spdr/aperturestate.hxx>
 #include <spdr/features/hpsignalfeature.hxx>

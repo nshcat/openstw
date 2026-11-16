@@ -1,8 +1,9 @@
 #pragma once
 
-#include "blinkstate.hxx"
 #include <QObject>
 #include <QTimer>
+
+#include "blinkstate.hxx"
 
 // Class that generates the global blink impulse used all over
 // the Stelltisch. This ensures that blinking tile elements all
