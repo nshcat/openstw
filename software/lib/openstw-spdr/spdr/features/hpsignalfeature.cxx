@@ -45,52 +45,14 @@ namespace Openstw::SpDr
                                                     QObject* parent)
     {
         // Retrieve the signal mast that fills this feature with data.
-        const auto signalName = Core::Xml::stringAttribute(xmlElement, u"SignalMast");
-        if (!signalName.has_value())
-        {
-            throw Core::RuntimeError("SpDr XML: Line {}: HpSignal feature element missing signal mast name attribute",
-                                     xmlElement.lineNumber());
-        }
-
-        // Try to find the element within the interlocking system
-        // that represents the referenced signal mast
-        auto mastElement = interlocking->element(signalName.value());
-        if (!mastElement.has_value())
-        {
-            throw Core::RuntimeError(
-                "SpDr XML: Line {}: HpSignal feature element references non-existent signal mast '{}'",
-                xmlElement.lineNumber(), signalName.value());
-        }
-
-        // Validate that the element is, in fact, a signal mast
-        if (mastElement.value()->type() != Interlocking::ElementType::SignalMast)
-        {
-            throw Core::RuntimeError("SpDr XML: Line {}: HpSignal feature element references interlocking "
-                                     "element '{}', which is not a signal mast",
-                                     xmlElement.lineNumber(), signalName.value());
-        }
-
-        // Cast it.
-        auto* mast = dynamic_cast<Interlocking::SignalMast*>(mastElement.value());
-
-        // Validate the cast.
-        if (!mast)
-        {
-            throw Core::RuntimeError("SpDr XML: Line {}: HpSignal feature element references interlocking "
-                                     "element '{}', which unexpectedly is not a SignalMast object",
-                                     xmlElement.lineNumber(), signalName.value());
-        }
+        auto* mast =
+            FeatureLayer::parseInterlockingReference<Interlocking::SignalMast>(xmlElement, u"SignalMast", interlocking);
 
         // Parse feature orientation.
-        const auto orientation = Core::Xml::enumAttribute<FeatureOrientation>(xmlElement, u"Orientation");
-        if (!orientation.has_value())
-        {
-            throw Core::RuntimeError("SpDr XML: Line {}: HpSignal feature element missing orientation attribute",
-                                     xmlElement.lineNumber());
-        }
+        const auto orientation = OrientedFeatureLayer::parseOrientation(xmlElement);
 
         // Create feature layer object and return
-        return new HpSignalFeature{mast, orientation.value(), parent};
+        return new HpSignalFeature{mast, orientation, parent};
     }
 
     Aperture* HpSignalFeature::redLamp() const

@@ -46,42 +46,8 @@ namespace Openstw::SpDr
         }
 
         // Now, retrieve the track section that fills this feature with data.
-        const auto sectionStr = xmlElement.attribute("TrackSection");
-        if (sectionStr.isEmpty())
-        {
-            throw Core::RuntimeError(
-                "SpDr XML: Line {}: Track indicator feature element missing track section attribute",
-                xmlElement.lineNumber());
-        }
-
-        // Try to find the element within the interlocking system
-        // that represents the referenced track section
-        auto sectionElement = interlocking->element(sectionStr);
-        if (!sectionElement.has_value())
-        {
-            throw Core::RuntimeError(
-                "SpDr XML: Line {}: Track indicator feature element references non-existent track section '{}'",
-                xmlElement.lineNumber(), sectionStr);
-        }
-
-        // Validate that the element is, in fact, a track section
-        if (sectionElement.value()->type() != Interlocking::ElementType::TrackSection)
-        {
-            throw Core::RuntimeError("SpDr XML: Line {}: Track indicator feature element references interlocking "
-                                     "element '{}', which is not a track section",
-                                     xmlElement.lineNumber(), sectionStr);
-        }
-
-        // Cast it.
-        auto* section = dynamic_cast<Interlocking::TrackSection*>(sectionElement.value());
-
-        // Validate the cast.
-        if (!section)
-        {
-            throw Core::RuntimeError("SpDr XML: Line {}: Track indicator feature element references interlocking "
-                                     "element '{}', which unexpectedly is not a TrackSection object",
-                                     xmlElement.lineNumber(), sectionStr);
-        }
+        auto* section = FeatureLayer::parseInterlockingReference<Interlocking::TrackSection>(
+            xmlElement, u"TrackSection", interlocking);
 
         // Create feature layer and return it.
         return new TrackIndicatorFeature{geometry.value(), section, parent};
