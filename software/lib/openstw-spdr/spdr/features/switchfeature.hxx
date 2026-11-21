@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <interlocking/elements/switch.hxx>
+#include <interlocking/elements/tracksection.hxx>
 #include <interlocking/system.hxx>
 
 #include <orientedfeaturelayer.hxx>
@@ -31,7 +32,7 @@ namespace Openstw::SpDr
     public:
         explicit SwitchFeature(SwitchStyle style, SwitchBranchOrientation branchOrientation,
                                FeatureOrientation orientation, Interlocking::Switch* switchElement,
-                               QObject* parent = nullptr);
+                               Interlocking::TrackSection* sectionElement, QObject* parent = nullptr);
 
         virtual ~SwitchFeature() override = default;
 
@@ -59,11 +60,31 @@ namespace Openstw::SpDr
         // Button representing the Weichentaste for the switch.
         Button* weichenTaste() const;
 
+    protected:
+        // Derive state of feature aperture based on the current switch and
+        // button state.
+        void updateApertures();
+
     protected slots:
+        // Called whenever the state of the interlocking switch associated
+        // with this feature changes
+        void onSwitchStateChanged(Interlocking::SwitchPosition currentPosition,
+                                  Interlocking::SwitchPosition targetPosition, bool isAdjusting);
+
+        // Called whenever the Weichentaste button is either pressed or released.
+        void onWeichenTasteStateChanged(ButtonState newState);
+
+        // Called whenever the occupancy state of the interlocking track section associated
+        // with this feature changes.
+        void onSectionOccupancyChanged(bool occupied);
 
     protected:
         // Reference to the switch element within the interlocking layer.
         Interlocking::Switch* m_switchElement;
+
+        // Reference to the track section element within the interlocking layer.
+        // It provides occupancy information for the switch.
+        Interlocking::TrackSection* m_sectionElement;
 
         // General style of the switch representation.
         SwitchStyle m_style;

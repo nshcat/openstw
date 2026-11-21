@@ -40,6 +40,16 @@ namespace Openstw::SpDr
         return this->m_state;
     }
 
+    bool Button::pressed() const
+    {
+        return this->m_state == ButtonState::Pressed;
+    }
+
+    bool Button::released() const
+    {
+        return this->m_state == ButtonState::Released;
+    }
+
     void Button::setState(ButtonState newState)
     {
         this->m_state = newState;

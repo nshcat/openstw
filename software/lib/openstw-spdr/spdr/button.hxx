@@ -42,6 +42,13 @@ namespace Openstw::SpDr
         // The current state of the button.
         ButtonState state() const;
 
+        // Whether the button is currently pressed.
+        bool pressed() const;
+
+        // Whether the button is currently released.
+        bool released() const;
+
+    public:
         // Set the current state of the button. This will cause the
         // `stateChanged` signal to be emitted.
         void setState(ButtonState newState);

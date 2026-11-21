@@ -65,8 +65,8 @@ namespace Openstw::SpDr
         // XML element, and retrieve it from the interlocking system, casting it
         // to the correct type.
         template <typename T>
-        static T* parseInterlockingElement(QDomElement xmlElement, QStringView attributeName,
-                                           Interlocking::System* interlocking);
+        static T* parseInterlockingReference(QDomElement xmlElement, QStringView attributeName,
+                                             Interlocking::System* interlocking);
 
     protected:
         // Add given aperture to the collection of apertures
@@ -117,8 +117,8 @@ namespace Openstw::SpDr
     };
 
     template <typename T>
-    T* FeatureLayer::parseInterlockingElement(QDomElement xmlElement, QStringView attributeName,
-                                              Interlocking::System* interlocking)
+    T* FeatureLayer::parseInterlockingReference(QDomElement xmlElement, QStringView attributeName,
+                                                Interlocking::System* interlocking)
     {
         // Ensure that T actually derives from Interlocking::Element.
         static_assert(std::is_base_of_v<Interlocking::Element, std::decay_t<T>>,
