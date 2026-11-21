@@ -1,8 +1,11 @@
-#include "featurelayer.hxx"
 #include <algorithm>
+#include <ranges>
+
 #include <core/enums.hxx>
 #include <core/exception.hxx>
-#include <ranges>
+
+#include "button.hxx"
+#include "featurelayer.hxx"
 
 namespace Openstw::SpDr
 {
@@ -190,5 +193,24 @@ namespace Openstw::SpDr
             }
         );
         // clang-format on
+    }
+
+    Aperture* FeatureLayer::createAperture(QStringView identifier)
+    {
+        auto* aperture = new Aperture{identifier, this};
+
+        this->addAperture(aperture);
+
+        return aperture;
+    }
+
+    Button* FeatureLayer::createButton(QStringView identifier, ButtonRole role,
+                                       std::optional<Interlocking::Element*> referencedElement)
+    {
+        auto* button = new Button{identifier, role, referencedElement, this};
+
+        this->addButton(button);
+
+        return button;
     }
 }

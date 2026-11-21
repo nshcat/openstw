@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QString>
 #include <optional>
 
@@ -16,7 +17,10 @@ namespace Openstw::SpDr
             TrackIndicator = 0,
 
             // A basic Hauptsignal.
-            HpSignal = 1
+            HpSignal = 1,
+
+            // A switch.
+            Switch = 2
         };
 
         Q_ENUM_NS(FeatureType)

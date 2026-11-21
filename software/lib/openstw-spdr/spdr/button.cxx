@@ -1,9 +1,12 @@
+#include <core/exception.hxx>
+
 #include "button.hxx"
 
 namespace Openstw::SpDr
 {
-    Button::Button(QStringView identifier, ButtonRole role, std::optional<QStringView> reference, QObject* parent)
-        : QObject{parent}, m_identifier{identifier}, m_role{role}, m_reference{reference}
+    Button::Button(QStringView identifier, ButtonRole role, std::optional<Interlocking::Element*> referencedElement,
+                   QObject* parent)
+        : QObject{parent}, m_identifier{identifier}, m_role{role}, m_referencedElement{referencedElement}
     {
     }
 
@@ -17,9 +20,19 @@ namespace Openstw::SpDr
         return this->m_role;
     }
 
-    std::optional<QStringView> Button::reference() const
+    Interlocking::Element* Button::referencedElement() const
     {
-        return {this->m_reference};
+        if (!this->referencesElement())
+        {
+            throw Core::RuntimeError("Button {} does not reference an interlocking element", this->identifier());
+        }
+
+        return this->m_referencedElement.value();
+    }
+
+    bool Button::referencesElement() const
+    {
+        return this->m_referencedElement.has_value();
     }
 
     ButtonState Button::state() const

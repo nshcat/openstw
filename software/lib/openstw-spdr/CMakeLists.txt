@@ -35,6 +35,9 @@ add_library(openstw-spdr STATIC
   spdr/features/trackindicatorgeometry.hxx
   spdr/features/hpsignalfeature.hxx spdr/features/hpsignalfeature.cxx
   spdr/orientedfeaturelayer.hxx spdr/orientedfeaturelayer.cxx
+  spdr/switchbranchorientation.hxx
+  spdr/switchstyle.hxx
+  spdr/features/switchfeature.hxx spdr/features/switchfeature.cxx
 )
 
 target_link_libraries(openstw-spdr PRIVATE Qt${QT_VERSION_MAJOR}::Core)

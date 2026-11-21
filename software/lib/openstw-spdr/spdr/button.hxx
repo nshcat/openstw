@@ -1,11 +1,14 @@
 #pragma once
 
-#include "buttonrole.hxx"
-#include "buttonstate.hxx"
 #include <QObject>
 #include <QString>
 #include <QStringView>
 #include <optional>
+
+#include <interlocking/element.hxx>
+
+#include "buttonrole.hxx"
+#include "buttonstate.hxx"
 
 namespace Openstw::SpDr
 {
@@ -19,7 +22,7 @@ namespace Openstw::SpDr
         Q_OBJECT
 
     public:
-        Button(QStringView identifier, ButtonRole role, std::optional<QStringView> reference,
+        Button(QStringView identifier, ButtonRole role, std::optional<Interlocking::Element*> referencedElement,
                QObject* parent = nullptr);
 
     public:
@@ -29,9 +32,12 @@ namespace Openstw::SpDr
         // The specific role of this button.
         ButtonRole role() const;
 
-        // Identifier of the interlocking element this button references,
+        // The interlocking element this button references,
         // if applicable (depends on the buttons specific role).
-        std::optional<QStringView> reference() const;
+        Interlocking::Element* referencedElement() const;
+
+        // Whether this button references an interlocking element.
+        bool referencesElement() const;
 
         // The current state of the button.
         ButtonState state() const;
@@ -52,9 +58,9 @@ namespace Openstw::SpDr
         // it references, if any.
         ButtonRole m_role;
 
-        // Identifier of the interlocking element this button refers to, if any.
+        // The interlocking element this button refers to, if any.
         // Whether this is used or not depends on the role of the button
-        std::optional<QString> m_reference;
+        std::optional<Interlocking::Element*> m_referencedElement;
 
         // The current state of the button.
         ButtonState m_state{ButtonState::Released};

@@ -2,6 +2,8 @@
 
 #include <QObject>
 
+#include <QDomElement>
+
 #include "featurelayer.hxx"
 #include "featureorientation.hxx"
 #include "featuretype.hxx"
@@ -20,6 +22,10 @@ namespace Openstw::SpDr
     public:
         // The orientation of the feature.
         FeatureOrientation orientation() const;
+
+    protected:
+        // Parse the feature orientation from given XML element.
+        static FeatureOrientation parseOrientation(QDomElement xmlElement);
 
     protected:
         // The orientation of the feature.

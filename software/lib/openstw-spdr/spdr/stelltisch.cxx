@@ -1,8 +1,10 @@
 #include <chrono>
+
 #include <core/exception.hxx>
 #include <core/xmlutility.hxx>
 
 #include "features/hpsignalfeature.hxx"
+#include "features/switchfeature.hxx"
 #include "features/trackindicatorfeature.hxx"
 #include "stelltisch.hxx"
 
@@ -224,6 +226,10 @@ namespace Openstw::SpDr
 
             case FeatureType::HpSignal:
                 layer = HpSignalFeature::createFromXml(layerElement, this->m_interlocking, tile);
+                break;
+
+            case FeatureType::Switch:
+                layer = SwitchFeature::createFromXml(layerElement, this->m_interlocking, tile);
                 break;
 
             default:

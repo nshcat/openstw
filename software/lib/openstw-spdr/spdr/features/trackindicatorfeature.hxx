@@ -18,6 +18,13 @@ namespace Openstw::SpDr
     {
         Q_OBJECT
 
+    protected:
+        // Aperture identifiers for all orientations.
+        struct Identifiers
+        {
+            constexpr static QStringView occupancyAperture{u"center-occupancy"};
+        };
+
     public:
         TrackIndicatorFeature(TrackIndicatorGeometry geometry, Interlocking::TrackSection* section,
                               QObject* parent = nullptr);

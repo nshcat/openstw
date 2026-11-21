@@ -14,23 +14,13 @@ namespace Openstw::SpDr
         // First, create apertures used to display the signal state.
         if (this->orientation() == FeatureOrientation::Forward)
         {
-            auto* redLamp = new Aperture(ForwardIdentifiers::redAperture, this);
-            this->addAperture(redLamp);
-            this->m_redLamp = redLamp;
-
-            auto* greenLamp = new Aperture(ForwardIdentifiers::greenAperture, this);
-            this->addAperture(greenLamp);
-            this->m_greenLamp = greenLamp;
+            this->m_redLamp = this->createAperture(ForwardIdentifiers::redAperture);
+            this->m_greenLamp = this->createAperture(ForwardIdentifiers::greenAperture);
         }
         else
         {
-            auto* redLamp = new Aperture(BackwardIdentifiers::redAperture, this);
-            this->addAperture(redLamp);
-            this->m_redLamp = redLamp;
-
-            auto* greenLamp = new Aperture(BackwardIdentifiers::greenAperture, this);
-            this->addAperture(greenLamp);
-            this->m_greenLamp = greenLamp;
+            this->m_redLamp = this->createAperture(BackwardIdentifiers::redAperture);
+            this->m_greenLamp = this->createAperture(BackwardIdentifiers::greenAperture);
         }
 
         // Then, retrieve the Hauptsignalschirm attached to given Signalmast.

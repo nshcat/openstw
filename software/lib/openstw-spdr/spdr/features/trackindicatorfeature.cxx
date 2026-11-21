@@ -9,9 +9,7 @@ namespace Openstw::SpDr
         : FeatureLayer(FeatureType::TrackIndicator, parent), m_geometry{geometry}, m_trackSection{section}
     {
         // Create aperture for the occupancy indicator.
-        auto* occupancyElement = new Aperture("center-occupancy", this);
-        this->addAperture(occupancyElement);
-        this->m_occupancyLamp = occupancyElement;
+        this->m_occupancyLamp = this->createAperture(Identifiers::occupancyAperture);
 
         // Listen to occupancy and lock state changes emitted by the track
         // section object we are associated with.
